@@ -36,11 +36,11 @@
     <div
       style="width:75%; margin-left:auto; margin-right:auto; margin-top: 50px;">
 
-      <h1 style="font-family:Pokemon GB"><font color="green">About the CodeU Chat App</font></h1>
-      <p style="font-family:Pokemon GB"><font color="green">
+      <h1>About the CodeU Chat App</h1>
+      <p>
         This is an example chat application designed to be a starting point
         for your CodeU project team work. Here's some stuff to think about:
-      </font></p>
+      </p>
 
       <ul>
         <li><strong>Algorithms and data structures:</strong> We've made the app
