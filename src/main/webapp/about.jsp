@@ -37,8 +37,8 @@
       style="width:75%; margin-left:auto; margin-right:auto; margin-top: 50px;">
 
       <p style="font-family:Phosphate"><font color="jade" size="45">About the CodeU Chat App</font></p>
-      <p style="font-family:chalkboardse"><font color="jade" size="4">Hi fellow CodeUers!We are Team 32 AKA Team *insert name here*! Here, we will improve on a chat app as a team! Here is a little bit about our team members:
-      <ul>
+      <p style="font-family:Chalkboard"><font color="jade" size="4">Hi fellow CodeUers!We are Team 32 AKA Team LSD! Here, we will improve on a chat app as a team! Here is a little bit about our team members:
+      <ul style="font-family:Chalkboard">
 
         <li><strong>Leslie Coney:</strong> Rising sophomore at Howard University, majoring in computer science. Volunteering with a tech camp for HS students in DC. Is from Chicago just like Kanye West.</li>
         <li><strong>Shana Mathew:</strong>Awaiting on a bio. </li>
