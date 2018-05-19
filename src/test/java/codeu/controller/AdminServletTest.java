@@ -24,16 +24,11 @@ public class AdminServletTest {
     private HttpServletResponse mockResponse;
     private RequestDispatcher mockRequestDispatcher;
 
-
     @Before
     public void setup() {
         adminServlet = new AdminServlet();
-        try {
-			adminServlet.init();
-		} catch (ServletException e) {
-			e.printStackTrace();
-			fail();
-		}
+
+		adminServlet.setAdminUsernames();
 
         mockRequest = Mockito.mock(HttpServletRequest.class);
         mockSession = Mockito.mock(HttpSession.class);
