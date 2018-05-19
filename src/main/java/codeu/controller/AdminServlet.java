@@ -33,6 +33,8 @@ public class AdminServlet extends HttpServlet {
 
         if (admins.contains(user)) {
             request.getRequestDispatcher("/WEB-INF/view/admin.jsp").forward(request, response);
+        } else {
+            response.sendError(HttpServletResponse.SC_NOT_FOUND);
         }
 
     }
