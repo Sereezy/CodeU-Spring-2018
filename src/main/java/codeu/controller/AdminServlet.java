@@ -16,6 +16,10 @@ public class AdminServlet extends HttpServlet {
     public void init() throws ServletException {
         super.init();
 
+        setAdminUsernames();
+    }
+
+    void setAdminUsernames() {
         admins = new HashSet<String>();
         admins.add("daniel");
         admins.add("leslie");
@@ -23,7 +27,6 @@ public class AdminServlet extends HttpServlet {
         admins.add("shana");
         admins.add("kyra");
     }
-
 
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -33,6 +36,8 @@ public class AdminServlet extends HttpServlet {
 
         if (admins.contains(user)) {
             request.getRequestDispatcher("/WEB-INF/view/admin.jsp").forward(request, response);
+        } else {
+            response.sendError(HttpServletResponse.SC_NOT_FOUND);
         }
 
     }
