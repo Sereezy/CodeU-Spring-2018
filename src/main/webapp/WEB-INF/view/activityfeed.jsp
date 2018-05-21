@@ -4,7 +4,7 @@
 <html>
 
 <head>
-    <title>Admin</title>
+    <title>Activity Feed</title>
     <link rel="stylesheet" href="/css/main.css">
 </head>
 
@@ -22,7 +22,7 @@
     </nav>
 
     <div id="container">
-        <p>This is the admin page</p>
+        <p>This is the Activity Feed!</p>
     </div>
 
 </body>
