@@ -30,6 +30,7 @@
       <a href="/login">Login</a>
     <% } %>
     <a href="/about.jsp">About</a>
+    <a href="/activityfeed">Activity Feed</a>
   </nav>
 
   <div id="container">
@@ -38,7 +39,7 @@
 
       <h1>CodeU Chat App</h1>
       <h2>Welcome!</h2>
-
+      <p>This is a chat app created by Leslie, Shana, Serena, and Daniel! Click on any of the below links to explore more:</p>
       <ul>
         <li><a href="/login">Login</a> to get started.</li>
         <li>Go to the <a href="/conversations">conversations</a> page to
