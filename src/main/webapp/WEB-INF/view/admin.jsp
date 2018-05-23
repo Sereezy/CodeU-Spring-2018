@@ -1,4 +1,7 @@
 
+<%@ page import="codeu.model.store.basic.UserStore" %>
+
+
 <!DOCTYPE html>
 
 <html>
@@ -22,7 +25,13 @@
     </nav>
 
     <div id="container">
-        <p>This is the admin page</p>
+        <h1>Administration</h1>
+
+        <h2>Users</h2><hr />
+            <p>Number of users: <%= UserStore.getInstance().getUsers().size() %></p>
+
+        <h2>Conversations</h2><hr />
+        <h2>Import<h2><hr />
     </div>
 
 </body>
