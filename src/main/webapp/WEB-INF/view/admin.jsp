@@ -65,11 +65,12 @@ for (Conversation c: allConversations) {
         <h3>Conversations</h3>
             <p>Number of conversations: <%= allConversations.size() %></p>
             <p>Number of messages: <%= messageCount %></p>
-            <p>Average messages per conversation: ~coming soon~</p>
+            <p>Average messages per conversation: <%= (int) ((float) messageCount / allConversations.size()) %></p>
         <hr />
 
         <h3>Import<h3>
             <p>~coming soon~</p>
+            <button>Submit</button>
     </div>
 
 </body>
