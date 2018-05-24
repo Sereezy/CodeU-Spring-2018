@@ -12,12 +12,15 @@
 <%@ page import="codeu.model.data.Conversation" %>
 <%@ page import="codeu.model.data.Message" %>
 <%
+// Calculate information to be displayed
+
 // Users
 List<User> allUsers = UserStore.getInstance().getAllUsers();
 
 String newestUser = "N/A";
 String mostActiveUser = "N/A";
 
+// get newest user
 if (allUsers.size() > 0) {
     newestUser = allUsers.get(allUsers.size() - 1).getName();
 }
@@ -27,23 +30,36 @@ if (allUsers.size() > 0) {
 List<Conversation> allConversations = ConversationStore.getInstance().getAllConversations();
 List<Message> messagesInConversation;
 
+// HashMap to hold user IDs and the number of messages sent by that user
 HashMap<UUID, Integer> userMessageCounts = new HashMap<UUID, Integer>();
-int totalMessageCount = 0;
+
+int totalMessageCount = 0; // total number of messages sent by all users
+int totalWordCount = 0; // total number of words sent by all users
 
 for (Conversation c: allConversations) {
+
     messagesInConversation = MessageStore.getInstance().getMessagesInConversation(c.getId());
     totalMessageCount += messagesInConversation.size();
+
     for (Message m: messagesInConversation) {
+
         int tmp = userMessageCounts.getOrDefault(m.getAuthorId(), 0);
         userMessageCounts.put(m.getAuthorId(), tmp + 1);
+
+        totalWordCount += m.getContent().split("\\s+").length;
     }
+
 }
 
+// compute most active user
 Map.Entry<UUID, Integer> maxMessageCountUser = null;
+
 for (Map.Entry<UUID, Integer> entry: userMessageCounts.entrySet()) {
+
     if (maxMessageCountUser == null || entry.getValue() > maxMessageCountUser.getValue()) {
         maxMessageCountUser = entry;
     }
+
 }
 if (maxMessageCountUser != null) {
     mostActiveUser = UserStore.getInstance().getUser(maxMessageCountUser.getKey()).getName();
@@ -86,7 +102,8 @@ if (maxMessageCountUser != null) {
         <h3>Conversations</h3>
             <p>Number of conversations: <%= allConversations.size() %></p>
             <p>Number of messages: <%= totalMessageCount %></p>
-            <p>Average messages per conversation: <%= (int) ((float) totalMessageCount / allConversations.size()) %></p>
+            <p>Average messages per conversation: <%= (int) ((double) totalMessageCount / allConversations.size()) %></p>
+            <p>Average words per message: <%= (int) ((double) totalWordCount / totalMessageCount) %></p>
         <hr />
 
         <h3>Import</h3>
