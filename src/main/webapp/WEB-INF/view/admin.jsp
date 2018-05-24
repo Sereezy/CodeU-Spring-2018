@@ -1,72 +1,4 @@
 
-<%@ page import="java.util.List" %>
-<%@ page import="java.util.UUID" %>
-<%@ page import="java.util.HashMap" %>
-<%@ page import="java.util.Map" %>
-
-<%@ page import="codeu.model.store.basic.UserStore" %>
-<%@ page import="codeu.model.store.basic.ConversationStore" %>
-<%@ page import="codeu.model.store.basic.MessageStore" %>
-
-<%@ page import="codeu.model.data.User" %>
-<%@ page import="codeu.model.data.Conversation" %>
-<%@ page import="codeu.model.data.Message" %>
-<%
-// Calculate information to be displayed
-
-// Users
-List<User> allUsers = UserStore.getInstance().getAllUsers();
-
-String newestUser = "N/A";
-String mostActiveUser = "N/A";
-
-// get newest user
-if (allUsers.size() > 0) {
-    newestUser = allUsers.get(allUsers.size() - 1).getName();
-}
-
-
-// Conversations
-List<Conversation> allConversations = ConversationStore.getInstance().getAllConversations();
-List<Message> messagesInConversation;
-
-// HashMap to hold user IDs and the number of messages sent by that user
-HashMap<UUID, Integer> userMessageCounts = new HashMap<UUID, Integer>();
-
-int totalMessageCount = 0; // total number of messages sent by all users
-int totalWordCount = 0; // total number of words sent by all users
-
-for (Conversation c: allConversations) {
-
-    messagesInConversation = MessageStore.getInstance().getMessagesInConversation(c.getId());
-    totalMessageCount += messagesInConversation.size();
-
-    for (Message m: messagesInConversation) {
-
-        int tmp = userMessageCounts.getOrDefault(m.getAuthorId(), 0);
-        userMessageCounts.put(m.getAuthorId(), tmp + 1);
-
-        totalWordCount += m.getContent().split("\\s+").length;
-    }
-
-}
-
-// compute most active user
-Map.Entry<UUID, Integer> maxMessageCountUser = null;
-
-for (Map.Entry<UUID, Integer> entry: userMessageCounts.entrySet()) {
-
-    if (maxMessageCountUser == null || entry.getValue() > maxMessageCountUser.getValue()) {
-        maxMessageCountUser = entry;
-    }
-
-}
-if (maxMessageCountUser != null) {
-    mostActiveUser = UserStore.getInstance().getUser(maxMessageCountUser.getKey()).getName();
-}
-
-
-%>
 
 <!DOCTYPE html>
 
@@ -94,16 +26,16 @@ if (maxMessageCountUser != null) {
         <h1>Administration</h1>
 
         <h3>Users</h3>
-            <p>Number of users: <%= allUsers.size() %></p>
-            <p>Newest user: <%= newestUser %></p>
-            <p>Most active user: <%= mostActiveUser %></p>
+            <p>Number of users: <%= request.getAttribute("numberOfUsers") %></p>
+            <p>Newest user: <%= request.getAttribute("newestUser") %></p>
+            <p>Most active user: <%= request.getAttribute("mostActiveUser") %></p>
         <hr />
 
         <h3>Conversations</h3>
-            <p>Number of conversations: <%= allConversations.size() %></p>
-            <p>Number of messages: <%= totalMessageCount %></p>
-            <p>Average messages per conversation: <%= (int) ((double) totalMessageCount / allConversations.size()) %></p>
-            <p>Average words per message: <%= (int) ((double) totalWordCount / totalMessageCount) %></p>
+            <p>Number of conversations: <%= request.getAttribute("numberOfConversations") %></p>
+            <p>Number of messages: <%= request.getAttribute("numberOfMessages") %></p>
+            <p>Average messages per conversation: <%= request.getAttribute("avgMessagesPerConvo") %></p>
+            <p>Average words per message: <%= request.getAttribute("avgWordsPerMessage") %></p>
         <hr />
 
         <h3>Import</h3>

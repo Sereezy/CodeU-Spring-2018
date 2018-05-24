@@ -27,7 +27,6 @@ public class AdminServletTest {
     @Before
     public void setup() {
         adminServlet = new AdminServlet();
-
 		adminServlet.setAdminUsernames();
 
         mockRequest = Mockito.mock(HttpServletRequest.class);
@@ -53,12 +52,27 @@ public class AdminServletTest {
 
     @Test
     public void testDoGet_Admin() throws IOException, ServletException {
-        Mockito.when(mockSession.getAttribute("user")).thenReturn("daniel");
+        Mockito.when(mockSession.getAttribute("user")).thenReturn("admin");
 
         adminServlet.doGet(mockRequest, mockResponse);
 
         Mockito.verify(mockRequestDispatcher).forward(mockRequest, mockResponse);
     }
+
+
+    /*
+    @Test
+    public void testNumberOfUsers() throws IOException, ServletException {
+        Mockito.when(mockSession.getAttribute("user")).thenReturn("admin");
+
+
+
+
+        adminServlet.doGet(mockRequest, mockResponse);
+
+
+    }
+    */
 
 
 }
