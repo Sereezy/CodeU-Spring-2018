@@ -1,6 +1,35 @@
 
-<%@ page import="codeu.model.store.basic.UserStore" %>
+<%@ page import="java.util.List" %>
 
+<%@ page import="codeu.model.store.basic.UserStore" %>
+<%@ page import="codeu.model.store.basic.ConversationStore" %>
+<%@ page import="codeu.model.store.basic.MessageStore" %>
+
+<%@ page import="codeu.model.data.User" %>
+<%@ page import="codeu.model.data.Conversation" %>
+<%@ page import="codeu.model.data.Message" %>
+<%
+// Users
+List<User> allUsers = UserStore.getInstance().getAllUsers();
+
+String newestUser = "N/A";
+String mostActiveUser = "N/A";
+
+if (allUsers.size() > 0) {
+    newestUser = allUsers.get(allUsers.size() - 1).getName();
+}
+
+
+// Conversations
+List<Conversation> allConversations = ConversationStore.getInstance().getAllConversations();
+
+int messageCount = 0;
+for (Conversation c: allConversations) {
+    messageCount += MessageStore.getInstance().getMessagesInConversation(c.getId()).size();
+}
+
+
+%>
 
 <!DOCTYPE html>
 
@@ -27,11 +56,20 @@
     <div id="container">
         <h1>Administration</h1>
 
-        <h2>Users</h2><hr />
-            <p>Number of users: <%= UserStore.getInstance().getUsers().size() %></p>
+        <h3>Users</h3>
+            <p>Number of users: <%= allUsers.size() %></p>
+            <p>Newest user: <%= newestUser %></p>
+            <p>Most active user: ~coming soon~</p>
+        <hr />
 
-        <h2>Conversations</h2><hr />
-        <h2>Import<h2><hr />
+        <h3>Conversations</h3>
+            <p>Number of conversations: <%= allConversations.size() %></p>
+            <p>Number of messages: <%= messageCount %></p>
+            <p>Average messages per conversation: ~coming soon~</p>
+        <hr />
+
+        <h3>Import<h3>
+            <p>~coming soon~</p>
     </div>
 
 </body>

@@ -79,14 +79,6 @@ public class UserStore {
     return null;
   }
 
-  public List<User> getUsers() {
-      List<User> copy = new ArrayList<>(users);
-      for (User x: copy) {
-          System.out.println(x.getName());
-      }
-      return copy;
-  }
-
   /**
    * Access the User object with the given UUID.
    *
@@ -99,6 +91,10 @@ public class UserStore {
       }
     }
     return null;
+  }
+
+  public List<User> getAllUsers() {
+      return users;
   }
 
   /**
