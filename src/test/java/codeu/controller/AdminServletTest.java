@@ -223,7 +223,33 @@ public class AdminServletTest {
 
   // Number of conversations test
   @Test
-  public void testMostActiveUser_NoUsers() throws IOException, ServletException {
+  public void testNumberOfConversations_NoConversations() throws IOException, ServletException {
+    Mockito.when(mockSession.getAttribute("user")).thenReturn("admin");
+
+    List<Conversation> mockAllConversations = new ArrayList<Conversation>();
+
+    Mockito.when(mockConversationStore.getAllConversations()).thenReturn(mockAllConversations);
+
+    adminServlet.doGet(mockRequest, mockResponse);
+
+    Mockito.verify(mockRequest).setAttribute("numberOfConversations", 0);
+  }
+
+  @Test
+  public void testNumberOfConversations_MultipleConversations() throws IOException, ServletException {
+    Mockito.when(mockSession.getAttribute("user")).thenReturn("admin");
+
+    List<Conversation> mockAllConversations = new ArrayList<Conversation>();
+    UUID mockUserID = UUID.randomUUID();
+    mockAllConversations.add(new Conversation(UUID.randomUUID(), mockUserID, "conv1", Instant.now()));
+    mockAllConversations.add(new Conversation(UUID.randomUUID(), mockUserID, "conv2", Instant.now()));
+    mockAllConversations.add(new Conversation(UUID.randomUUID(), mockUserID, "conv3", Instant.now()));
+
+    Mockito.when(mockConversationStore.getAllConversations()).thenReturn(mockAllConversations);
+
+    adminServlet.doGet(mockRequest, mockResponse);
+
+    Mockito.verify(mockRequest).setAttribute("numberOfConversations", 3);
 
   }
 
