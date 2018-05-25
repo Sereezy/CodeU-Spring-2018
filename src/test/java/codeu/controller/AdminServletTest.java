@@ -100,21 +100,6 @@ public class AdminServletTest {
     }
 
     @Test
-    public void testNumberOfUsers_OneUser() throws IOException, ServletException {
-        Mockito.when(mockSession.getAttribute("user")).thenReturn("admin");
-
-        User u1 = new User(UUID.randomUUID(), "user1", "hashed_pw", Instant.now());
-        List<User> mockAllUsers = new ArrayList<User>();
-        mockAllUsers.add(u1);
-
-        Mockito.when(mockUserStore.getAllUsers()).thenReturn(mockAllUsers);
-
-        adminServlet.doGet(mockRequest, mockResponse);
-
-        Mockito.verify(mockRequest).setAttribute("numberOfUsers", 1);
-    }
-
-    @Test
     public void testNumberOfUsers_MultipleUsers() throws IOException, ServletException {
         Mockito.when(mockSession.getAttribute("user")).thenReturn("admin");
 
@@ -134,6 +119,36 @@ public class AdminServletTest {
         Mockito.verify(mockRequest).setAttribute("numberOfUsers", 3);
     }
 
+    @Test
+    public void testNewestUser_NoUsers() throws IOException, ServletException {
+        Mockito.when(mockSession.getAttribute("user")).thenReturn("admin");
 
+        List<User> mockAllUsers = new ArrayList<User>();
+        Mockito.when(mockUserStore.getAllUsers()).thenReturn(mockAllUsers);
+
+        adminServlet.doGet(mockRequest, mockResponse);
+
+        Mockito.verify(mockRequest).setAttribute("newestUser", "N/A");
+    }
+
+    @Test
+    public void testNewestUser_MultipleUsers() throws IOException, ServletException {
+        Mockito.when(mockSession.getAttribute("user")).thenReturn("admin");
+
+        User u1 = new User(UUID.randomUUID(), "user1", "hashed_pw", Instant.now());
+        User u2 = new User(UUID.randomUUID(), "user2", "hashed_pw", Instant.now());
+        User u3 = new User(UUID.randomUUID(), "user3", "hashed_pw", Instant.now());
+
+        List<User> mockAllUsers = new ArrayList<User>();
+        mockAllUsers.add(u1);
+        mockAllUsers.add(u2);
+        mockAllUsers.add(u3);
+
+        Mockito.when(mockUserStore.getAllUsers()).thenReturn(mockAllUsers);
+
+        adminServlet.doGet(mockRequest, mockResponse);
+
+        Mockito.verify(mockRequest).setAttribute("newestUser", "user3");
+    }
 
 }
