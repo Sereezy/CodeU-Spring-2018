@@ -109,7 +109,7 @@ public class AdminServlet extends HttpServlet {
       }
 
     }
-    if (maxMessageCountUser != null) {
+    if (maxMessageCountUser != null && userStore.getUser(maxMessageCountUser.getKey()) != null) {
       mostActiveUser = userStore.getUser(maxMessageCountUser.getKey()).getName();
     }
 
