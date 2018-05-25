@@ -23,11 +23,19 @@ public class AdminServlet extends HttpServlet {
 
     private HashSet<String> admins;
 
+    private UserStore userStore;
+    private ConversationStore conversationStore;
+    private MessageStore messageStore;
+
     @Override
     public void init() throws ServletException {
         super.init();
 
         setAdminUsernames();
+
+        setUserStore(UserStore.getInstance());
+        setConversationStore(ConversationStore.getInstance());
+        setMessageStore(MessageStore.getInstance());
     }
 
     void setAdminUsernames() {
@@ -40,11 +48,22 @@ public class AdminServlet extends HttpServlet {
         admins.add("kyra");
     }
 
+    void setUserStore(UserStore userStore) {
+        this.userStore = userStore;
+    }
+    void setConversationStore(ConversationStore conversationStore) {
+        this.conversationStore = conversationStore;
+    }
+    void setMessageStore(MessageStore messageStore) {
+        this.messageStore = messageStore;
+    }
+
     void computeAdminStats(HttpServletRequest request) {
+
         // Calculate information to be displayed
 
         // Users
-        List<User> allUsers = UserStore.getInstance().getAllUsers();
+        List<User> allUsers = userStore.getAllUsers();
 
         String newestUser = "N/A";
         String mostActiveUser = "N/A";
@@ -56,7 +75,7 @@ public class AdminServlet extends HttpServlet {
 
 
         // Conversations
-        List<Conversation> allConversations = ConversationStore.getInstance().getAllConversations();
+        List<Conversation> allConversations = conversationStore.getAllConversations();
         List<Message> messagesInConversation;
 
         // HashMap to hold user IDs and the number of messages sent by that user
@@ -67,7 +86,7 @@ public class AdminServlet extends HttpServlet {
 
         for (Conversation c: allConversations) {
 
-            messagesInConversation = MessageStore.getInstance().getMessagesInConversation(c.getId());
+            messagesInConversation = messageStore.getMessagesInConversation(c.getId());
             totalMessageCount += messagesInConversation.size();
 
             for (Message m: messagesInConversation) {
@@ -91,9 +110,8 @@ public class AdminServlet extends HttpServlet {
 
         }
         if (maxMessageCountUser != null) {
-            mostActiveUser = UserStore.getInstance().getUser(maxMessageCountUser.getKey()).getName();
+            mostActiveUser = userStore.getUser(maxMessageCountUser.getKey()).getName();
         }
-
 
         // Set attributes
         request.setAttribute("numberOfUsers", allUsers.size());

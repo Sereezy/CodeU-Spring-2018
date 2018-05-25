@@ -2,9 +2,11 @@
 
 package codeu.controller;
 
-import static org.junit.Assert.fail;
-
 import java.io.IOException;
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -16,6 +18,11 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
+import codeu.model.data.User;
+import codeu.model.store.basic.ConversationStore;
+import codeu.model.store.basic.MessageStore;
+import codeu.model.store.basic.UserStore;
+
 public class AdminServletTest {
 
     private AdminServlet adminServlet;
@@ -24,10 +31,16 @@ public class AdminServletTest {
     private HttpServletResponse mockResponse;
     private RequestDispatcher mockRequestDispatcher;
 
+    private UserStore mockUserStore;
+    private ConversationStore mockConversationStore;
+    private MessageStore mockMessageStore;
+
     @Before
     public void setup() {
         adminServlet = new AdminServlet();
 		adminServlet.setAdminUsernames();
+
+        setUpStores();
 
         mockRequest = Mockito.mock(HttpServletRequest.class);
         mockSession = Mockito.mock(HttpSession.class);
@@ -38,6 +51,18 @@ public class AdminServletTest {
         mockRequestDispatcher = Mockito.mock(RequestDispatcher.class);
         Mockito.when(mockRequest.getRequestDispatcher("/WEB-INF/view/admin.jsp"))
             .thenReturn(mockRequestDispatcher);
+
+    }
+
+    void setUpStores() {
+        mockUserStore = Mockito.mock(UserStore.class);
+        adminServlet.setUserStore(mockUserStore);
+
+        mockConversationStore = Mockito.mock(ConversationStore.class);
+        adminServlet.setConversationStore(mockConversationStore);
+
+        mockMessageStore = Mockito.mock(MessageStore.class);
+        adminServlet.setMessageStore(mockMessageStore);
 
     }
 
@@ -60,19 +85,55 @@ public class AdminServletTest {
     }
 
 
-    /*
     @Test
-    public void testNumberOfUsers() throws IOException, ServletException {
+    public void testNumberOfUsers_NoUsers() throws IOException, ServletException {
         Mockito.when(mockSession.getAttribute("user")).thenReturn("admin");
 
+        List<User> mockAllUsers = new ArrayList<User>();
 
-
+        Mockito.when(mockUserStore.getAllUsers()).thenReturn(mockAllUsers);
 
         adminServlet.doGet(mockRequest, mockResponse);
 
+        Mockito.verify(mockRequest).setAttribute("numberOfUsers", 0);
 
     }
-    */
+
+    @Test
+    public void testNumberOfUsers_OneUser() throws IOException, ServletException {
+        Mockito.when(mockSession.getAttribute("user")).thenReturn("admin");
+
+        User u1 = new User(UUID.randomUUID(), "user1", "hashed_pw", Instant.now());
+        List<User> mockAllUsers = new ArrayList<User>();
+        mockAllUsers.add(u1);
+
+        Mockito.when(mockUserStore.getAllUsers()).thenReturn(mockAllUsers);
+
+        adminServlet.doGet(mockRequest, mockResponse);
+
+        Mockito.verify(mockRequest).setAttribute("numberOfUsers", 1);
+    }
+
+    @Test
+    public void testNumberOfUsers_MultipleUsers() throws IOException, ServletException {
+        Mockito.when(mockSession.getAttribute("user")).thenReturn("admin");
+
+        User u1 = new User(UUID.randomUUID(), "user1", "hashed_pw", Instant.now());
+        User u2 = new User(UUID.randomUUID(), "user2", "hashed_pw", Instant.now());
+        User u3 = new User(UUID.randomUUID(), "user3", "hashed_pw", Instant.now());
+
+        List<User> mockAllUsers = new ArrayList<User>();
+        mockAllUsers.add(u1);
+        mockAllUsers.add(u2);
+        mockAllUsers.add(u3);
+
+        Mockito.when(mockUserStore.getAllUsers()).thenReturn(mockAllUsers);
+
+        adminServlet.doGet(mockRequest, mockResponse);
+
+        Mockito.verify(mockRequest).setAttribute("numberOfUsers", 3);
+    }
+
 
 
 }
