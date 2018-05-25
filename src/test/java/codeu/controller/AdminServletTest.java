@@ -396,15 +396,76 @@ public class AdminServletTest {
     Mockito.verify(mockRequest).setAttribute("avgMessagesPerConvo", 3);
   }
 
-
   // Average words per message tests
   @Test
   public void testAvgWordsPerMessage_NoConvos() throws IOException, ServletException {
     Mockito.when(mockSession.getAttribute("user")).thenReturn("admin");
 
+    List<Conversation> mockAllConversations = new ArrayList<Conversation>();
+    Mockito.when(mockConversationStore.getAllConversations()).thenReturn(mockAllConversations);
+
     adminServlet.doGet(mockRequest, mockResponse);
 
-    Mockito.verify(mockRequest).setAttribute("avgMessagesPerConvo", 3);
+    Mockito.verify(mockRequest).setAttribute("avgWordsPerMessage", 0);
 
   }
+
+
+  @Test
+  public void testAvgWordsPerMessage_NoMessages() throws IOException, ServletException {
+    Mockito.when(mockSession.getAttribute("user")).thenReturn("admin");
+
+    List<Conversation> mockAllConversations = new ArrayList<Conversation>();
+    Conversation emptyConversation = new Conversation(UUID.randomUUID(), UUID.randomUUID(), "empty conversation", Instant.now());
+    mockAllConversations.add(emptyConversation);
+
+    List<Message> mockMessagesInConversation = new ArrayList<Message>();
+
+    Mockito.when(mockConversationStore.getAllConversations()).thenReturn(mockAllConversations);
+    Mockito.when(mockMessageStore.getMessagesInConversation(emptyConversation.getId())).thenReturn(mockMessagesInConversation);
+
+    adminServlet.doGet(mockRequest, mockResponse);
+
+    Mockito.verify(mockRequest).setAttribute("avgWordsPerMessage", 0);
+
+  }
+
+  @Test
+  public void testAvgWordsPerMessage_MultipleMessages() throws IOException, ServletException {
+    Mockito.when(mockSession.getAttribute("user")).thenReturn("admin");
+
+    List<Conversation> mockAllConversations = new ArrayList<Conversation>();
+    UUID mockUserID = UUID.randomUUID();
+
+    Conversation c1 = new Conversation(UUID.randomUUID(), mockUserID, "convo1", Instant.now());
+    Conversation c2 = new Conversation(UUID.randomUUID(), mockUserID, "convo2", Instant.now());
+
+    mockAllConversations.add(c1);
+    mockAllConversations.add(c2);
+
+    List<Message> mockMessagesInConversation1 = new ArrayList<Message>();
+    mockMessagesInConversation1.add(new Message(UUID.randomUUID(), c1.getId(),
+      mockUserID, "a", Instant.now()));
+    mockMessagesInConversation1.add(new Message(UUID.randomUUID(), c1.getId(),
+      mockUserID, "a b", Instant.now()));
+
+    Mockito.when(mockMessageStore.getMessagesInConversation(c1.getId())).thenReturn(mockMessagesInConversation1);
+
+
+    List<Message> mockMessagesInConversation2 = new ArrayList<Message>();
+    mockMessagesInConversation1.add(new Message(UUID.randomUUID(), c2.getId(),
+      mockUserID, "a b c", Instant.now()));
+
+
+    Mockito.when(mockMessageStore.getMessagesInConversation(c2.getId())).thenReturn(mockMessagesInConversation2);
+
+    Mockito.when(mockConversationStore.getAllConversations()).thenReturn(mockAllConversations);
+
+    adminServlet.doGet(mockRequest, mockResponse);
+
+    Mockito.verify(mockRequest).setAttribute("avgWordsPerMessage", 2);
+
+  }
+
+
 }
