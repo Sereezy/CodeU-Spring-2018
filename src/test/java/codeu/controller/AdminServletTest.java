@@ -18,6 +18,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
+import codeu.model.data.Conversation;
+import codeu.model.data.Message;
 import codeu.model.data.User;
 import codeu.model.store.basic.ConversationStore;
 import codeu.model.store.basic.MessageStore;
@@ -84,7 +86,7 @@ public class AdminServletTest {
         Mockito.verify(mockRequestDispatcher).forward(mockRequest, mockResponse);
     }
 
-
+    // Number of users tests
     @Test
     public void testNumberOfUsers_NoUsers() throws IOException, ServletException {
         Mockito.when(mockSession.getAttribute("user")).thenReturn("admin");
@@ -119,6 +121,7 @@ public class AdminServletTest {
         Mockito.verify(mockRequest).setAttribute("numberOfUsers", 3);
     }
 
+    // Newest user tests
     @Test
     public void testNewestUser_NoUsers() throws IOException, ServletException {
         Mockito.when(mockSession.getAttribute("user")).thenReturn("admin");
@@ -149,6 +152,72 @@ public class AdminServletTest {
         adminServlet.doGet(mockRequest, mockResponse);
 
         Mockito.verify(mockRequest).setAttribute("newestUser", "user3");
+    }
+
+    // Most active user tests
+    @Test
+    public void testMostActiveUser_NoUsers() throws IOException, ServletException {
+        Mockito.when(mockSession.getAttribute("user")).thenReturn("admin");
+
+        List<User> mockAllUsers = new ArrayList<User>();
+        Mockito.when(mockUserStore.getAllUsers()).thenReturn(mockAllUsers);
+
+        adminServlet.doGet(mockRequest, mockResponse);
+
+        Mockito.verify(mockRequest).setAttribute("mostActiveUser", "N/A");
+    }
+
+    @Test
+    public void testMostActiveUser_MultipleUsers() throws IOException, ServletException {
+        Mockito.when(mockSession.getAttribute("user")).thenReturn("admin");
+
+        // Set up mock users
+        User u1 = new User(UUID.randomUUID(), "user1", "hashed_pw", Instant.now());
+        User u2 = new User(UUID.randomUUID(), "user2", "hashed_pw", Instant.now());
+        User u3 = new User(UUID.randomUUID(), "user3", "hashed_pw", Instant.now());
+
+        List<User> mockAllUsers = new ArrayList<User>();
+        mockAllUsers.add(u1);
+        mockAllUsers.add(u2);
+        mockAllUsers.add(u3);
+
+        Mockito.when(mockUserStore.getAllUsers()).thenReturn(mockAllUsers);
+
+
+        // Set up mock conversations
+        Conversation mockConversation = new Conversation(UUID.randomUUID(), u1.getId(), "mock conversation", Instant.now());
+
+        List<Conversation> mockAllConversations = new ArrayList<Conversation>();
+        mockAllConversations.add(mockConversation);
+
+        Mockito.when(mockConversationStore.getAllConversations()).thenReturn(mockAllConversations);
+
+
+        // Add mock messages
+        List<Message> mockMessagesInConversation = new ArrayList<Message>();
+        String[][] messages = {
+            {"a"},
+            {"a", "b"},
+            {"a", "b", "c"}
+        };
+        User[] users = {u1, u2, u3};
+
+        for (int u = 0; u < messages.length; u++) {
+            for (String s : messages[u]) {
+                mockMessagesInConversation.add(new Message(UUID.randomUUID(),
+                    mockConversation.getId(),
+                    users[u].getId(),
+                    s, Instant.now()));
+            }
+        }
+
+        Mockito.when(mockMessageStore.getMessagesInConversation(mockConversation.getId())).thenReturn(mockMessagesInConversation);
+
+        Mockito.when(mockUserStore.getUser(u3.getId())).thenReturn(u3);
+
+        adminServlet.doGet(mockRequest, mockResponse);
+
+        Mockito.verify(mockRequest).setAttribute("mostActiveUser", "user3");
     }
 
 }
