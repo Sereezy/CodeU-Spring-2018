@@ -94,7 +94,7 @@ public class UserStore {
   }
 
   public List<User> getAllUsers() {
-      return users;
+    return users;
   }
 
   /**
