@@ -7,7 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 public class ProfileServlet extends HttpServlet {
-	@Override
+	  @Override
     public void init() throws ServletException {
         super.init();
 
@@ -16,9 +16,9 @@ public class ProfileServlet extends HttpServlet {
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response)
         throws IOException, ServletException {
-        
+
         request.getRequestDispatcher("/WEB-INF/view/profile.jsp").forward(request, response);
-        
+
     }
 
     @Override
