@@ -332,7 +332,7 @@ public class AdminServletTest {
 
     adminServlet.doGet(mockRequest, mockResponse);
 
-    Mockito.verify(mockRequest).setAttribute("avgMessagesPerConvo", 0);
+    Mockito.verify(mockRequest).setAttribute("avgMessagesPerConvo", "0.000");
   }
 
   @Test
@@ -351,7 +351,7 @@ public class AdminServletTest {
 
     adminServlet.doGet(mockRequest, mockResponse);
 
-    Mockito.verify(mockRequest).setAttribute("avgMessagesPerConvo", 0);
+    Mockito.verify(mockRequest).setAttribute("avgMessagesPerConvo", "0.000");
   }
 
   @Test
@@ -393,7 +393,7 @@ public class AdminServletTest {
 
     adminServlet.doGet(mockRequest, mockResponse);
 
-    Mockito.verify(mockRequest).setAttribute("avgMessagesPerConvo", 3);
+    Mockito.verify(mockRequest).setAttribute("avgMessagesPerConvo", "3.000");
   }
 
   // Average words per message tests
@@ -406,7 +406,7 @@ public class AdminServletTest {
 
     adminServlet.doGet(mockRequest, mockResponse);
 
-    Mockito.verify(mockRequest).setAttribute("avgWordsPerMessage", 0);
+    Mockito.verify(mockRequest).setAttribute("avgWordsPerMessage", "0.000");
 
   }
 
@@ -426,7 +426,7 @@ public class AdminServletTest {
 
     adminServlet.doGet(mockRequest, mockResponse);
 
-    Mockito.verify(mockRequest).setAttribute("avgWordsPerMessage", 0);
+    Mockito.verify(mockRequest).setAttribute("avgWordsPerMessage", "0.000");
 
   }
 
@@ -463,7 +463,7 @@ public class AdminServletTest {
 
     adminServlet.doGet(mockRequest, mockResponse);
 
-    Mockito.verify(mockRequest).setAttribute("avgWordsPerMessage", 2);
+    Mockito.verify(mockRequest).setAttribute("avgWordsPerMessage", "2.000");
 
   }
 

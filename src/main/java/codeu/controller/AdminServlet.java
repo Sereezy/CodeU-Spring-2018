@@ -120,8 +120,22 @@ public class AdminServlet extends HttpServlet {
 
     request.setAttribute("numberOfConversations", allConversations.size());
     request.setAttribute("numberOfMessages", totalMessageCount);
-    request.setAttribute("avgMessagesPerConvo", (int) ((double) totalMessageCount / allConversations.size()));
-    request.setAttribute("avgWordsPerMessage", (int) ((double) totalWordCount / totalMessageCount));
+
+    String avgMessagesPerConvo;
+    if (allConversations.size() != 0) {
+      avgMessagesPerConvo = String.format("%.3f", (double) totalMessageCount / allConversations.size());
+    } else {
+      avgMessagesPerConvo = "0.000";
+    }
+    request.setAttribute("avgMessagesPerConvo", avgMessagesPerConvo);
+
+    String avgWordsPerMessage;
+    if (totalMessageCount != 0) {
+      avgWordsPerMessage = String.format("%.3f", (double) totalWordCount / totalMessageCount);
+    } else {
+      avgWordsPerMessage = "0.000";
+    }
+    request.setAttribute("avgWordsPerMessage", avgWordsPerMessage);
 
   }
 
