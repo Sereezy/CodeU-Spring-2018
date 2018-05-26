@@ -19,7 +19,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Conversations</title>
+  <title>CodeU Chat App</title>
   <link rel="stylesheet" href="/css/main.css">
 </head>
 <body>
