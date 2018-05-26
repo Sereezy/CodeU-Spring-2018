@@ -91,8 +91,8 @@ public class AdminServlet extends HttpServlet {
 
       for (Message m: messagesInConversation) {
 
-        int tmp = userMessageCounts.getOrDefault(m.getAuthorId(), 0);
-        userMessageCounts.put(m.getAuthorId(), tmp + 1);
+        int previousMessageCount = userMessageCounts.getOrDefault(m.getAuthorId(), 0);
+        userMessageCounts.put(m.getAuthorId(), previousMessageCount + 1);
 
         totalWordCount += m.getContent().split("\\s+").length;
       }
@@ -113,21 +113,12 @@ public class AdminServlet extends HttpServlet {
       mostActiveUser = userStore.getUser(maxMessageCountUser.getKey()).getName();
     }
 
-    // Set attributes
-    request.setAttribute("numberOfUsers", allUsers.size());
-    request.setAttribute("newestUser", newestUser);
-    request.setAttribute("mostActiveUser", mostActiveUser);
-
-    request.setAttribute("numberOfConversations", allConversations.size());
-    request.setAttribute("numberOfMessages", totalMessageCount);
-
     String avgMessagesPerConvo;
     if (allConversations.size() != 0) {
       avgMessagesPerConvo = String.format("%.3f", (double) totalMessageCount / allConversations.size());
     } else {
       avgMessagesPerConvo = "0.000";
     }
-    request.setAttribute("avgMessagesPerConvo", avgMessagesPerConvo);
 
     String avgWordsPerMessage;
     if (totalMessageCount != 0) {
@@ -135,6 +126,15 @@ public class AdminServlet extends HttpServlet {
     } else {
       avgWordsPerMessage = "0.000";
     }
+
+    // Set attributes
+    request.setAttribute("numberOfUsers", allUsers.size());
+    request.setAttribute("newestUser", newestUser);
+    request.setAttribute("mostActiveUser", mostActiveUser);
+
+    request.setAttribute("numberOfConversations", allConversations.size());
+    request.setAttribute("numberOfMessages", totalMessageCount);
+    request.setAttribute("avgMessagesPerConvo", avgMessagesPerConvo);
     request.setAttribute("avgWordsPerMessage", avgWordsPerMessage);
 
   }
