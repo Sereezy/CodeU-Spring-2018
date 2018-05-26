@@ -1,4 +1,4 @@
-/*package codeu.controller;
+package codeu.controller;
 
 import static org.junit.Assert.fail;
 
@@ -39,10 +39,10 @@ public class ProfileServletTest {
 
     }
 
-    
+
     @Test
     public void testDoGet() throws IOException, ServletException {
-      activityFeedServlet.doGet(mockRequest, mockResponse);
+      profileServlet.doGet(mockRequest, mockResponse);
 
       Mockito.verify(mockRequestDispatcher).forward(mockRequest, mockResponse);
     }
@@ -50,4 +50,3 @@ public class ProfileServletTest {
 
 
 }
-*/
