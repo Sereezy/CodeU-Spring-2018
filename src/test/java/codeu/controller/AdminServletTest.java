@@ -52,7 +52,7 @@ public class AdminServletTest {
     mockResponse = Mockito.mock(HttpServletResponse.class);
     mockRequestDispatcher = Mockito.mock(RequestDispatcher.class);
     Mockito.when(mockRequest.getRequestDispatcher("/WEB-INF/view/admin.jsp"))
-      .thenReturn(mockRequestDispatcher);
+        .thenReturn(mockRequestDispatcher);
 
   }
 
@@ -205,9 +205,7 @@ public class AdminServletTest {
     for (int u = 0; u < messages.length; u++) {
       for (String s : messages[u]) {
         mockMessagesInConversation.add(new Message(UUID.randomUUID(),
-          mockConversation.getId(),
-          users[u].getId(),
-          s, Instant.now()));
+            mockConversation.getId(), users[u].getId(), s, Instant.now()));
       }
     }
 
@@ -300,16 +298,16 @@ public class AdminServletTest {
 
     List<Message> mockMessagesInConversation1 = new ArrayList<Message>();
     mockMessagesInConversation1.add(new Message(UUID.randomUUID(), c1.getId(),
-      mockUserID, "message 1", Instant.now()));
+        mockUserID, "message 1", Instant.now()));
 
     Mockito.when(mockMessageStore.getMessagesInConversation(c1.getId())).thenReturn(mockMessagesInConversation1);
 
 
     List<Message> mockMessagesInConversation2 = new ArrayList<Message>();
     mockMessagesInConversation1.add(new Message(UUID.randomUUID(), c2.getId(),
-      mockUserID, "message 2", Instant.now()));
+        mockUserID, "message 2", Instant.now()));
     mockMessagesInConversation1.add(new Message(UUID.randomUUID(), c2.getId(),
-      mockUserID, "message 3", Instant.now()));
+        mockUserID, "message 3", Instant.now()));
 
     Mockito.when(mockMessageStore.getMessagesInConversation(c2.getId())).thenReturn(mockMessagesInConversation2);
 
@@ -369,22 +367,22 @@ public class AdminServletTest {
 
     List<Message> mockMessagesInConversation1 = new ArrayList<Message>();
     mockMessagesInConversation1.add(new Message(UUID.randomUUID(), c1.getId(),
-      mockUserID, "message 1", Instant.now()));
+        mockUserID, "message 1", Instant.now()));
     mockMessagesInConversation1.add(new Message(UUID.randomUUID(), c1.getId(),
-      mockUserID, "message 2", Instant.now()));
+        mockUserID, "message 2", Instant.now()));
 
     Mockito.when(mockMessageStore.getMessagesInConversation(c1.getId())).thenReturn(mockMessagesInConversation1);
 
 
     List<Message> mockMessagesInConversation2 = new ArrayList<Message>();
     mockMessagesInConversation1.add(new Message(UUID.randomUUID(), c2.getId(),
-      mockUserID, "message 3", Instant.now()));
+        mockUserID, "message 3", Instant.now()));
     mockMessagesInConversation1.add(new Message(UUID.randomUUID(), c2.getId(),
-      mockUserID, "message 4", Instant.now()));
+        mockUserID, "message 4", Instant.now()));
     mockMessagesInConversation1.add(new Message(UUID.randomUUID(), c2.getId(),
-      mockUserID, "message 5", Instant.now()));
+        mockUserID, "message 5", Instant.now()));
     mockMessagesInConversation1.add(new Message(UUID.randomUUID(), c2.getId(),
-      mockUserID, "message 6", Instant.now()));
+        mockUserID, "message 6", Instant.now()));
 
     Mockito.when(mockMessageStore.getMessagesInConversation(c2.getId())).thenReturn(mockMessagesInConversation2);
 
@@ -445,16 +443,16 @@ public class AdminServletTest {
 
     List<Message> mockMessagesInConversation1 = new ArrayList<Message>();
     mockMessagesInConversation1.add(new Message(UUID.randomUUID(), c1.getId(),
-      mockUserID, "a", Instant.now()));
+        mockUserID, "a", Instant.now()));
     mockMessagesInConversation1.add(new Message(UUID.randomUUID(), c1.getId(),
-      mockUserID, "a b", Instant.now()));
+        mockUserID, "a b", Instant.now()));
 
     Mockito.when(mockMessageStore.getMessagesInConversation(c1.getId())).thenReturn(mockMessagesInConversation1);
 
 
     List<Message> mockMessagesInConversation2 = new ArrayList<Message>();
     mockMessagesInConversation1.add(new Message(UUID.randomUUID(), c2.getId(),
-      mockUserID, "a b c", Instant.now()));
+        mockUserID, "a b c", Instant.now()));
 
 
     Mockito.when(mockMessageStore.getMessagesInConversation(c2.getId())).thenReturn(mockMessagesInConversation2);
@@ -466,6 +464,5 @@ public class AdminServletTest {
     Mockito.verify(mockRequest).setAttribute("avgWordsPerMessage", "2.000");
 
   }
-
 
 }
