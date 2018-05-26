@@ -13,7 +13,6 @@
 // limitations under the License.
 
 package codeu.controller;
-
 import codeu.model.data.Conversation;
 import codeu.model.data.Message;
 import codeu.model.data.User;
@@ -129,13 +128,8 @@ public class ChatServlet extends HttpServlet {
     }
 
     String requestUrl = request.getRequestURI();
-    String conversationTitle = requestUrl.substring("/chat/".length());
-
-    Conversation conversation = conversationStore.getConversationWithTitle(conversationTitle);
-    if (conversation == null) {
-      // couldn't find conversation, redirect to conversation list
-      response.sendRedirect("/conversations");
-      return;
+    String userProfile = requestUrl.substring("/user/".length());
+   response.sendDirect(/user/ + username);
     }
 
     String messageContent = request.getParameter("message");
