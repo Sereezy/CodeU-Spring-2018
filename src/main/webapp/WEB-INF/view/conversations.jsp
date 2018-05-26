@@ -42,7 +42,7 @@
     <% } %>
 
     <% if(request.getSession().getAttribute("user") != null){ %>
-      <h1>New Conversation</h1>
+      <a>Hello <%=request.getSession().getAttribute("user")%>!<a>
       <form action="/conversations" method="POST">
           <div class="form-group">
             <label class="form-control-label">Title:</label>
