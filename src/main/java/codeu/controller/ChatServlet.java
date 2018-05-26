@@ -129,7 +129,8 @@ public class ChatServlet extends HttpServlet {
 
     String requestUrl = request.getRequestURI();
     String userProfile = requestUrl.substring("/user/".length());
-   response.sendDirect(/user/ + username);
+   request.setAttribute("profile", profile);
+   request.getRequestDispatcher("/WEB-INF/view/profile.jsp").forward(request, response);
     }
 
     String messageContent = request.getParameter("message");
