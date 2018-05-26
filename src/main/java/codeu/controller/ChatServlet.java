@@ -11,11 +11,9 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-
 package codeu.controller;
 
 import codeu.model.data.Conversation;
-
 import codeu.model.data.Message;
 import codeu.model.data.User;
 import codeu.model.store.basic.ConversationStore;
@@ -30,11 +28,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.jsoup.Jsoup;
-import org.jsoup.parser.Parser;
 import org.jsoup.safety.Whitelist;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.safety.Cleaner;
 
 /** Servlet class responsible for the chat page. */
 public class ChatServlet extends HttpServlet {
@@ -145,15 +139,15 @@ public class ChatServlet extends HttpServlet {
 
     String messageContent = request.getParameter("message");
 
-    // allows users to enter basic HTML tags that are not a threat to security
-    String HTMLMessageContent = clean(messageContent, Whitelist.basic());
-    
+    // this removes any HTML from the message content
+    String cleanedMessageContent = Jsoup.clean(messageContent, Whitelist.none());
+
     Message message =
         new Message(
             UUID.randomUUID(),
             conversation.getId(),
             user.getId(),
-            HTMLMessageContent,
+            cleanedMessageContent,
             Instant.now());
 
     messageStore.addMessage(message);
@@ -161,12 +155,4 @@ public class ChatServlet extends HttpServlet {
     // redirect to a GET request
     response.sendRedirect("/chat/" + conversationTitle);
   }
-
-public static String clean(String cleanedMessage, Whitelist whitelist ) {
-	Document dirty = Parser.parseBodyFragment(cleanedMessage, "");
-	Cleaner cleaner = new Cleaner(Whitelist.basic());
-	Document clean = cleaner.clean(dirty);
-	clean.outputSettings().prettyPrint(false);
-	return clean.body().html();
-	}
 }
