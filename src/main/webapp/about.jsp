@@ -48,7 +48,7 @@
         <li><strong>Features/Changes added thus far: </strong>
         <ul>~Changed font size, color, style.</ul>
         <ul>~Changed Text</ul>
-        </li>  
+        </li>
      </ul>
      </font></p>
 
