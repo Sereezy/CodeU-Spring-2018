@@ -138,9 +138,9 @@ public class AdminServletTest {
   public void testNewestUser_MultipleUsers() throws IOException, ServletException {
     Mockito.when(mockSession.getAttribute("user")).thenReturn("admin");
 
-    User u1 = new User(UUID.randomUUID(), "user1", "hashed_pw", Instant.now());
-    User u2 = new User(UUID.randomUUID(), "user2", "hashed_pw", Instant.now());
-    User u3 = new User(UUID.randomUUID(), "user3", "hashed_pw", Instant.now());
+    User u1 = new User(UUID.randomUUID(), "user1", "hashed_pw", Instant.ofEpochSecond(200));
+    User u2 = new User(UUID.randomUUID(), "user2", "hashed_pw", Instant.ofEpochSecond(300));
+    User u3 = new User(UUID.randomUUID(), "user3", "hashed_pw", Instant.ofEpochSecond(100));
 
     List<User> mockAllUsers = new ArrayList<User>();
     mockAllUsers.add(u1);
@@ -151,7 +151,7 @@ public class AdminServletTest {
 
     adminServlet.doGet(mockRequest, mockResponse);
 
-    Mockito.verify(mockRequest).setAttribute("newestUser", "user3");
+    Mockito.verify(mockRequest).setAttribute("newestUser", "user2");
   }
 
   // Most active user tests

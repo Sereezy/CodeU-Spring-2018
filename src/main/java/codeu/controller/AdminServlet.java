@@ -1,6 +1,7 @@
 package codeu.controller;
 
 import java.io.IOException;
+import java.time.Instant;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -69,8 +70,12 @@ public class AdminServlet extends HttpServlet {
     String mostActiveUser = "N/A";
 
     // get newest user
-    if (allUsers.size() > 0) {
-      newestUser = allUsers.get(allUsers.size() - 1).getName();
+    Instant newestInstant = null;
+    for (User u : allUsers) {
+      if (newestInstant == null || u.getCreationTime().compareTo(newestInstant) > 0) {
+        newestInstant = u.getCreationTime();
+        newestUser = u.getName();
+      }
     }
 
 
@@ -154,10 +159,11 @@ public class AdminServlet extends HttpServlet {
 
   }
 
-
+  /*
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response)
     throws IOException, ServletException {
 
   }
+  */
 }
