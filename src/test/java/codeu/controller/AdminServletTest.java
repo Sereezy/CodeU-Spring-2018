@@ -196,9 +196,9 @@ public class AdminServletTest {
     // Add mock messages
     List<Message> mockMessagesInConversation = new ArrayList<Message>();
     String[][] messages = {
-      {"a"},
-      {"a", "b"},
-      {"a", "b", "c"}
+      {"a"},          // u1's messages
+      {"a", "b"},     // u2's messages
+      {"a", "b", "c"} // u3's messages
     };
     User[] users = {u1, u2, u3};
 
