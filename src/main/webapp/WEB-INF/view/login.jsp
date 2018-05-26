@@ -30,6 +30,7 @@
       <a href="/login">Login</a>
     <% } %>
     <a href="/about.jsp">About</a>
+    <a href="/profile/<%=request.getSession().getAttribute("user")%>">Profile</a>
     <a href="/activityfeed">Activity Feed</a>
   </nav>
 
