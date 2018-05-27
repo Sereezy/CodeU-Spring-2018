@@ -93,6 +93,10 @@ public class UserStore {
     return null;
   }
 
+  public List<User> getAllUsers() {
+    return users;
+  }
+
   /**
    * Add a new user to the current set of users known to the application. This should only be called
    * to add a new user, not to update an existing user.
@@ -127,4 +131,3 @@ public class UserStore {
     this.users = users;
   }
 }
-
