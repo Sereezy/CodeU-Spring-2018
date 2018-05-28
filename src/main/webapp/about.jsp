@@ -31,11 +31,8 @@
     <% } %>
     <a href="/about.jsp">About</a>
     <a href="/activityfeed">Activity Feed</a>
-    <% if (request.getSession().getAttribute("user") != null) { %>
-      <a href="/profile/<%=request.getSession().getAttribute("user")%>">Profile</a>
-    <% } else{ %>
-      <a></a>
-    <% } %>
+    <a href="/profile/<%=request.getSession().getAttribute("user")%>">Profile</a>
+
   </nav>
 
   <div id="container">
