@@ -14,6 +14,7 @@
 
 package codeu.model.store.persistence;
 
+import codeu.model.data.About;
 import codeu.model.data.Conversation;
 import codeu.model.data.Message;
 import codeu.model.data.User;
@@ -78,6 +79,26 @@ public class PersistentDataStore {
     }
 
     return users;
+  }
+  public List<About> loadAbout() throws PersistentDataStoreException {
+
+    List<About> about = new ArrayList<>();
+
+    Query query = new Query("chat-messages").addSort("creation_time", SortDirection.ASCENDING);
+    PreparedQuery results = datastore.prepare(query);
+
+    for (Entity entity : results.asIterable()) {
+      try {
+        UUID uuid = UUID.fromString((String) entity.getProperty("uuid"));
+        String content = (String) entity.getProperty("content");
+        About about = new About(content);
+        about.add(about);
+      } catch (Exception e) {
+        throw new PersistentDataStoreException(e);
+      }
+    }
+
+    return about;
   }
 
   /**
@@ -169,6 +190,12 @@ public class PersistentDataStore {
     messageEntity.setProperty("creation_time", message.getCreationTime().toString());
     datastore.put(messageEntity);
   }
+  public void writeThrough(About about) {
+    Entity aboutEntity = new Entity("chat-messages", about.getId().toString());
+    aboutEntity.setProperty("uuid", about.getId().toString());
+    aboutEntity.setProperty("content", about.getContent());
+    datastore.put(aboutEntity);
+  }
 
   /** Write a Conversation object to the Datastore service. */
   public void writeThrough(Conversation conversation) {
@@ -180,4 +207,3 @@ public class PersistentDataStore {
     datastore.put(conversationEntity);
   }
 }
-

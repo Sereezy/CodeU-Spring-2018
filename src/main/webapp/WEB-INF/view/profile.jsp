@@ -1,3 +1,6 @@
+<%@ page import="codeu.model.store.basic.AboutStore" %>
+<%@ page import="codeu.model.data.About" %>
+
 <!DOCTYPE html>
 
 <html>
