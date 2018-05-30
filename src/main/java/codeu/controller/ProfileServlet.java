@@ -24,6 +24,8 @@ public class ProfileServlet extends HttpServlet {
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response)
         throws IOException, ServletException {
-
+					String userValue = request.getParameter("about");
+					System.out.println(userValue);
+					response.sendRedirect("/profile/" + request.getSession().getAttribute("user"));
     }
 }
