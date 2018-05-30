@@ -6,8 +6,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public class ActivityFeedServlet extends HttpServlet {
-	@Override
+public class ProfileServlet extends HttpServlet {
+	  @Override
     public void init() throws ServletException {
         super.init();
 
@@ -17,7 +17,7 @@ public class ActivityFeedServlet extends HttpServlet {
     public void doGet(HttpServletRequest request, HttpServletResponse response)
         throws IOException, ServletException {
 
-        request.getRequestDispatcher("/WEB-INF/view/activityfeed.jsp").forward(request, response);
+        request.getRequestDispatcher("/WEB-INF/view/profile.jsp").forward(request, response);
 
     }
 

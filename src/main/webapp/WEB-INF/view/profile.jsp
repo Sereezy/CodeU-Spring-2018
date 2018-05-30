@@ -1,10 +1,9 @@
-
 <!DOCTYPE html>
 
 <html>
 
 <head>
-    <title>Activity Feed</title>
+    <title>Profile</title>
     <link rel="stylesheet" href="/css/main.css">
 </head>
 
@@ -17,7 +16,6 @@
       <% } else{ %>
         <a href="/login">Login</a>
       <% } %>
-      <a href="/about.jsp">About</a>
       <a href="/activityfeed">Activity Feed</a>
       <% if (request.getSession().getAttribute("user") != null) { %>
         <a href="/profile/<%=request.getSession().getAttribute("user")%>">Profile</a>
@@ -27,7 +25,7 @@
     </nav>
 
     <div id="container">
-        <p>This is the Activity Feed!</p>
+        <p>Welcome to your profile!</p>
     </div>
 
 </body>
