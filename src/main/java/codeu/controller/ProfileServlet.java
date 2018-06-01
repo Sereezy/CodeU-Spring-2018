@@ -1,7 +1,7 @@
 package codeu.controller;
 
-import codeu.model.data.About;
-import codeu.model.store.basic.AboutStore;
+import codeu.model.data.UserProfile;
+import codeu.model.store.basic.UserProfileStore;
 import java.util.List;
 import java.util.UUID;
 import java.io.IOException;
@@ -13,14 +13,17 @@ import org.jsoup.Jsoup;
 import org.jsoup.safety.Whitelist;
 
 public class ProfileServlet extends HttpServlet {
+
+	private ProfileUserStore profileuserStore;
+
 	  @Override
     public void init() throws ServletException {
         super.init();
-				setAboutStore(AboutStore.getinstance());
+				setUserProfileStore(UserProfileStore.getinstance());
 
     }
-		void setAboutStore(AboutStore aboutStore) {
-			this.aboutStore = aboutStore;
+		void setUserProfileStore(UserProfileStore userprofileStore) {
+			this.userprofileStore = userprofileStore;
 		}
 
     @Override
@@ -34,7 +37,7 @@ public class ProfileServlet extends HttpServlet {
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response)
         throws IOException, ServletException {
-					String userValue = request.getParameter("about");
+					String userValue = request.getParameter("userprofile");
 					System.out.println(userValue);
 					response.sendRedirect("/profile/" + request.getSession().getAttribute("user"));
     }
