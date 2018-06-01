@@ -14,6 +14,7 @@
 
 package codeu.model.store.persistence;
 
+import codeu.model.data.UserProfile;
 import codeu.model.data.Conversation;
 import codeu.model.data.Message;
 import codeu.model.data.User;
@@ -102,5 +103,9 @@ public class PersistentStorageAgent {
   /** Write a Conversation object to the Datastore service. */
   public void writeThrough(Message message) {
     persistentDataStore.writeThrough(message);
+  }
+
+  public List<UserProfile> loadMessages() throws PersistentDataStoreException {
+    return persistentDataStore.loadMessages();
   }
 }

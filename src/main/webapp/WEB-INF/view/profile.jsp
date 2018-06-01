@@ -1,5 +1,5 @@
-<%@ page import="codeu.model.store.basic.AboutStore" %>
-<%@ page import="codeu.model.data.About" %>
+<%@ page import="codeu.model.store.basic.UserProfileStore" %>
+<%@ page import="codeu.model.data.UserProfile" %>
 
 <!DOCTYPE html>
 
@@ -30,7 +30,7 @@
     <div id="container"><h1><%=request.getSession().getAttribute("user")%>'s Profile</h1>
       <hr/>
       <form action="/profile/<%=request.getSession().getAttribute("user")%>" method="POST">
-        <input type="text" name="about">
+        <input type="text" name="userprofile">
           <br/><br/>
         <button type="submit">Submit</button>
       </form>

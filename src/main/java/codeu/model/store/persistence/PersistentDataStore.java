@@ -14,7 +14,7 @@
 
 package codeu.model.store.persistence;
 
-import codeu.model.data.About;
+import codeu.model.data.UserProfile;
 import codeu.model.data.Conversation;
 import codeu.model.data.Message;
 import codeu.model.data.User;
@@ -80,25 +80,31 @@ public class PersistentDataStore {
 
     return users;
   }
-  public List<About> loadAbout() throws PersistentDataStoreException {
 
-    List<About> about = new ArrayList<>();
+  /**
+   * @throws PersistentDataStoreException
+   */
 
-    Query query = new Query("chat-messages").addSort("creation_time", SortDirection.ASCENDING);
+  public List<ProfileUser> loadProfileUsers() throws PersistentDataStoreException {
+
+    List<ProfileUser> profileusers = new ArrayList<>();
+
+    Query query = new Query("chat-userprofiles");
     PreparedQuery results = datastore.prepare(query);
 
     for (Entity entity : results.asIterable()) {
       try {
         UUID uuid = UUID.fromString((String) entity.getProperty("uuid"));
+        UUID authorUuid = UUID.fromString((String) entity.getProperty("author_uuid"));
         String content = (String) entity.getProperty("content");
-        About about = new About(content);
-        about.add(about);
+        UserProfile userprofile = new UserProfile(uuid, content, authorUuid);
+        profileusers.add(profileuser);
       } catch (Exception e) {
         throw new PersistentDataStoreException(e);
       }
     }
 
-    return about;
+    return profileusers;
   }
 
   /**
@@ -190,11 +196,12 @@ public class PersistentDataStore {
     messageEntity.setProperty("creation_time", message.getCreationTime().toString());
     datastore.put(messageEntity);
   }
-  public void writeThrough(About about) {
-    Entity aboutEntity = new Entity("chat-messages", about.getId().toString());
-    aboutEntity.setProperty("uuid", about.getId().toString());
-    aboutEntity.setProperty("content", about.getContent());
-    datastore.put(aboutEntity);
+  public void writeThrough(ProfileUser profileuser) {
+    Entity profileuserEntity = new Entity("chat-userprofile", profileuser.getId().toString());
+    profileuserEntity.setProperty("uuid", profileuser.getId().toString());
+    profileuserEntity.setProperty("author_uuid", profileuser.getAuthorId().toString());
+    profileuserEntity.setProperty("content", profileuser.getContent());
+    datastore.put(profileuserEntity);
   }
 
   /** Write a Conversation object to the Datastore service. */
