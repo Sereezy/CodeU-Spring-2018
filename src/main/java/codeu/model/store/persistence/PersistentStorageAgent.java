@@ -105,7 +105,11 @@ public class PersistentStorageAgent {
     persistentDataStore.writeThrough(message);
   }
 
-  public List<UserProfile> loadMessages() throws PersistentDataStoreException {
-    return persistentDataStore.loadMessages();
+  /**
+   * @throws PersistentDataStoreException
+   */
+
+  public List<UserProfile> loadUserprofiles() throws PersistentDataStoreException {
+    return persistentDataStore.loadUserprofiles();
   }
 }
