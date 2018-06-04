@@ -33,7 +33,7 @@ public class ServerStartupListener implements ServletContextListener {
       List<Message> messages = PersistentStorageAgent.getInstance().loadMessages();
       MessageStore.getInstance().setMessages(messages);
 
-      List<UserProfile> userprofiles = PersistentStorageAgent.getInstance().loadUserprofiles();
+      List<UserProfile> userprofiles = PersistentStorageAgent.getInstance().loadUserProfiles();
       UserProfileStore.getInstance().setUserProfiles(userprofiles);
 
     } catch (PersistentDataStoreException e) {
