@@ -19,11 +19,11 @@ public class ProfileServlet extends HttpServlet {
 	  @Override
     public void init() throws ServletException {
         super.init();
-				setUserProfileStore(UserProfileStore.getinstance());
+				setUserProfileStore(UserProfileStore.getInstance());
 
     }
 		void setUserProfileStore(UserProfileStore userprofileStore) {
-			this.userprofileStore = userprofileStore;
+			this.profileuserStore = userprofileStore;
 		}
 
     @Override

@@ -97,7 +97,7 @@ public class PersistentDataStore {
         UUID uuid = UUID.fromString((String) entity.getProperty("uuid"));
         UUID authorUuid = UUID.fromString((String) entity.getProperty("author_uuid"));
         String content = (String) entity.getProperty("content");
-        UserProfile userprofile = new UserProfile(uuid, content, authorUuid);
+        UserProfile userprofile = new UserProfile(uuid, authorUuid,content,);
         userprofiles.add(profileuser);
       } catch (Exception e) {
         throw new PersistentDataStoreException(e);

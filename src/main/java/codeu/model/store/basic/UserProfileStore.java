@@ -35,7 +35,7 @@ public class UserProfileStore {
    }
 
    public void addUserProfile(UserProfile userprofile) {
-     about.add(userprofile);
+     userprofiles.add(userprofile);
      persistentStorageAgent.writeThrough(userprofile);
    }
 
