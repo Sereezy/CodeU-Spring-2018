@@ -97,14 +97,14 @@ public class PersistentDataStore {
         UUID uuid = UUID.fromString((String) entity.getProperty("uuid"));
         UUID authorUuid = UUID.fromString((String) entity.getProperty("author_uuid"));
         String content = (String) entity.getProperty("content");
-        UserProfile userprofile = new UserProfile(uuid, authorUuid,content,);
-        userprofiles.add(profileuser);
+        UserProfile userprofile = new UserProfile(uuid, authorUuid,content);
+        profileUsers.add(userprofile);
       } catch (Exception e) {
         throw new PersistentDataStoreException(e);
       }
     }
 
-    return profileusers;
+    return profileUsers;
   }
 
   /**
@@ -197,11 +197,11 @@ public class PersistentDataStore {
     datastore.put(messageEntity);
   }
   public void writeThrough(UserProfile userprofile) {
-    Entity profileuserEntity = new Entity("chat-userprofile", profileuser.getId().toString());
-    profileuserEntity.setProperty("uuid", profileuser.getId().toString());
-    profileuserEntity.setProperty("author_uuid", profileuser.getAuthorId().toString());
-    profileuserEntity.setProperty("content", profileuser.getContent());
-    datastore.put(profileuserEntity);
+    Entity profileuserEntity = new Entity("chat-userprofile", userprofile.getId().toString());
+    profileuserEntity.setProperty("uuid", userprofile.getId().toString());
+    profileuserEntity.setProperty("author_uuid", userprofile.getAuthorId().toString());
+    profileuserEntity.setProperty("content", userprofile.getContent());
+    datastore.put(userprofileEntity);
   }
 
   /** Write a Conversation object to the Datastore service. */
