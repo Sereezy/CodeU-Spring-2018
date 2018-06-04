@@ -201,7 +201,7 @@ public class PersistentDataStore {
     profileuserEntity.setProperty("uuid", userprofile.getId().toString());
     profileuserEntity.setProperty("author_uuid", userprofile.getAuthorId().toString());
     profileuserEntity.setProperty("content", userprofile.getContent());
-    datastore.put(userprofileEntity);
+    datastore.put(profileuserEntity);
   }
 
   /** Write a Conversation object to the Datastore service. */
