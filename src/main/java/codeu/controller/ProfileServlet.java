@@ -14,7 +14,7 @@ import org.jsoup.safety.Whitelist;
 
 public class ProfileServlet extends HttpServlet {
 
-	private ProfileUserStore profileuserStore;
+	private UserProfileStore profileuserStore;
 
 	  @Override
     public void init() throws ServletException {
