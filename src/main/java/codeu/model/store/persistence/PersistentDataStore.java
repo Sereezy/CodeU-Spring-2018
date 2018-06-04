@@ -85,9 +85,9 @@ public class PersistentDataStore {
    * @throws PersistentDataStoreException
    */
 
-  public List<ProfileUser> loadProfileUsers() throws PersistentDataStoreException {
+  public List<UserProfile> loadUserProfiles() throws PersistentDataStoreException {
 
-    List<ProfileUser> profileusers = new ArrayList<>();
+    List<UserProfile> profileUsers = new ArrayList<>();
 
     Query query = new Query("chat-userprofiles");
     PreparedQuery results = datastore.prepare(query);
@@ -98,7 +98,7 @@ public class PersistentDataStore {
         UUID authorUuid = UUID.fromString((String) entity.getProperty("author_uuid"));
         String content = (String) entity.getProperty("content");
         UserProfile userprofile = new UserProfile(uuid, content, authorUuid);
-        profileusers.add(profileuser);
+        userprofiles.add(profileuser);
       } catch (Exception e) {
         throw new PersistentDataStoreException(e);
       }
@@ -196,7 +196,7 @@ public class PersistentDataStore {
     messageEntity.setProperty("creation_time", message.getCreationTime().toString());
     datastore.put(messageEntity);
   }
-  public void writeThrough(ProfileUser profileuser) {
+  public void writeThrough(UserProfile userprofile) {
     Entity profileuserEntity = new Entity("chat-userprofile", profileuser.getId().toString());
     profileuserEntity.setProperty("uuid", profileuser.getId().toString());
     profileuserEntity.setProperty("author_uuid", profileuser.getAuthorId().toString());
