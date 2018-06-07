@@ -19,7 +19,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Conversations</title>
+  <title>CodeU Chat App</title>
   <link rel="stylesheet" href="/css/main.css">
 </head>
 <body>
@@ -34,6 +34,11 @@
     <% } %>
     <a href="/about.jsp">About</a>
     <a href="/activityfeed">Activity Feed</a>
+    <% if (request.getSession().getAttribute("user") != null) { %>
+      <a href="/profile/<%=request.getSession().getAttribute("user")%>">Profile</a>
+    <% } else{ %>
+      <a></a>
+    <% } %>
   </nav>
 
   <div id="container">
@@ -43,7 +48,7 @@
     <% } %>
 
     <% if(request.getSession().getAttribute("user") != null){ %>
-      <h1>New Conversation</h1>
+      <a>Hello <%=request.getSession().getAttribute("user")%>!<a>
       <form action="/conversations" method="POST">
           <div class="form-group">
             <label class="form-control-label">Title:</label>
