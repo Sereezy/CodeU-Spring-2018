@@ -10,6 +10,7 @@
 </head>
 
 <body>
+
   <nav>
     <a id="navTitle" href="/">CodeU Chat App</a>
     <a href="/conversations">Conversations</a>
@@ -26,7 +27,33 @@
     <h1>Administration
     </h1>
 
-    <button> Add Test Data </button>
+    <button id="testDataButton" onclick="testDataButtonPressed()">Add Test Data</button>
+    <form id="dataGenOptions" style="display:none" action="admin" method="POST">
+      Number of test users: <input type="number" name="numUsers"><br>
+      Number of test conversations: <input type="number" name="numConvos"><br>
+      Number of test messages: <input type="number" name="numMessages"><br>
+      <input type="submit" value="Submit">
+    </form>
+
+    <script>
+      var dataGenOptionsShown = false;
+      function testDataButtonPressed() {
+        console.log(dataGenOptionsShown);
+        let button = document.getElementById("testDataButton");
+        let options = document.getElementById("dataGenOptions");
+
+        if (dataGenOptionsShown) {
+          options.style.display = "none";
+          button.innerHTML = "Add Test Data"
+        } else {
+          options.style.display = "block";
+          button.innerHTML = "Hide"
+        }
+
+        dataGenOptionsShown = !dataGenOptionsShown;
+      }
+
+    </script>
 
     <h3>Users</h3>
       <p>Number of users: <%= request.getAttribute("numberOfUsers") %></p>
@@ -45,6 +72,7 @@
       <p>~coming soon~</p>
       <button>Submit</button>
   </div>
+
 
 </body>
 

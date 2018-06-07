@@ -29,18 +29,18 @@ class TestDataGenerator {
   private ConversationStore conversationStore;
   private MessageStore messageStore;
 
-  private List<UUID> testUsers;
-  private List<UUID> testConversations;
-  private List<UUID> testMessages;
+  private List<User> testUsers;
+  private List<Conversation> testConversations;
+  private List<Message> testMessages;
 
   private TestDataGenerator() {
     setUserStore(UserStore.getInstance());
     setConversationStore(ConversationStore.getInstance());
     setMessageStore(MessageStore.getInstance());
 
-    testUsers = new ArrayList<UUID>();
-    testConversations = new ArrayList<UUID>();
-    testMessages = new ArrayList<UUID>();
+    testUsers = new ArrayList<User>();
+    testConversations = new ArrayList<Conversation>();
+    testMessages = new ArrayList<Message>();
   }
 
   void setUserStore(UserStore userStore) {
@@ -83,24 +83,34 @@ class TestDataGenerator {
           Instant.ofEpochSecond(ThreadLocalRandom.current().nextInt(1, 10001)));
 
       userStore.addUser(newUser);
-      testUsers.add(newUser.getId());
+      testUsers.add(newUser);
     }
   }
 
   public void addTestConversations(int numberOfConversations) {
+    if (testUsers.size() == 0) {
+      System.out.println("Unable to create test conversations. Please create test users first.");
+      return;
+    }
+
     Conversation newConversation;
     User owner;
     for (int i = 0; i < numberOfConversations; i++) {
-      owner = userStore.getAllUsers().get(ThreadLocalRandom.current().nextInt(0, userStore.getAllUsers().size()));
+      owner = testUsers.get(ThreadLocalRandom.current().nextInt(0, testUsers.size()));
       newConversation = new Conversation(UUID.randomUUID(), owner.getId(), "conversation"+testConversations.size(),
           Instant.now());
 
       conversationStore.addConversation(newConversation);
-      testConversations.add(newConversation.getId());
+      testConversations.add(newConversation);
     }
   }
 
   public void addTestMessages(int numberOfMessages) {
+    if (testConversations.size() == 0) {
+      System.out.println("Unable to create test messages. Please create test conversations first.");
+      return;
+    }
+
     Message newMessage;
     Conversation conversation;
     User author;
@@ -121,6 +131,7 @@ class TestDataGenerator {
           content, Instant.now());
 
       messageStore.addMessage(newMessage);
+      testMessages.add(newMessage);
     }
   }
 }

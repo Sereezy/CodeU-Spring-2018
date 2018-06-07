@@ -7,7 +7,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.ThreadLocalRandom;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -149,7 +148,7 @@ public class AdminServlet extends HttpServlet {
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response)
-    throws IOException, ServletException {
+      throws IOException, ServletException {
 
     String user = (String) request.getSession().getAttribute("user");
 
@@ -162,5 +161,27 @@ public class AdminServlet extends HttpServlet {
 
   }
 
+  @Override
+  public void doPost(HttpServletRequest request, HttpServletResponse response)
+      throws IOException, ServletException{
+
+    String user = (String) request.getSession().getAttribute("user");
+
+    if (admins.contains(user)) {
+      TestDataGenerator generator = TestDataGenerator.getInstance();
+      int numUsers = Integer.parseInt(request.getParameter("numUsers"));
+      int numConvos = Integer.parseInt(request.getParameter("numConvos"));
+      int numMessages = Integer.parseInt(request.getParameter("numMessages"));
+
+      generator.addTestUsers(numUsers);
+      generator.addTestConversations(numConvos);
+      generator.addTestMessages(numMessages);
+
+      computeAdminStats(request);
+      request.getRequestDispatcher("/WEB-INF/view/admin.jsp").forward(request, response);
+    } else {
+      response.sendError(HttpServletResponse.SC_NOT_FOUND);
+    }
+  }
 
 }
