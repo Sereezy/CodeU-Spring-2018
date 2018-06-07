@@ -23,7 +23,10 @@
   </nav>
 
   <div id="container">
-    <h1>Administration</h1>
+    <h1>Administration
+    </h1>
+
+    <button> Add Test Data </button>
 
     <h3>Users</h3>
       <p>Number of users: <%= request.getAttribute("numberOfUsers") %></p>
