@@ -13,7 +13,7 @@ import org.mockito.Mockito;
 
 public class UserProfileTest {
 
-  private UserProfileStore userProfileStore;
+  private UserProfileStoreTest userProfileStore;
   private PersistentStorageAgent mockPersistentStorageAgent;
 
   private final UserProfile PROFILE_ONE =
