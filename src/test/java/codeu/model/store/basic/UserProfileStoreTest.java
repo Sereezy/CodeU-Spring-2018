@@ -11,9 +11,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-public class UserProfileTest {
+public class UserProfileStoreTest {
 
-  private UserProfileStoreTest userProfileStore;
+  private UserProfileStore userProfileStore;
   private PersistentStorageAgent mockPersistentStorageAgent;
 
   private final UserProfile PROFILE_ONE =
