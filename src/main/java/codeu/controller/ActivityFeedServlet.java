@@ -67,11 +67,10 @@ public class ActivityFeedServlet extends HttpServlet {
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response)
         throws IOException, ServletException {
+
     	List<User> allUsers = this.userStore.getAllUsers();
     	List<Conversation> allConversations = this.conversationStore.getAllConversations();
-    	//“Grace created a new conversation: Conversation_42”
-    	
-    			
+    	    			
     	List<List<Message>> allMessages = new ArrayList<>();
     	
 		for (int i = 0; i < allConversations.size(); i++) {
@@ -80,12 +79,12 @@ public class ActivityFeedServlet extends HttpServlet {
 			
 		}
         
-        
-    	request.setAttribute("users", allUsers);
+        request.setAttribute("users", allUsers);
     	request.setAttribute("conversations", allConversations);
     	request.setAttribute("messages", allMessages);
+
         request.getRequestDispatcher("/WEB-INF/view/activityfeed.jsp").forward(request, response);
-        
+
     }
 
     @Override
