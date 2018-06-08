@@ -5,13 +5,11 @@
 <%@ page import="codeu.model.data.User" %>
 <%@ page import="codeu.model.data.Message" %>
 <%@ page import="codeu.model.store.basic.UserStore" %>
-<%@ page import="codeu.model.store.basic.ConversationStore" %>
 
 <%
 List<User> allUsers = (List<User>) request.getAttribute("users");
 List<Conversation> allConversations = (List<Conversation>) request.getAttribute("conversations");
 List<List<Message>> allMessages = (List<List<Message>>) request.getAttribute("messages");
-UserStore userStore = (UserStore) request.getAttribute("userStore");
 %>
 <!DOCTYPE html>
 
@@ -57,7 +55,7 @@ UserStore userStore = (UserStore) request.getAttribute("userStore");
 			        String title = conversation.getTitle();
 			        String creationTime = conversation.getCreationTime().toString();
 			        UUID ownerID = conversation.getOwnerId();
-			        String ownerName = userStore.getUser(ownerID).getName();
+			        String ownerName =  UserStore.getInstance().getUser(ownerID).getName();
 			        
 			    %>
 			      <li><strong><%= creationTime %>:</strong> <%= ownerName %> created <%= title %></li>
@@ -76,7 +74,7 @@ UserStore userStore = (UserStore) request.getAttribute("userStore");
 				        String creationTime = message.getCreationTime().toString();
 				        UUID authorId = message.getAuthorId();
 				        UUID conversationId = message.getConversationId();
-				        String authorName = userStore.getUser(authorId).getName();
+				        String authorName =  UserStore.getInstance().getUser(authorId).getName();
 				        String conversationTitle = allConversations.get(i).getTitle();
 				        			        
 					    %>

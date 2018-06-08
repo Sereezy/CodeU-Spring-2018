@@ -82,7 +82,6 @@ public class ActivityFeedServlet extends HttpServlet {
         
         
     	request.setAttribute("users", allUsers);
-    	request.setAttribute("userStore", this.userStore);
     	request.setAttribute("conversations", allConversations);
     	request.setAttribute("messages", allMessages);
         request.getRequestDispatcher("/WEB-INF/view/activityfeed.jsp").forward(request, response);
