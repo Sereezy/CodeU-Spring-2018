@@ -42,12 +42,12 @@ public class ActivityFeedServletTest {
     }
 
     
-    @Test
+    /*@Test
     public void testDoGet() throws IOException, ServletException {
       activityFeedServlet.doGet(mockRequest, mockResponse);
 
       Mockito.verify(mockRequestDispatcher).forward(mockRequest, mockResponse);
-    }
+    }*/
 
 
 
