@@ -8,9 +8,6 @@
 <%@ page import="codeu.model.store.basic.UserStore" %>
 
 <%
-List<User> allUsers = (List<User>) request.getAttribute("users");
-List<Conversation> allConversations = (List<Conversation>) request.getAttribute("conversations");
-List<List<Message>> allMessages = (List<List<Message>>) request.getAttribute("messages");
 List<Object> allActivity = (List<Object>) request.getAttribute("activity");
 Hashtable<Message, String> conversationTitles = (Hashtable<Message, String>) request.getAttribute("conversationTitles");
 %>

@@ -100,11 +100,7 @@ public class ActivityFeedServlet extends HttpServlet {
 		
 		Comparator<Object> byCreationDate = Comparator.comparing(o -> getCreationTime(o)).reversed();
 		allActivity = allActivity.stream().sorted(byCreationDate).collect(Collectors.toList());
-        
-        request.setAttribute("users", allUsers);
-    	request.setAttribute("conversations", allConversations);
-    	request.setAttribute("messages", allMessages);
-    	
+ 
     	request.setAttribute("activity", allActivity);
     	request.setAttribute("conversationTitles", messageToConversationTitle);
 
