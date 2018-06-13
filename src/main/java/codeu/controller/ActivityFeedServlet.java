@@ -100,7 +100,11 @@ public class ActivityFeedServlet extends HttpServlet {
 		
 		Comparator<Object> byCreationDate = Comparator.comparing(o -> getCreationTime(o)).reversed();
 		allActivity = allActivity.stream().sorted(byCreationDate).collect(Collectors.toList());
- 
+		
+		if (allActivity.size() > 25){ //truncate list if too long
+			allActivity = new ArrayList<Object>(allActivity.subList(0, 25));
+		}
+		
     	request.setAttribute("activity", allActivity);
     	request.setAttribute("conversationTitles", messageToConversationTitle);
 

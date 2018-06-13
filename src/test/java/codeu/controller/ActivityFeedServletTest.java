@@ -123,7 +123,10 @@ public class ActivityFeedServletTest {
       
       Comparator<Object> byCreationDate = Comparator.comparing(o -> getCreationTime(o)).reversed();
       fakeAllActivity = fakeAllActivity.stream().sorted(byCreationDate).collect(Collectors.toList());
-
+      if (fakeAllActivity.size() > 25){
+    	  fakeAllActivity = new ArrayList<Object>(fakeAllActivity.subList(0, 25));
+      }
+      
       activityFeedServlet.doGet(mockRequest, mockResponse);
       
       Mockito.verify(mockRequest).setAttribute("activity", fakeAllActivity);

@@ -42,7 +42,7 @@ Hashtable<Message, String> conversationTitles = (Hashtable<Message, String>) req
     </nav>
 
     <div id="container">
-        <p>This is the Activity Feed!</p>
+        <p>This is the Activity Feed! It shows the 25 most recent events. </p>
         <div id="activities_container">
 	        <ul>
 			    <%
