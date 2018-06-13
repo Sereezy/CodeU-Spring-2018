@@ -14,10 +14,13 @@
 
 package codeu.model.store.basic;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.UUID;
+
 import codeu.model.data.Conversation;
 import codeu.model.store.persistence.PersistentStorageAgent;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Store class that uses in-memory data structures to hold values and automatically loads from and
@@ -75,6 +78,10 @@ public class ConversationStore {
     persistentStorageAgent.writeThrough(conversation);
   }
 
+  public void addVolatileConversation(Conversation conversation) {
+    conversations.add(conversation);
+  }
+
   /** Check whether a Conversation title is already known to the application. */
   public boolean isTitleTaken(String title) {
     // This approach will be pretty slow if we have many Conversations.
@@ -99,5 +106,35 @@ public class ConversationStore {
   /** Sets the List of Conversations stored by this ConversationStore. */
   public void setConversations(List<Conversation> conversations) {
     this.conversations = conversations;
+  }
+
+  public void deleteConversation(Conversation conversation) {
+
+    for (int i = 0; i < conversations.size(); i++) {
+      if (conversations.get(i) == conversation) {
+        conversations.remove(i);
+        return;
+      }
+    }
+
+    persistentStorageAgent.deleteEntity(conversation.getId());
+  }
+
+  public void deleteConversations(List<Conversation> conversations) {
+    List<UUID> ids = new ArrayList<UUID>();
+    HashSet<Conversation> conversationSet = new HashSet<Conversation>();
+    for (Conversation c : conversations) {
+      ids.add(c.getId());
+      conversationSet.add(c);
+    }
+
+    for (int i = conversations.size() - 1; i >= 0; i--) {
+      if (conversationSet.contains(conversations.get(i))) {
+        conversations.remove(i);
+      }
+    }
+
+    persistentStorageAgent.deleteEntities(ids);
+
   }
 }

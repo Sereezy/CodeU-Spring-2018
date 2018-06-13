@@ -12,6 +12,8 @@ import codeu.model.data.User;
 import codeu.model.store.basic.ConversationStore;
 import codeu.model.store.basic.MessageStore;
 import codeu.model.store.basic.UserStore;
+import codeu.model.store.persistence.PersistentDataStoreException;
+import codeu.model.store.persistence.PersistentStorageAgent;
 
 class TestDataGenerator {
 
@@ -19,11 +21,18 @@ class TestDataGenerator {
 
   public static TestDataGenerator getInstance() {
     if (instance == null) {
-      instance = new TestDataGenerator();
+      instance = new TestDataGenerator(PersistentStorageAgent.getInstance());
+      instance.init();
     }
 
     return instance;
   }
+
+  public static TestDataGenerator getTestInstance(PersistentStorageAgent persistentStorageAgent) {
+    return new TestDataGenerator(persistentStorageAgent);
+  }
+
+  private PersistentStorageAgent persistentStorageAgent;
 
   private UserStore userStore;
   private ConversationStore conversationStore;
@@ -33,14 +42,18 @@ class TestDataGenerator {
   private List<Conversation> testConversations;
   private List<Message> testMessages;
 
-  private TestDataGenerator() {
-    setUserStore(UserStore.getInstance());
-    setConversationStore(ConversationStore.getInstance());
-    setMessageStore(MessageStore.getInstance());
+  private TestDataGenerator(PersistentStorageAgent persistentStorageAgent) {
+    this.persistentStorageAgent = persistentStorageAgent;
 
     testUsers = new ArrayList<User>();
     testConversations = new ArrayList<Conversation>();
     testMessages = new ArrayList<Message>();
+  }
+
+  private void init() {
+    setUserStore(UserStore.getInstance());
+    setConversationStore(ConversationStore.getInstance());
+    setMessageStore(MessageStore.getInstance());
   }
 
   void setUserStore(UserStore userStore) {
@@ -82,7 +95,7 @@ class TestDataGenerator {
       newUser = new User(UUID.randomUUID(), "user"+testUsers.size(), "password",
           Instant.ofEpochSecond(ThreadLocalRandom.current().nextInt(1, 10001)));
 
-      userStore.addUser(newUser);
+      userStore.addVolatileUser(newUser);
       testUsers.add(newUser);
     }
   }
@@ -100,7 +113,7 @@ class TestDataGenerator {
       newConversation = new Conversation(UUID.randomUUID(), owner.getId(), "conversation"+testConversations.size(),
           Instant.now());
 
-      conversationStore.addConversation(newConversation);
+      conversationStore.addVolatileConversation(newConversation);
       testConversations.add(newConversation);
     }
   }
@@ -117,7 +130,7 @@ class TestDataGenerator {
     int numberOfWords;
     String content;
     for (int i = 0; i < numberOfMessages; i++) {
-      author = userStore.getAllUsers().get(ThreadLocalRandom.current().nextInt(0, userStore.getAllUsers().size()));
+      author = testUsers.get(ThreadLocalRandom.current().nextInt(0, userStore.getAllUsers().size()));
       conversation = conversationStore.getAllConversations().get(ThreadLocalRandom.current().
           nextInt(0, conversationStore.getAllConversations().size()));
 
@@ -130,8 +143,18 @@ class TestDataGenerator {
       newMessage = new Message(UUID.randomUUID(), conversation.getId(), author.getId(),
           content, Instant.now());
 
-      messageStore.addMessage(newMessage);
+      messageStore.addVolatileMessage(newMessage);
       testMessages.add(newMessage);
+    }
+  }
+
+  public void clearTestData() {
+    try {
+      userStore.setUsers(persistentStorageAgent.loadUsers());
+      conversationStore.setConversations(persistentStorageAgent.loadConversations());
+      messageStore.setMessages(persistentStorageAgent.loadMessages());
+    } catch(PersistentDataStoreException e) {
+      e.printStackTrace();
     }
   }
 }

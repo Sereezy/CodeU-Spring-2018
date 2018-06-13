@@ -19,6 +19,8 @@ import codeu.model.data.User;
 import codeu.model.store.basic.ConversationStore;
 import codeu.model.store.basic.MessageStore;
 import codeu.model.store.basic.UserStore;
+import codeu.model.store.persistence.PersistentDataStoreException;
+import codeu.model.store.persistence.PersistentStorageAgent;
 
 public class AdminServlet extends HttpServlet {
 
@@ -168,15 +170,19 @@ public class AdminServlet extends HttpServlet {
     String user = (String) request.getSession().getAttribute("user");
 
     if (admins.contains(user)) {
-      TestDataGenerator generator = TestDataGenerator.getInstance();
-      int numUsers = Integer.parseInt(request.getParameter("numUsers"));
-      int numConvos = Integer.parseInt(request.getParameter("numConvos"));
-      int numMessages = Integer.parseInt(request.getParameter("numMessages"));
+      switch (request.getParameter("id")) {
+        case "dataGenOptions":
 
-      generator.addTestUsers(numUsers);
-      generator.addTestConversations(numConvos);
-      generator.addTestMessages(numMessages);
-
+          addTestData(parseInt(request.getParameter("numUsers")),
+              parseInt(request.getParameter("numConvos")),
+              parseInt(request.getParameter("numMessages")));
+          break;
+        case "clearTestData":
+          clearTestData();
+          break;
+        default:
+          break;
+      }
       computeAdminStats(request);
       request.getRequestDispatcher("/WEB-INF/view/admin.jsp").forward(request, response);
     } else {
@@ -184,4 +190,23 @@ public class AdminServlet extends HttpServlet {
     }
   }
 
+  private int parseInt(String str) {
+    try {
+      return Integer.parseInt(str);
+    } catch (NumberFormatException e) {
+      return 0;
+    }
+  }
+
+  void addTestData(int numUsers, int numConvos, int numMessages) {
+    TestDataGenerator generator = TestDataGenerator.getInstance();
+
+    generator.addTestUsers(numUsers);
+    generator.addTestConversations(numConvos);
+    generator.addTestMessages(numMessages);
+  }
+
+  void clearTestData() {
+    TestDataGenerator.getInstance().clearTestData();
+  }
 }

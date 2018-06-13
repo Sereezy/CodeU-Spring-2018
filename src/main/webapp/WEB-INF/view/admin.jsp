@@ -29,10 +29,15 @@
 
     <button id="testDataButton" onclick="testDataButtonPressed()">Add Test Data</button>
     <form id="dataGenOptions" style="display:none" action="admin" method="POST">
-      Number of test users: <input type="number" name="numUsers"><br>
-      Number of test conversations: <input type="number" name="numConvos"><br>
-      Number of test messages: <input type="number" name="numMessages"><br>
-      <input type="submit" value="Submit">
+      <input type="hidden" name="id" value="dataGenOptions">
+      Number of test users: <input type="number" name="numUsers" value=0><br>
+      Number of test conversations: <input type="number" name="numConvos" value=0><br>
+      Number of test messages: <input type="number" name="numMessages" value=0><br>
+      <button type="submit">Submit</button>
+    </form>
+    <form id="clearTestData" action="admin" method="POST">
+      <input type="hidden" name="id" value="clearTestData">
+      <button type="submit">Clear all test data</button>
     </form>
 
     <script>
