@@ -170,7 +170,7 @@ public class PersistentDataStoreTest {
     UserProfile resultUserProfileOne = resultUserProfiles.get(0);
     Assert.assertEquals(profileIdOne, inputProfileOne.getId());
     Assert.assertEquals(authorUserOne, inputProfileOne.getId());
-    Assert.assertEquals(profileContentOne, inpProfileOne.getContent());
+    Assert.assertEquals(profileContentOne, inputProfileOne.getContent());
 
     UserProfile resultUserProfileTwo = resultUserProfiles.get(1);
     Assert.assertEquals(profileIdTwo, inputProfileTwo.getId());
