@@ -43,4 +43,8 @@ public class UserProfileStore {
      this.userprofiles = userprofiles;
    }
 
+   public List<UserProfile> getUserProfileContent() {
+     return userprofiles;
+   }
+
 }
