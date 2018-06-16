@@ -89,7 +89,7 @@ public class PersistentDataStore {
 
     List<UserProfile> profileUsers = new ArrayList<>();
 
-    Query query = new Query("chat-userprofiles");
+    Query query = new Query("chat-userprofile");
     PreparedQuery results = datastore.prepare(query);
 
     for (Entity entity : results.asIterable()) {
