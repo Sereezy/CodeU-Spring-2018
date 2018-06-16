@@ -68,7 +68,7 @@ public class UserProfileStoreTest {
             "test bio");
 
     userProfileStore.addUserProfile(inputBio);
-    UserProfile resultUserProfile = userProfileStore.getUserProfileContent().get(0);
+    UserProfile resultUserProfile = userProfileStore.getUserProfileContent().get(3);
 
     assertEquals(inputBio, resultUserProfile);
     Mockito.verify(mockPersistentStorageAgent).writeThrough(inputBio);
