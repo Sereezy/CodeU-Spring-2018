@@ -16,15 +16,18 @@ public class UserProfileStoreTest {
   private UserProfileStore userProfileStore;
   private PersistentStorageAgent mockPersistentStorageAgent;
 
+  private final UUID ABOUT_PROFILE = UUID.randomUUID();
   private final UserProfile PROFILE_ONE =
       new UserProfile(
           UUID.randomUUID(),
+          ABOUT_PROFILE,
           UUID.randomUUID(),
           "bio one");
 
   private final UserProfile PROFILE_TWO =
       new UserProfile(
           UUID.randomUUID(),
+          ABOUT_PROFILE,
           UUID.randomUUID(),
           "bio two");
 
@@ -50,7 +53,7 @@ public class UserProfileStoreTest {
 
   @Test
   public void testGetUserProfileContent() {
-    List<UserProfile> resultUserProfile = userProfileStore.getUserProfileContent(USER_ID_ONE);
+    List<UserProfile> resultUserProfile = userProfileStore.getUserProfileContent(ABOUT_PROFILE);
 
     Assert.assertEquals(2, resultUserProfile.size());
     assertEquals(PROFILE_ONE, resultUserProfile.get(0));
@@ -59,18 +62,19 @@ public class UserProfileStoreTest {
 
   @Test
   public void testAddUserProfile() {
-    UserProfile inputUserProfile =
+    UUID inputUserProfile = UUID.randomUUID();
+    UserProfile inputBio =
         new UserProfile(
             UUID.randomUUID(),
+            inputUserProfile,
             UUID.randomUUID(),
-            "test message",
-            Instant.now());
+            "test bio");
 
     userProfileStore.addUserProfile(inputUserProfile);
-    UserProfile resultUserProfile = userProfileStore.getUserProfileContent(inputConversationId).get(0);
+    UserProfile resultUserProfile = userProfileStore.getUserProfileContent(inputUserProfile).get(0);
 
-    assertEquals(inputMessage, resultMessage);
-    Mockito.verify(mockPersistentStorageAgent).writeThrough(inputMessage);
+    assertEquals(inputUserProfile, resultUserProfile);
+    Mockito.verify(mockPersistentStorageAgent).writeThrough(inputUserProfile);
   }
 
   private void assertEquals(UserProfile expectedUserProfile, UserProfile actualUserProfile) {
