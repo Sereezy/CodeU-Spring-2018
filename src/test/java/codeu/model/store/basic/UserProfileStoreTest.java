@@ -53,11 +53,11 @@ public class UserProfileStoreTest {
 
   @Test
   public void testGetUserProfileContent() {
-    List<UserProfile> resultUserProfile = userProfileStore.getUserProfileContent(ABOUT_PROFILE);
+    List<UserProfile> resultUserProfiles = userProfileStore.getUserProfileContent(ABOUT_PROFILE);
 
-    Assert.assertEquals(2, resultUserProfile.size());
-    assertEquals(PROFILE_ONE, resultUserProfile.get(0));
-    assertEquals(PROFILE_TWO, resultUserProfile.get(1));
+    Assert.assertEquals(2, resultUserProfiles.size());
+    assertEquals(PROFILE_ONE, resultUserProfiles.get(0));
+    assertEquals(PROFILE_TWO, resultUserProfiles.get(1));
   }
 
   @Test
