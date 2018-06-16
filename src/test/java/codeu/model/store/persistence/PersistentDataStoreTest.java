@@ -151,14 +151,16 @@ public class PersistentDataStoreTest {
   @Test
   public void testSaveAndLoadUserProfiles() throws PersistentDataStoreException {
     UUID profileIdOne = UUID.fromString("10000000-2222-3333-4444-555555555555");
+    UUID authorUserOne = UUID.fromString("10000005-2222-3333-4444-555555555555");
     String profileContentOne = "test content one";
     UserProfile inputProfileOne =
-        new UserProfile(profileIdOne, profileContentOne);
+        new UserProfile(profileIdOne, authorUserOne, profileContentOne);
 
     UUID profileIdTwo = UUID.fromString("10000003-2222-3333-4444-555555555555");
+    UUID authorUserTwo = UUID.fromString("10000005-2222-3333-4444-555555555555");
     String profileContentTwo = "test content two";
     UserProfile inputProfileTwo =
-        new UserProfile(profileIdTwo, profileContentTwo);
+        new UserProfile(profileIdTwo, authorUserTwo, profileContentTwo);
 
     persistentDataStore.writeThrough(inputProfileOne);
     persistentDataStore.writeThrough(inputProfileTwo);
@@ -167,10 +169,12 @@ public class PersistentDataStoreTest {
 
     UserProfile resultUserProfileOne = resultUserProfiles.get(0);
     Assert.assertEquals(profileIdOne, resultUserProfiles.getId());
+    Assert.assertEquals(authorUserOne, resultUserProfiles.getId());
     Assert.assertEquals(profileContentOne, resultUserProfileOne.getContent());
 
     UserProfile resultUserProfileTwo = resultUserProfiles.get(1);
-    Assert.assertEquals(ProfileIdTwo, resultUserProfiles.getId());
+    Assert.assertEquals(profileIdTwo, resultUserProfiles.getId());
+    Assert.assertEquals(authorUserTwo, resultUserProfiles.getId());
     Assert.assertEquals(profileContentOne, resultUserProfileTwo.getContent());
   }
 }
