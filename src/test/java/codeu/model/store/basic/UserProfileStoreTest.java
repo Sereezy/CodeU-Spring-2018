@@ -2,7 +2,7 @@ package codeu.model.store.basic;
 
 import codeu.model.data.UserProfile;
 import codeu.model.store.persistence.PersistentStorageAgent;
-import java.time.Instant;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -20,21 +20,21 @@ public class UserProfileStoreTest {
       new UserProfile(
           UUID.randomUUID(),
           UUID.randomUUID(),
-          "bio one",
-          Instant.ofEpochMilli(1000));
+          "bio one");
+
   private final UserProfile PROFILE_TWO =
       new UserProfile(
           UUID.randomUUID(),
           UUID.randomUUID(),
-          "bio two",
-          Instant.ofEpochMilli(1000));
+          "bio two");
+
   private final UserProfile PROFILE_THREE =
       new UserProfile(
           UUID.randomUUID(),
           UUID.randomUUID(),
           UUID.randomUUID(),
-          "bio three",
-          Instant.ofEpochMilli(1000));
+          "bio three");
+
 
   @Before
   public void setup() {
