@@ -1,8 +1,8 @@
 package codeu.model.store.persistence;
 
 import codeu.model.data.Conversation;
-import codeu.model.data.UserProfile;
 import codeu.model.data.Message;
+import codeu.model.data.UserProfile;
 import codeu.model.data.User;
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
@@ -146,39 +146,31 @@ public class PersistentDataStoreTest {
     Assert.assertEquals(authorTwo, resultMessageTwo.getAuthorId());
     Assert.assertEquals(contentTwo, resultMessageTwo.getContent());
     Assert.assertEquals(creationTwo, resultMessageTwo.getCreationTime());
+  }
 
+  @Test
+  public void testSaveAndLoadUserProfiles() throws PersistentDataStoreException {
+    UUID profileIdOne = UUID.fromString("10000000-2222-3333-4444-555555555555");
+    String profileContentOne = "test content one";
+    UserProfile inputProfileOne =
+        new UserProfile(profileIdOne, profileContentOne);
+
+    UUID profileIdTwo = UUID.fromString("10000003-2222-3333-4444-555555555555");
+    String profileContentTwo = "test content two";
+    UserProfile inputProfileTwo =
+        new UserProfile(profileIdTwo, profileContentTwo);
 
     persistentDataStore.writeThrough(inputProfileOne);
     persistentDataStore.writeThrough(inputProfileTwo);
 
     List<UserProfile> resultUserProfiles = persistentDataStore.loadUserProfiles();
 
-    UserProfiles resultProfileOne = resultUserProfiles.get(0);
-    Assert.assertEquals(idOne, resultProfileOne.getId());
-    Assert.assertEquals(ownerOne, resultProfileOne.getOwnerId());
-    Assert.assertEquals(titleOne, resultProfileOne.getTitle());
-    Assert.assertEquals(creationOne, resultProfileOne.getCreationTime());
+    UserProfile resultUserProfileOne = resultUserProfiles.get(0);
+    Assert.assertEquals(profileIdOne, resultUserProfiles.getId());
+    Assert.assertEquals(profileContentOne, resultUserProfileOne.getContent());
 
-    Conversation resultProfileTwo = resultConversations.get(1);
-    Assert.assertEquals(idTwo, resultProfileTwo.getId());
-    Assert.assertEquals(ownerTwo, resultProfileTwo.getOwnerId());
-    Assert.assertEquals(titleTwo, resultProfileTwo.getTitle());
-    Assert.assertEquals(creationTwo, resultProfileTwo.getCreationTime());
-  }
-
-  @Test
-  public void testSaveAndLoadUserProfiles() throws PersistentDataStoreException {
-    UUID idOne = UUID.fromString("10000000-2222-3333-4444-555555555555");
-    UUID authorOne = UUID.fromString("10000002-2222-3333-4444-555555555555");
-    String contentOne = "test content one";
-    UserProfile inputProfileOne =
-        new UserProfile(idOne, authorOne, contentOne);
-
-    UUID idTwo = UUID.fromString("10000003-2222-3333-4444-555555555555");
-    UUID conversationTwo = UUID.fromString("10000004-2222-3333-4444-555555555555");
-    UUID authorTwo = UUID.fromString("10000005-2222-3333-4444-555555555555");
-    String contentTwo = "test content one";
-    UserProfile inputProfileTwo =
-        new UserProfile(idTwo, authorTwo, contentTwo);
+    UserProfile resultUserProfileTwo = resultUserProfiles.get(1);
+    Assert.assertEquals(ProfileIdTwo, resultUserProfiles.getId());
+    Assert.assertEquals(profileContentOne, resultUserProfileTwo.getContent());
   }
 }
