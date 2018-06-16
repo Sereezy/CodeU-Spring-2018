@@ -52,9 +52,10 @@ public class UserProfileStoreTest {
   public void testGetUserProfileContent() {
     List<UserProfile> resultUserProfiles = userProfileStore.getUserProfileContent();
 
-    Assert.assertEquals(2, resultUserProfiles.size());
+    Assert.assertEquals(3, resultUserProfiles.size());
     assertEquals(PROFILE_ONE, resultUserProfiles.get(0));
     assertEquals(PROFILE_TWO, resultUserProfiles.get(1));
+    assertEquals(PROFILE_THREE, resultUserProfiles.get(2));
   }
 
   @Test
