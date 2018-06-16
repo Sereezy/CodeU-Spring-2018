@@ -1,3 +1,6 @@
+<%@ page import="codeu.model.store.basic.UserProfileStore" %>
+<%@ page import="codeu.model.data.UserProfile" %>
+
 <!DOCTYPE html>
 
 <html>
@@ -24,8 +27,13 @@
       <% } %>
     </nav>
 
-    <div id="container">
-        <p>Welcome to your profile!</p>
+    <div id="container"><h1><%=request.getSession().getAttribute("user")%>'s Profile</h1>
+      <hr/>
+      <form action="/profile/<%=request.getSession().getAttribute("user")%>" method="POST">
+        <input type="text" name="userprofile">
+          <br/><br/>
+        <button type="submit">Submit</button>
+      </form>
     </div>
 
 </body>
