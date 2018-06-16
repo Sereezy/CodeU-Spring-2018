@@ -50,7 +50,7 @@ public class UserProfileStoreTest {
 
   @Test
   public void testGetUserProfileContent() {
-    List<UserProfile> resultUserProfiles = userProfileStore.getUserProfileContent(ABOUT_PROFILE);
+    List<UserProfile> resultUserProfiles = userProfileStore.getUserProfileContent();
 
     Assert.assertEquals(2, resultUserProfiles.size());
     assertEquals(PROFILE_ONE, resultUserProfiles.get(0));
@@ -67,10 +67,10 @@ public class UserProfileStoreTest {
             "test bio");
 
     userProfileStore.addUserProfile(inputBio);
-    UserProfile resultUserProfile = userProfileStore.getUserProfileContent(inputUserProfile).get(0);
+    UserProfile resultUserProfile = userProfileStore.getUserProfileContent().get(0);
 
     assertEquals(inputBio, resultUserProfile);
-    Mockito.verify(mockPersistentStorageAgent).writeThrough(inputUserProfile);
+    Mockito.verify(mockPersistentStorageAgent).writeThrough(inputBio);
   }
 
   private void assertEquals(UserProfile expectedUserProfile, UserProfile actualUserProfile) {
