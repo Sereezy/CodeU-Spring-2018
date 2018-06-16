@@ -21,19 +21,16 @@ public class UserProfileStoreTest {
       new UserProfile(
           UUID.randomUUID(),
           ABOUT_PROFILE,
-          UUID.randomUUID(),
           "bio one");
 
   private final UserProfile PROFILE_TWO =
       new UserProfile(
           UUID.randomUUID(),
           ABOUT_PROFILE,
-          UUID.randomUUID(),
           "bio two");
 
   private final UserProfile PROFILE_THREE =
       new UserProfile(
-          UUID.randomUUID(),
           UUID.randomUUID(),
           UUID.randomUUID(),
           "bio three");
@@ -48,7 +45,7 @@ public class UserProfileStoreTest {
     userProfileList.add(PROFILE_ONE);
     userProfileList.add(PROFILE_TWO);
     userProfileList.add(PROFILE_THREE);
-    UserProfileStore.setUserProfiles(userProfileList);
+    userProfileStore.setUserProfiles(userProfileList);
   }
 
   @Test
@@ -67,7 +64,6 @@ public class UserProfileStoreTest {
         new UserProfile(
             UUID.randomUUID(),
             inputUserProfile,
-            UUID.randomUUID(),
             "test bio");
 
     userProfileStore.addUserProfile(inputUserProfile);

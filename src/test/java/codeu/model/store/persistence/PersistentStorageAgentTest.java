@@ -84,7 +84,7 @@ public class PersistentStorageAgentTest {
   public void testWriteThroughUserProfile() {
     UserProfile userProfile =
         new UserProfile(
-            UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID(), "test content");
+            UUID.randomUUID(), UUID.randomUUID(), "test content");
     persistentStorageAgent.writeThrough(userProfile);
     Mockito.verify(mockPersistentDataStore).writeThrough(userProfile);
   }
