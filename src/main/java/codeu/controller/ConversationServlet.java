@@ -74,7 +74,6 @@ public class ConversationServlet extends HttpServlet {
     List<Conversation> conversations = conversationStore.getAllConversations();
 
     // Filter out test data to non-admins
-
     HttpSession session = request.getSession();
     boolean adminStatus = session.getAttribute("isAdmin") != null ? (boolean) session.getAttribute("isAdmin") : false;
 
