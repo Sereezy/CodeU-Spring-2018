@@ -109,19 +109,4 @@ public class PersistentStorageAgent {
     persistentDataStore.writeThrough(message);
   }
 
-  public void deleteEntity(UUID id) {
-    //Key key = KeyFactory.generateKey(id.toString());
-    //persistentDataStore.deleteEntity(key);
-  }
-
-  public void deleteEntities(List<UUID> ids) {
-    List<Key> keys = new ArrayList<Key>();
-
-    Key key;
-    for (UUID id : ids) {
-      //key = KeyFactory.generateKey(id.toString());
-      //keys.add(key);
-    }
-    //persistentDataStore.deleteEntities(keys);
-  }
 }

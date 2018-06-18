@@ -108,33 +108,5 @@ public class ConversationStore {
     this.conversations = conversations;
   }
 
-  public void deleteConversation(Conversation conversation) {
 
-    for (int i = 0; i < conversations.size(); i++) {
-      if (conversations.get(i) == conversation) {
-        conversations.remove(i);
-        return;
-      }
-    }
-
-    persistentStorageAgent.deleteEntity(conversation.getId());
-  }
-
-  public void deleteConversations(List<Conversation> conversations) {
-    List<UUID> ids = new ArrayList<UUID>();
-    HashSet<Conversation> conversationSet = new HashSet<Conversation>();
-    for (Conversation c : conversations) {
-      ids.add(c.getId());
-      conversationSet.add(c);
-    }
-
-    for (int i = conversations.size() - 1; i >= 0; i--) {
-      if (conversationSet.contains(conversations.get(i))) {
-        conversations.remove(i);
-      }
-    }
-
-    persistentStorageAgent.deleteEntities(ids);
-
-  }
 }

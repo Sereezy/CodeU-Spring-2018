@@ -1,5 +1,14 @@
 package codeu.controller;
 
+import java.time.Instant;
+import java.util.List;
+import java.util.UUID;
+
+import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletContextListener;
+
+import org.mindrot.jbcrypt.BCrypt;
+
 import codeu.model.data.Conversation;
 import codeu.model.data.Message;
 import codeu.model.data.User;
@@ -8,9 +17,6 @@ import codeu.model.store.basic.MessageStore;
 import codeu.model.store.basic.UserStore;
 import codeu.model.store.persistence.PersistentDataStoreException;
 import codeu.model.store.persistence.PersistentStorageAgent;
-import java.util.List;
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
 
 /**
  * Listener class that fires when the server first starts up, before any servlet classes are
@@ -23,6 +29,13 @@ public class ServerStartupListener implements ServletContextListener {
   public void contextInitialized(ServletContextEvent sce) {
     try {
       List<User> users = PersistentStorageAgent.getInstance().loadUsers();
+      
+      String adminPassword = "admin";
+      String hashedPassword = BCrypt.hashpw(adminPassword, BCrypt.gensalt());
+      User rootAdmin = new User(UUID.randomUUID(), "admin", hashedPassword, Instant.ofEpochSecond(0));
+      rootAdmin.setAdminStatus(true);
+      users.add(rootAdmin);
+
       UserStore.getInstance().setUsers(users);
 
       List<Conversation> conversations = PersistentStorageAgent.getInstance().loadConversations();

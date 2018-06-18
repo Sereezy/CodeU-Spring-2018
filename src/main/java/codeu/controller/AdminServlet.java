@@ -24,8 +24,6 @@ import codeu.model.store.persistence.PersistentStorageAgent;
 
 public class AdminServlet extends HttpServlet {
 
-  private HashSet<String> admins;
-
   private UserStore userStore;
   private ConversationStore conversationStore;
   private MessageStore messageStore;
@@ -34,22 +32,10 @@ public class AdminServlet extends HttpServlet {
   public void init() throws ServletException {
     super.init();
 
-    setAdminUsernames();
-
     setUserStore(UserStore.getInstance());
     setConversationStore(ConversationStore.getInstance());
     setMessageStore(MessageStore.getInstance());
 
-  }
-
-  void setAdminUsernames() {
-    admins = new HashSet<String>();
-    admins.add("admin");
-    admins.add("daniel");
-    admins.add("leslie");
-    admins.add("serena");
-    admins.add("shana");
-    admins.add("kyra");
   }
 
   void setUserStore(UserStore userStore) {
@@ -152,9 +138,7 @@ public class AdminServlet extends HttpServlet {
   public void doGet(HttpServletRequest request, HttpServletResponse response)
       throws IOException, ServletException {
 
-    String user = (String) request.getSession().getAttribute("user");
-
-    if (admins.contains(user)) {
+    if (request.getSession().getAttribute("isAdmin").equals(Boolean.TRUE)) {
       computeAdminStats(request);
       request.getRequestDispatcher("/WEB-INF/view/admin.jsp").forward(request, response);
     } else {
@@ -167,9 +151,8 @@ public class AdminServlet extends HttpServlet {
   public void doPost(HttpServletRequest request, HttpServletResponse response)
       throws IOException, ServletException{
 
-    String user = (String) request.getSession().getAttribute("user");
 
-    if (admins.contains(user)) {
+    if (request.getSession().getAttribute("isAdmin").equals(Boolean.TRUE)) {
       switch (request.getParameter("id")) {
         case "dataGenOptions":
 

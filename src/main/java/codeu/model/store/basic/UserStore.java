@@ -137,32 +137,5 @@ public class UserStore {
     this.users = users;
   }
 
-  public void deleteUser(User user) {
-
-    for (int i = 0; i < users.size(); i++) {
-      if (users.get(i) == user) {
-        users.remove(i);
-        return;
-      }
-    }
-
-    persistentStorageAgent.deleteEntity(user.getId());
-  }
-
-  public void deleteUsers(List<User> users) {
-    List<UUID> ids = new ArrayList<UUID>();
-    HashSet<User> userSet = new HashSet<User>();
-    for (User u : users) {
-      ids.add(u.getId());
-      userSet.add(u);
-    }
-
-    for (int i = users.size() - 1; i >= 0; i--) {
-      if (userSet.contains(users.get(i))) {
-        users.remove(i);
-      }
-    }
-
-    persistentStorageAgent.deleteEntities(ids);
-  }
+  
 }

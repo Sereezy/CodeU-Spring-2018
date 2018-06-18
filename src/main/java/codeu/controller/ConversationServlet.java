@@ -26,6 +26,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /** Servlet class responsible for the conversations page. */
 public class ConversationServlet extends HttpServlet {
@@ -71,6 +72,21 @@ public class ConversationServlet extends HttpServlet {
   public void doGet(HttpServletRequest request, HttpServletResponse response)
       throws IOException, ServletException {
     List<Conversation> conversations = conversationStore.getAllConversations();
+
+    // Filter out test data to non-admins
+
+    HttpSession session = request.getSession();
+    boolean adminStatus = session.getAttribute("isAdmin") != null ? (boolean) session.getAttribute("isAdmin") : false;
+
+    if (adminStatus == false) {
+      TestDataGenerator tdg = TestDataGenerator.getInstance();
+      for (int i = conversations.size() - 1; i >= 0; i--) {
+        if (tdg.isTestConversation(conversations.get(i).getId())) {
+          conversations.remove(i);
+        }
+      }
+    }
+
     request.setAttribute("conversations", conversations);
     request.getRequestDispatcher("/WEB-INF/view/conversations.jsp").forward(request, response);
   }

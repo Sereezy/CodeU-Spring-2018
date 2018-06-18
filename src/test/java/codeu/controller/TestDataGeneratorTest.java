@@ -55,74 +55,62 @@ public class TestDataGeneratorTest {
   @Test
   public void testAddTestUsers() {
 
-    int numUsersBefore = mockUserStore.getAllUsers().size();
-
     mockTestDataGenerator.addTestUsers(3);
 
     int numUsersAfter = mockUserStore.getAllUsers().size();
 
-    assertEquals(numUsersBefore + 3, numUsersAfter);
+    assertEquals(3, numUsersAfter);
 
   }
 
   @Test
   public void testAddTestConversations_NoTestUsers() {
 
-    int numConversationsBefore = mockConversationStore.getAllConversations().size();
-
     mockTestDataGenerator.addTestConversations(3);
 
     int numConversationsAfter = mockConversationStore.getAllConversations().size();
 
-    assertEquals(numConversationsBefore, numConversationsAfter);
+    assertEquals(0, numConversationsAfter);
 
   }
 
   @Test
   public void testAddTestConversations() {
 
-    int numConversationsBefore = mockConversationStore.getAllConversations().size();
-
     mockTestDataGenerator.addTestUsers(3);
     mockTestDataGenerator.addTestConversations(3);
 
     int numConversationsAfter = mockConversationStore.getAllConversations().size();
 
-    assertEquals(numConversationsBefore + 3, numConversationsAfter);
+    assertEquals(3, numConversationsAfter);
 
   }
 
   @Test
   public void testAddTestMessages_NoTestUsers() {
 
-    int numMessagesBefore = mockMessageStore.getAllMessages().size();
-
     mockTestDataGenerator.addTestMessages(3);
 
     int numMessagesAfter = mockMessageStore.getAllMessages().size();
 
-    assertEquals(numMessagesBefore, numMessagesAfter);
+    assertEquals(0, numMessagesAfter);
 
   }
 
   @Test
   public void testAddTestMessages_NoTestConversations() {
 
-    int numMessagesBefore = mockMessageStore.getAllMessages().size();
-
     mockTestDataGenerator.addTestUsers(3);
     mockTestDataGenerator.addTestMessages(3);
 
     int numMessagesAfter = mockMessageStore.getAllMessages().size();
 
-    assertEquals(numMessagesBefore, numMessagesAfter);
+    assertEquals(0, numMessagesAfter);
 
   }
 
   @Test
   public void testAddTestMessages() {
-
-    int numMessagesBefore = mockMessageStore.getAllMessages().size();
 
     mockTestDataGenerator.addTestUsers(3);
     mockTestDataGenerator.addTestConversations(3);
@@ -130,16 +118,12 @@ public class TestDataGeneratorTest {
 
     int numMessagesAfter = mockMessageStore.getAllMessages().size();
 
-    assertEquals(numMessagesBefore + 3, numMessagesAfter);
+    assertEquals(3, numMessagesAfter);
 
   }
 
   @Test
   public void testClearTestData() {
-
-    int numUsersBefore = mockUserStore.getAllUsers().size();
-    int numConversationsBefore = mockConversationStore.getAllConversations().size();
-    int numMessagesBefore = mockMessageStore.getAllMessages().size();
 
     mockTestDataGenerator.addTestUsers(3);
     mockTestDataGenerator.addTestConversations(3);
@@ -149,9 +133,9 @@ public class TestDataGeneratorTest {
     int numConversationsAfter = mockConversationStore.getAllConversations().size();
     int numMessagesAfter = mockMessageStore.getAllMessages().size();
 
-    assertEquals(numUsersBefore + 3, numUsersAfter);
-    assertEquals(numConversationsBefore + 3, numConversationsAfter);
-    assertEquals(numMessagesBefore + 3, numMessagesAfter);
+    assertEquals(3, numUsersAfter);
+    assertEquals(3, numConversationsAfter);
+    assertEquals(3, numMessagesAfter);
 
     mockTestDataGenerator.clearTestData();
 

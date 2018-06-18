@@ -100,32 +100,4 @@ public class MessageStore {
     this.messages = messages;
   }
 
-  public void deleteMessage(Message message) {
-
-    for (int i = 0; i < messages.size(); i++) {
-      if (messages.get(i) == message) {
-        messages.remove(i);
-        return;
-      }
-    }
-
-    persistentStorageAgent.deleteEntity(message.getId());
-  }
-
-  public void deleteMessages(List<Message> messages) {
-    List<UUID> ids = new ArrayList<UUID>();
-    HashSet<Message> messageSet = new HashSet<Message>();
-    for (Message m : messages) {
-      ids.add(m.getId());
-      messageSet.add(m);
-    }
-
-    for (int i = messages.size() - 1; i >= 0; i--) {
-      if (messageSet.contains(messages.get(i))) {
-        messages.remove(i);
-      }
-    }
-
-    persistentStorageAgent.deleteEntities(ids);
-  }
 }
