@@ -19,6 +19,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import codeu.model.data.UserProfile;
+import codeu.model.data.Conversation;
+import codeu.model.data.Message;
+import codeu.model.data.User;
+import codeu.model.store.persistence.PersistentDataStoreException;
+
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
@@ -81,6 +87,32 @@ public class PersistentDataStore {
     }
 
     return users;
+  }
+
+  /**
+   * @throws PersistentDataStoreException
+   */
+
+  public List<UserProfile> loadUserProfiles() throws PersistentDataStoreException {
+
+    List<UserProfile> profileUsers = new ArrayList<>();
+
+    Query query = new Query("chat-userprofile");
+    PreparedQuery results = datastore.prepare(query);
+
+    for (Entity entity : results.asIterable()) {
+      try {
+        UUID uuid = UUID.fromString((String) entity.getProperty("uuid"));
+        UUID authorUuid = UUID.fromString((String) entity.getProperty("author_uuid"));
+        String content = (String) entity.getProperty("content");
+        UserProfile userprofile = new UserProfile(uuid, authorUuid,content);
+        profileUsers.add(userprofile);
+      } catch (Exception e) {
+        throw new PersistentDataStoreException(e);
+      }
+    }
+
+    return profileUsers;
   }
 
   /**
@@ -172,6 +204,13 @@ public class PersistentDataStore {
     messageEntity.setProperty("content", message.getContent());
     messageEntity.setProperty("creation_time", message.getCreationTime().toString());
     datastore.put(messageEntity);
+  }
+  public void writeThrough(UserProfile userprofile) {
+    Entity profileuserEntity = new Entity("chat-userprofile", userprofile.getId().toString());
+    profileuserEntity.setProperty("uuid", userprofile.getId().toString());
+    profileuserEntity.setProperty("author_uuid", userprofile.getAuthorId().toString());
+    profileuserEntity.setProperty("content", userprofile.getContent());
+    datastore.put(profileuserEntity);
   }
 
   /** Write a Conversation object to the Datastore service. */

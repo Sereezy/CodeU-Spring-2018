@@ -9,9 +9,12 @@ import javax.servlet.ServletContextListener;
 
 import org.mindrot.jbcrypt.BCrypt;
 
+import codeu.model.data.UserProfile;
+
 import codeu.model.data.Conversation;
 import codeu.model.data.Message;
 import codeu.model.data.User;
+import codeu.model.store.basic.UserProfileStore;
 import codeu.model.store.basic.ConversationStore;
 import codeu.model.store.basic.MessageStore;
 import codeu.model.store.basic.UserStore;
@@ -29,7 +32,7 @@ public class ServerStartupListener implements ServletContextListener {
   public void contextInitialized(ServletContextEvent sce) {
     try {
       List<User> users = PersistentStorageAgent.getInstance().loadUsers();
-      
+
       String adminPassword = "admin";
       String hashedPassword = BCrypt.hashpw(adminPassword, BCrypt.gensalt());
       User rootAdmin = new User(UUID.randomUUID(), "admin", hashedPassword, Instant.ofEpochSecond(0));
@@ -43,6 +46,9 @@ public class ServerStartupListener implements ServletContextListener {
 
       List<Message> messages = PersistentStorageAgent.getInstance().loadMessages();
       MessageStore.getInstance().setMessages(messages);
+
+      List<UserProfile> userprofiles = PersistentStorageAgent.getInstance().loadUserProfiles();
+      UserProfileStore.getInstance().setUserProfiles(userprofiles);
 
     } catch (PersistentDataStoreException e) {
       System.err.println("Server didn't start correctly. An error occurred during Datastore load!");

@@ -14,12 +14,15 @@
 
 package codeu.model.store.persistence;
 
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
+
+import codeu.model.data.UserProfile;
 
 import codeu.model.data.Conversation;
 import codeu.model.data.Message;
@@ -109,4 +112,15 @@ public class PersistentStorageAgent {
     persistentDataStore.writeThrough(message);
   }
 
+  public void writeThrough(UserProfile userprofile) {
+    persistentDataStore.writeThrough(userprofile);
+  }
+
+  /**
+   * @throws PersistentDataStoreException
+   */
+
+  public List<UserProfile> loadUserProfiles() throws PersistentDataStoreException {
+    return persistentDataStore.loadUserProfiles();
+  }
 }

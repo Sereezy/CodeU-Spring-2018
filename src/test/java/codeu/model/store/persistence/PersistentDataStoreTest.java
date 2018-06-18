@@ -2,6 +2,7 @@ package codeu.model.store.persistence;
 
 import codeu.model.data.Conversation;
 import codeu.model.data.Message;
+import codeu.model.data.UserProfile;
 import codeu.model.data.User;
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
@@ -145,5 +146,35 @@ public class PersistentDataStoreTest {
     Assert.assertEquals(authorTwo, resultMessageTwo.getAuthorId());
     Assert.assertEquals(contentTwo, resultMessageTwo.getContent());
     Assert.assertEquals(creationTwo, resultMessageTwo.getCreationTime());
+  }
+
+  @Test
+  public void testSaveAndLoadUserProfiles() throws PersistentDataStoreException {
+    UUID profileIdOne = UUID.fromString("10000000-2222-3333-4444-555555555555");
+    UUID authorUserOne = UUID.fromString("10000005-2222-3333-4444-555555555555");
+    String profileContentOne = "test content one";
+    UserProfile inputProfileOne =
+        new UserProfile(profileIdOne, authorUserOne, profileContentOne);
+
+    UUID profileIdTwo = UUID.fromString("10000003-2222-3333-4444-555555555555");
+    UUID authorUserTwo = UUID.fromString("10000005-2222-3333-4444-555555555555");
+    String profileContentTwo = "test content two";
+    UserProfile inputProfileTwo =
+        new UserProfile(profileIdTwo, authorUserTwo, profileContentTwo);
+
+    persistentDataStore.writeThrough(inputProfileOne);
+    persistentDataStore.writeThrough(inputProfileTwo);
+
+    List<UserProfile> resultUserProfiles = persistentDataStore.loadUserProfiles();
+
+    UserProfile resultUserProfileOne = resultUserProfiles.get(0);
+    Assert.assertEquals(profileIdOne, inputProfileOne.getId());
+    Assert.assertEquals(authorUserOne, inputProfileOne.getAuthorId());
+    Assert.assertEquals(profileContentOne, inputProfileOne.getContent());
+
+    UserProfile resultUserProfileTwo = resultUserProfiles.get(1);
+    Assert.assertEquals(profileIdTwo, inputProfileTwo.getId());
+    Assert.assertEquals(authorUserTwo, inputProfileTwo.getAuthorId());
+    Assert.assertEquals(profileContentTwo, inputProfileTwo.getContent());
   }
 }
