@@ -37,10 +37,10 @@ public class ProfileServlet extends HttpServlet {
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response)
         throws IOException, ServletException {
-					
+
 					String userValue = request.getParameter("userprofile");
 					System.out.println(userValue);
-					UserProfileStore.getInstance().updateUserProfile(userprofile);
+					UserProfileStore.getInstance().updateUserProfile(userprof);
 					response.sendRedirect("/profile/" + request.getSession().getAttribute("user"));
     }
 }
