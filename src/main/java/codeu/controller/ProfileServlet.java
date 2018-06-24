@@ -30,16 +30,17 @@ public class ProfileServlet extends HttpServlet {
     public void doGet(HttpServletRequest request, HttpServletResponse response)
         throws IOException, ServletException {
 
-        request.getRequestDispatcher("/WEB-INF/view/profile.jsp").forward(request, response);
+        	request.getRequestDispatcher("/WEB-INF/view/profile.jsp").forward(request, response);
 
     }
 
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response)
         throws IOException, ServletException {
+					
 					String userValue = request.getParameter("userprofile");
 					System.out.println(userValue);
+					UserProfileStore.getInstance().updateUserProfile(userprofile);
 					response.sendRedirect("/profile/" + request.getSession().getAttribute("user"));
-					//userprofile.add
     }
 }
