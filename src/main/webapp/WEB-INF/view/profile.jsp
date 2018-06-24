@@ -29,12 +29,18 @@
 
     <div id="container"><h1><%=request.getSession().getAttribute("user")%>'s Profile</h1>
       <hr/>
-      <form action="/profile/<%=request.getSession().getAttribute("user")%>" method="POST">
-        <input type="text" name="userprofile">
-          <br/><br/>
-        <button type="submit">Submit</button>
-      </form>
-    </div>
+    <% if(request.getSession().getAttribute("user") != null){ %>
+      <form action ="/profile/<%=request.getSession().getAttribute("user")%>" method="POST">
+        <textarea
+          name="About me" rows="10" col="40">
+        </textarea>
+        <br>
+        <input type="Submit">
+        </form>
+    <% } %>
+  </div>
+
+
 
 </body>
 
