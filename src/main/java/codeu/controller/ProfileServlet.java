@@ -40,7 +40,7 @@ public class ProfileServlet extends HttpServlet {
 
 					String userValue = request.getParameter("userprofile");
 					System.out.println(userValue);
-					UserProfileStore.getInstance().updateUserProfile(userprof);
+					UserProfileStore.getInstance().updateUserProfile(userprofile);
 					response.sendRedirect("/profile/" + request.getSession().getAttribute("user"));
     }
 }
