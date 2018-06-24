@@ -39,10 +39,6 @@ public class UserProfileStore {
      persistentStorageAgent.writeThrough(userprofile);
    }
 
-   public void updateUserProfile(UserProfile userprofile) {
-     persistentStorageAgent.writeThrough(userprofile);
-   }
-
    public void setUserProfiles(List<UserProfile> userprofiles) {
      this.userprofiles = userprofiles;
    }

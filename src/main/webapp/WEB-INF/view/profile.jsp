@@ -33,7 +33,7 @@
            <input type="text" name="userprofile">
              <br/><br/>
            <button type="submit">Submit</button>
-           <p><%= UserProfileStore.getInstance().addUserProfile((String)request.getSession().getAttribute("user")).getUserProfileContent()%></p>
+           <%--<p><%= UserProfileStore.getInstance().addUserProfile((String)request.getSession().getAttribute("user")).getUserProfileContent()%></p>--%>
          </form>
     </div>
 
