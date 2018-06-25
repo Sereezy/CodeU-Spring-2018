@@ -7,11 +7,8 @@ import static org.junit.Assert.fail;
 import java.io.IOException;
 import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Hashtable;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -100,54 +97,30 @@ public class ActivityFeedServletTest {
           .thenReturn(fakeAllConversations);
 
       
-      List<Message> fakeAllMessages = new ArrayList<>();
-      fakeAllMessages.add(
+      List<List<Message>> fakeAllMessages = new ArrayList<>();
+
+      List<Message> fakeMessageList = new ArrayList<>();
+      fakeMessageList.add(
           new Message(
               UUID.randomUUID(),
               fakeConversationId,
               fakeUserId,
               "test message",
               Instant.now()));
+      
+      fakeAllMessages.add(fakeMessageList);
+      
       Mockito.when(mockMessageStore.getMessagesInConversation(fakeConversationId))
-          .thenReturn(fakeAllMessages);
-      
-      Hashtable<Message, String> fakeMessageToConversationTitle = new Hashtable();
-      for (Message message : fakeAllMessages) {
-    	  fakeMessageToConversationTitle.put(message, "test_conversation");
-		}
-      
-      List<Object> fakeAllActivity = new ArrayList<>();
-      fakeAllActivity.addAll(fakeAllUsers);
-      fakeAllActivity.addAll(fakeAllConversations);
-      fakeAllActivity.addAll(fakeAllMessages);
-      
-      Comparator<Object> byCreationDate = Comparator.comparing(o -> getCreationTime(o)).reversed();
-      fakeAllActivity = fakeAllActivity.stream().sorted(byCreationDate).collect(Collectors.toList());
-      if (fakeAllActivity.size() > 25){
-    	  fakeAllActivity = new ArrayList<Object>(fakeAllActivity.subList(0, 25));
-      }
-      
+          .thenReturn(fakeMessageList);
+
       activityFeedServlet.doGet(mockRequest, mockResponse);
       
-      Mockito.verify(mockRequest).setAttribute("activity", fakeAllActivity);
-      Mockito.verify(mockRequest).setAttribute("conversationTitles", fakeMessageToConversationTitle);
-      
+      Mockito.verify(mockRequest).setAttribute("users", fakeAllUsers);
+      Mockito.verify(mockRequest).setAttribute("conversations", fakeAllConversations);
+      Mockito.verify(mockRequest).setAttribute("messages", fakeAllMessages);
 
       Mockito.verify(mockRequestDispatcher).forward(mockRequest, mockResponse);
     }
-    
-    private Instant getCreationTime(Object object) {
-        if (object.getClass() == Conversation.class) {
-          return ((Conversation) object).getCreationTime();
-        } 
-        else if (object.getClass() == Message.class) {
-          return ((Message) object).getCreationTime();
-        }
-        else if (object.getClass() == User.class) {
-          return ((User) object).getCreationTime();
-        }
-        return null;
-   }
 
 
 
