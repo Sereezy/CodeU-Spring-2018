@@ -1,15 +1,18 @@
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.UUID" %>
 <%@ page import="java.time.Instant" %>
+<%@ page import="java.time.format.DateTimeFormatter" %>
+<%@ page import="java.time.ZoneId" %>
+<%@ page import="java.util.Locale" %>
+<%@ page import="java.util.Hashtable" %>
 <%@ page import="codeu.model.data.Conversation" %>
 <%@ page import="codeu.model.data.User" %>
 <%@ page import="codeu.model.data.Message" %>
 <%@ page import="codeu.model.store.basic.UserStore" %>
 
 <%
-List<User> allUsers = (List<User>) request.getAttribute("users");
-List<Conversation> allConversations = (List<Conversation>) request.getAttribute("conversations");
-List<List<Message>> allMessages = (List<List<Message>>) request.getAttribute("messages");
+List<Object> allActivity = (List<Object>) request.getAttribute("activity");
+Hashtable<Message, String> conversationTitles = (Hashtable<Message, String>) request.getAttribute("conversationTitles");
 %>
 <!DOCTYPE html>
 
@@ -39,55 +42,53 @@ List<List<Message>> allMessages = (List<List<Message>>) request.getAttribute("me
     </nav>
 
     <div id="container">
-        <p>This is the Activity Feed!</p>
-        <div id="users_container">
+        <p>This is the Activity Feed! It shows the 25 most recent events. </p>
+        <div id="activities_container">
 	        <ul>
 			    <%
-			      for (User user : allUsers) {
-			        String name = user.getName();
-			        String creationTime = user.getCreationTime().toString();
-			    %>
-			      <li><strong><%= creationTime %>:</strong> <%= name %> joined!</li>
-			    <%
-			      }
-			    %>
-	     	</ul>
-        </div>
-        <div id="conversations_container">
-	        <ul>
-			    <%
-			      for (Conversation conversation : allConversations) {
-			        String title = conversation.getTitle();
-			        String creationTime = conversation.getCreationTime().toString();
-			        UUID ownerID = conversation.getOwnerId();
-			        String ownerName =  UserStore.getInstance().getUser(ownerID).getName();
-			        
-			    %>
-			      <li><strong><%= creationTime %>:</strong> <%= ownerName %> created <%= title %></li>
-			    <%
-			      }
-			    %>
-	     	</ul>
-        </div>
-        <div id="messages_container">
-	        <ul>
-			    <%
-			      int i = 0;
-			      for (List<Message> messagesInConvo : allMessages) {
-			    	  for (Message message : messagesInConvo) {
-				        String content = message.getContent();
-				        String creationTime = message.getCreationTime().toString();
-				        UUID authorId = message.getAuthorId();
-				        UUID conversationId = message.getConversationId();
-				        String authorName =  UserStore.getInstance().getUser(authorId).getName();
-				        String conversationTitle = allConversations.get(i).getTitle();
-				        			        
-					    %>
-					      <li><strong><%= creationTime %>:</strong> <%= authorName %> wrote <%= content %> in  <%= conversationTitle %> </li>
-					    <%
+			      for (Object activity : allActivity) {
+			    	  if (activity.getClass() == User.class){
+			    		  User user = (User) activity;
+			    		  String name = user.getName();
+					      Instant creationInstant = user.getCreationTime();	
+					      DateTimeFormatter formatter =
+					    		  DateTimeFormatter.ofPattern("MM-dd-yyyy HH:mm:ss").withZone(ZoneId.systemDefault());
+					      String creationTime = formatter.format(creationInstant) + " " + formatter.getZone();
+					      %>
+					      	<li><strong><%= creationTime %>:</strong> <%= name %> joined!</li>
+					      <%
 			    	  }
-			    	  i++;
-			      }
+			    	  else if (activity.getClass() == Conversation.class){
+			    		  Conversation conversation = (Conversation) activity;
+			    		  String title = conversation.getTitle();
+					      UUID ownerID = conversation.getOwnerId();
+					      String ownerName =  UserStore.getInstance().getUser(ownerID).getName();
+					      Instant creationInstant = conversation.getCreationTime();	
+					      DateTimeFormatter formatter =
+					    		  DateTimeFormatter.ofPattern("MM-dd-yyyy HH:mm:ss").withZone(ZoneId.systemDefault());
+					      String creationTime = formatter.format(creationInstant) + " " + formatter.getZone();
+					      %>
+						    <li><strong><%= creationTime %>:</strong> <%= ownerName %> created <i><%= title %></i></li>
+						  <%
+			    	  }
+			    	  else if (activity.getClass() == Message.class){
+			    		  Message message = (Message) activity;
+			    		  
+					      String content = message.getContent();
+					      
+					      UUID authorId = message.getAuthorId();
+					      UUID conversationId = message.getConversationId();
+					      String authorName =  UserStore.getInstance().getUser(authorId).getName();
+					      String conversationTitle = conversationTitles.get(message);
+					      Instant creationInstant = message.getCreationTime();	
+					      DateTimeFormatter formatter =
+					    		  DateTimeFormatter.ofPattern("MM-dd-yyyy HH:mm:ss").withZone(ZoneId.systemDefault());
+					      String creationTime = formatter.format(creationInstant) + " " + formatter.getZone();
+					      %>
+							<li><strong><%= creationTime %>:</strong> <%= authorName %> wrote "<%= content %>" in  <i><%= conversationTitle %></i> </li>
+						  <%
+					    }
+					}
 			    %>
 	     	</ul>
         </div>
