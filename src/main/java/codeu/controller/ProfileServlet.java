@@ -37,7 +37,13 @@ public class ProfileServlet extends HttpServlet {
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response)
         throws IOException, ServletException {
-
+					String username = (String) request.getSession().getAttribute("user");
+					UserProfile firstprofile =
+							new UserProfile(
+									UUID.randomUUID(),
+									UUID.randomUUID(),
+									"first profile");
+					profileuserStore.addUserProfile()
 					String userValue = request.getParameter("userprofile");
 					System.out.println(userValue);
 					response.sendRedirect("/profile/" + request.getSession().getAttribute("user"));
