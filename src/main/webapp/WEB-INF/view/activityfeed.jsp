@@ -21,6 +21,13 @@ Hashtable<Message, String> conversationTitles = (Hashtable<Message, String>) req
 <head>
     <title>Activity Feed</title>
     <link rel="stylesheet" href="/css/main.css">
+    <style>
+	    #activities_container {
+	      background-color: white;
+	      height: 500px;
+	      overflow-y: scroll
+	    }
+  	</style>
 </head>
 
 <body>
@@ -42,7 +49,7 @@ Hashtable<Message, String> conversationTitles = (Hashtable<Message, String>) req
     </nav>
 
     <div id="container">
-        <p>This is the Activity Feed! It shows the 25 most recent events. </p>
+        <p>This is the Activity Feed! </p>
         <div id="activities_container">
 	        <ul>
 			    <%

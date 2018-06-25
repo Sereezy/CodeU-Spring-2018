@@ -82,7 +82,7 @@ public class ActivityFeedServletTest {
     	        	fakeUserId,
     	            "test username",
     	            "$2a$10$.e.4EEfngEXmxAO085XnYOmDntkqod0C384jOR9oagwxMnPNHaGLa",
-    	            Instant.now());
+    	            Instant.ofEpochSecond(105));
       
       List<User> fakeAllUsers = new ArrayList<>();
       fakeAllUsers.add(fakeUser);
@@ -93,7 +93,7 @@ public class ActivityFeedServletTest {
     	
       UUID fakeConversationId = UUID.randomUUID();
       Conversation fakeConversation =
-          new Conversation(fakeConversationId, fakeUserId, "test_conversation", Instant.now());
+          new Conversation(fakeConversationId, fakeUserId, "test_conversation", Instant.ofEpochSecond(100));
       
       fakeAllConversations.add(fakeConversation);
       Mockito.when(mockConversationStore.getAllConversations())
@@ -101,13 +101,16 @@ public class ActivityFeedServletTest {
 
       
       List<Message> fakeAllMessages = new ArrayList<>();
-      fakeAllMessages.add(
-          new Message(
-              UUID.randomUUID(),
-              fakeConversationId,
-              fakeUserId,
-              "test message",
-              Instant.now()));
+      
+      for (int i=30; i < 1; i++) {
+	      fakeAllMessages.add(
+	          new Message(
+	              UUID.randomUUID(),
+	              fakeConversationId,
+	              fakeUserId,
+	              "test message num:"+Integer.toString(i),
+	              Instant.ofEpochSecond(i)));
+      }
       Mockito.when(mockMessageStore.getMessagesInConversation(fakeConversationId))
           .thenReturn(fakeAllMessages);
       
@@ -120,12 +123,9 @@ public class ActivityFeedServletTest {
       fakeAllActivity.addAll(fakeAllUsers);
       fakeAllActivity.addAll(fakeAllConversations);
       fakeAllActivity.addAll(fakeAllMessages);
+      //fakeAllActivity = new ArrayList<Object>(fakeAllActivity.subList(0, 25));
       
-      Comparator<Object> byCreationDate = Comparator.comparing(o -> getCreationTime(o)).reversed();
-      fakeAllActivity = fakeAllActivity.stream().sorted(byCreationDate).collect(Collectors.toList());
-      if (fakeAllActivity.size() > 25){
-    	  fakeAllActivity = new ArrayList<Object>(fakeAllActivity.subList(0, 25));
-      }
+      
       
       activityFeedServlet.doGet(mockRequest, mockResponse);
       
@@ -136,18 +136,7 @@ public class ActivityFeedServletTest {
       Mockito.verify(mockRequestDispatcher).forward(mockRequest, mockResponse);
     }
     
-    private Instant getCreationTime(Object object) {
-        if (object.getClass() == Conversation.class) {
-          return ((Conversation) object).getCreationTime();
-        } 
-        else if (object.getClass() == Message.class) {
-          return ((Message) object).getCreationTime();
-        }
-        else if (object.getClass() == User.class) {
-          return ((User) object).getCreationTime();
-        }
-        return null;
-   }
+    
 
 
 
