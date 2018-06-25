@@ -115,13 +115,13 @@ public class ActivityFeedServlet extends HttpServlet {
 
     
     private Instant getCreationTime(Object object) {
-        if (object.getClass() == Conversation.class) {
+        if (object instanceof Conversation) {
           return ((Conversation) object).getCreationTime();
         } 
-        else if (object.getClass() == Message.class) {
+        else if (object instanceof Message) {
           return ((Message) object).getCreationTime();
         }
-        else if (object.getClass() == User.class) {
+        else if (object instanceof User) {
           return ((User) object).getCreationTime();
         }
         return null;
