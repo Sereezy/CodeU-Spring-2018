@@ -43,7 +43,7 @@ public class ProfileServlet extends HttpServlet {
 									UUID.randomUUID(),
 									UUID.randomUUID(),
 									"first profile");
-					profileuserStore.addUserProfile()
+					profileuserStore.addUserProfile(firstprofile);
 					String userValue = request.getParameter("userprofile");
 					System.out.println(userValue);
 					response.sendRedirect("/profile/" + request.getSession().getAttribute("user"));
