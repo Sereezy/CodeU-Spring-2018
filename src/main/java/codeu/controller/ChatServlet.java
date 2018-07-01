@@ -13,12 +13,15 @@
 // limitations under the License.
 package codeu.controller;
 
+import java.awt.Image;
 import java.io.IOException;
+import java.io.InputStream;
 import java.time.Instant;
 import java.util.List;
 import java.util.Scanner;
 import java.util.UUID;
 
+import javax.imageio.ImageIO;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServlet;
@@ -32,6 +35,7 @@ import org.jsoup.safety.Cleaner;
 import org.jsoup.safety.Whitelist;
 
 import codeu.model.data.Conversation;
+import codeu.model.data.ImageMessage;
 import codeu.model.data.Message;
 import codeu.model.data.User;
 import codeu.model.store.basic.ConversationStore;
@@ -147,12 +151,11 @@ public class ChatServlet extends HttpServlet {
 			return;
 		}
 
-		Part content = request.getPart("message");
-		Scanner s = new Scanner(content.getInputStream());
-		String messageContent = s.nextLine();
+		Part messagePart = request.getPart("message");
+		Scanner s = new Scanner(messagePart.getInputStream());
 
-		//String messageContent = request.getParameter("message");
-		if (messageContent != null) {
+		if (s.hasNextLine()) {
+			String messageContent = s.nextLine();
 
 			// allows users to enter basic HTML tags that are not a threat to security
 			String HTMLMessageContent = clean(messageContent);
@@ -161,17 +164,22 @@ public class ChatServlet extends HttpServlet {
 					Instant.now());
 
 			messageStore.addMessage(message);
-			
-		}
 
+		}
+		s.close();
 
 		// Add image message if there is one
-		//Part filePart = request.getPart("upload");
-		//System.out.println(filePart);
-		//InputStream fileContent = filePart.getInputStream();
-		//Image image =
+		Part filePart = request.getPart("upload");
+		InputStream fileStream = filePart.getInputStream();
 
+		// fileStream.available() returns the number of bytes that are ready to read,
+		// so if it is 0, then no file was uploaded.
+		if (fileStream.available() > 0) {
+			Image image = ImageIO.read(fileStream);
 
+			ImageMessage message = new ImageMessage(UUID.randomUUID(), conversation.getId(), user.getId(), Instant.now(), image);
+			messageStore.addMessage(message);
+		}
 
 		// redirect to a GET request
 		response.sendRedirect("/chat/" + conversationTitle);

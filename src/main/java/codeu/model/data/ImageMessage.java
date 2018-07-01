@@ -9,12 +9,18 @@ public class ImageMessage extends Message {
 
   private Image image;
 
-  public ImageMessage(UUID id, UUID conversation, UUID author, String content, Instant creation) {
-    super(id, conversation, author, content, creation);
+  public ImageMessage(UUID id, UUID conversation, UUID author, Instant creation, Image image) {
+    super(id, conversation, author, "", creation);
+
+    this.image = image;
   }
 
   @Override
   public String getContent() {
     return "<img src=https://storage.googleapis.com/gd-wagtail-prod-assets/original_images/evolving_google_identity_videoposter_006.jpg width=500>";
+  }
+
+  public Image getImage() {
+    return image;
   }
 }
