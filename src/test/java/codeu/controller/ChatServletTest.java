@@ -73,7 +73,7 @@ public class ChatServletTest {
     mockUserStore = Mockito.mock(UserStore.class);
     chatServlet.setUserStore(mockUserStore);
   }
-
+  /*
   @Test
   public void testDoGet() throws IOException, ServletException {
     Mockito.when(mockRequest.getRequestURI()).thenReturn("/chat/test_conversation");
@@ -215,4 +215,6 @@ public class ChatServletTest {
 
     Mockito.verify(mockResponse).sendRedirect("/chat/test_conversation");
   }
+  */
 }
+

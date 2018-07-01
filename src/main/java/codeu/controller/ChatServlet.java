@@ -13,29 +13,33 @@
 // limitations under the License.
 package codeu.controller;
 
-import codeu.model.data.Conversation;
+import java.io.IOException;
+import java.time.Instant;
+import java.util.List;
+import java.util.Scanner;
+import java.util.UUID;
 
+import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.Part;
+
+import org.jsoup.nodes.Document;
+import org.jsoup.parser.Parser;
+import org.jsoup.safety.Cleaner;
+import org.jsoup.safety.Whitelist;
+
+import codeu.model.data.Conversation;
 import codeu.model.data.Message;
 import codeu.model.data.User;
 import codeu.model.store.basic.ConversationStore;
 import codeu.model.store.basic.MessageStore;
 import codeu.model.store.basic.UserStore;
-import java.io.IOException;
-import java.time.Instant;
-import java.util.List;
-import java.util.UUID;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import org.jsoup.Jsoup;
-import org.jsoup.parser.Parser;
-import org.jsoup.safety.Whitelist;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.safety.Cleaner;
 
 /** Servlet class responsible for the chat page. */
+@MultipartConfig
 public class ChatServlet extends HttpServlet {
 
 	/** Store class that gives access to Conversations. */
@@ -143,15 +147,31 @@ public class ChatServlet extends HttpServlet {
 			return;
 		}
 
-		String messageContent = request.getParameter("message");
+		Part content = request.getPart("message");
+		Scanner s = new Scanner(content.getInputStream());
+		String messageContent = s.nextLine();
 
-		// allows users to enter basic HTML tags that are not a threat to security
-		String HTMLMessageContent = clean(messageContent);
+		//String messageContent = request.getParameter("message");
+		if (messageContent != null) {
 
-		Message message = new Message(UUID.randomUUID(), conversation.getId(), user.getId(), HTMLMessageContent,
-				Instant.now());
+			// allows users to enter basic HTML tags that are not a threat to security
+			String HTMLMessageContent = clean(messageContent);
 
-		messageStore.addMessage(message);
+			Message message = new Message(UUID.randomUUID(), conversation.getId(), user.getId(), HTMLMessageContent,
+					Instant.now());
+
+			messageStore.addMessage(message);
+			
+		}
+
+
+		// Add image message if there is one
+		//Part filePart = request.getPart("upload");
+		//System.out.println(filePart);
+		//InputStream fileContent = filePart.getInputStream();
+		//Image image =
+
+
 
 		// redirect to a GET request
 		response.sendRedirect("/chat/" + conversationTitle);
