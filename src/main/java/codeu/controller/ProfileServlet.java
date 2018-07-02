@@ -29,7 +29,7 @@ public class ProfileServlet extends HttpServlet {
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response)
         throws IOException, ServletException {
-					
+
         	request.getRequestDispatcher("/WEB-INF/view/profile.jsp").forward(request, response);
 
     }
@@ -43,7 +43,11 @@ public class ProfileServlet extends HttpServlet {
 									UUID.randomUUID(),
 									UUID.randomUUID(),
 									"first profile");
+
 					profileuserStore.addUserProfile(firstprofile);
+					UserProfile testProfile = profileuserStore.getUserProfileContent().get(0);
+			    assertEquals(firstprofile, testProfile);
+
 					String userValue = request.getParameter("userprofile");
 					System.out.println(userValue);
 					response.sendRedirect("/profile/" + request.getSession().getAttribute("user"));
