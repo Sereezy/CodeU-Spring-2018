@@ -1,6 +1,8 @@
 <%@ page import="codeu.model.store.basic.UserProfileStore" %>
 <%@ page import="codeu.model.data.UserProfile" %>
 
+<%= request.getSession().getAttribute("userprofile") %>
+
 <!DOCTYPE html>
 
 <html>
@@ -33,6 +35,7 @@
            <input type="text" name="userprofile">
              <br/><br/>
            <button type="submit">Submit</button>
+           <p><%= request.getSession().getAttribute("userprofile") %><p>
            <%--<p><%= UserProfileStore.getInstance().addUserProfile((String)request.getSession().getAttribute("user")).getUserProfileContent()%></p>--%>
          </form>
     </div>
