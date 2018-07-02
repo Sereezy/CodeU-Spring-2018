@@ -31,11 +31,11 @@
 
     <div id="container"><h1><%=request.getSession().getAttribute("user")%>'s Profile</h1>
          <hr/>
+         <p><%= request.getAttribute("userprofile") %><p>
          <form action="/profile/<%=request.getSession().getAttribute("user")%>" method="POST">
            <input type="text" name="userprofile">
              <br/><br/>
            <button type="submit">Submit</button>
-           <p><%= request.getAttribute("userprofile") %><p>
            <%--<p><%= UserProfileStore.getInstance().addUserProfile((String)request.getSession().getAttribute("user")).getUserProfileContent()%></p>--%>
          </form>
     </div>
