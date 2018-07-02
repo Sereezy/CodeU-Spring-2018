@@ -31,7 +31,7 @@ public class ProfileServlet extends HttpServlet {
         throws IOException, ServletException {
 					String aboutme = "This is a test";
 					request.setAttribute("userprofile", aboutme);
-					List<UserProfile> profiles = UserProfileStore.getUserProfileContent();
+					List<UserProfile> profiles = profileuserStore.getUserProfileContent();
         	request.getRequestDispatcher("/WEB-INF/view/profile.jsp").forward(request, response);
 
     }
