@@ -46,10 +46,9 @@ public class ProfileServlet extends HttpServlet {
 
 					profileuserStore.addUserProfile(firstprofile);
 					UserProfile testProfile = profileuserStore.getUserProfileContent().get(0);
-			    assertEquals(firstprofile, testProfile);
 
 					String userValue = request.getParameter("userprofile");
-					System.out.println(userValue);
+					System.out.println(firstprofile);
 					response.sendRedirect("/profile/" + request.getSession().getAttribute("user"));
     }
 }
