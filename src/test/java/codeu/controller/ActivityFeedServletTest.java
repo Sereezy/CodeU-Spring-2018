@@ -7,8 +7,11 @@ import static org.junit.Assert.fail;
 import java.io.IOException;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -79,7 +82,7 @@ public class ActivityFeedServletTest {
     	        	fakeUserId,
     	            "test username",
     	            "$2a$10$.e.4EEfngEXmxAO085XnYOmDntkqod0C384jOR9oagwxMnPNHaGLa",
-    	            Instant.now());
+    	            Instant.ofEpochSecond(105));
       
       List<User> fakeAllUsers = new ArrayList<>();
       fakeAllUsers.add(fakeUser);
@@ -90,37 +93,50 @@ public class ActivityFeedServletTest {
     	
       UUID fakeConversationId = UUID.randomUUID();
       Conversation fakeConversation =
-          new Conversation(fakeConversationId, fakeUserId, "test_conversation", Instant.now());
+          new Conversation(fakeConversationId, fakeUserId, "test_conversation", Instant.ofEpochSecond(100));
       
       fakeAllConversations.add(fakeConversation);
       Mockito.when(mockConversationStore.getAllConversations())
           .thenReturn(fakeAllConversations);
 
       
-      List<List<Message>> fakeAllMessages = new ArrayList<>();
-
-      List<Message> fakeMessageList = new ArrayList<>();
-      fakeMessageList.add(
-          new Message(
-              UUID.randomUUID(),
-              fakeConversationId,
-              fakeUserId,
-              "test message",
-              Instant.now()));
+      List<Message> fakeAllMessages = new ArrayList<>();
       
-      fakeAllMessages.add(fakeMessageList);
-      
+      for (int i=30; i < 1; i++) {
+	      fakeAllMessages.add(
+	          new Message(
+	              UUID.randomUUID(),
+	              fakeConversationId,
+	              fakeUserId,
+	              "test message num:"+Integer.toString(i),
+	              Instant.ofEpochSecond(i)));
+      }
       Mockito.when(mockMessageStore.getMessagesInConversation(fakeConversationId))
-          .thenReturn(fakeMessageList);
-
+          .thenReturn(fakeAllMessages);
+      
+      Hashtable<Message, String> fakeMessageToConversationTitle = new Hashtable();
+      for (Message message : fakeAllMessages) {
+    	  fakeMessageToConversationTitle.put(message, "test_conversation");
+		}
+      
+      List<Object> fakeAllActivity = new ArrayList<>();
+      fakeAllActivity.addAll(fakeAllUsers);
+      fakeAllActivity.addAll(fakeAllConversations);
+      fakeAllActivity.addAll(fakeAllMessages);
+      //fakeAllActivity = new ArrayList<Object>(fakeAllActivity.subList(0, 25));
+      
+      
+      
       activityFeedServlet.doGet(mockRequest, mockResponse);
       
-      Mockito.verify(mockRequest).setAttribute("users", fakeAllUsers);
-      Mockito.verify(mockRequest).setAttribute("conversations", fakeAllConversations);
-      Mockito.verify(mockRequest).setAttribute("messages", fakeAllMessages);
+      Mockito.verify(mockRequest).setAttribute("activity", fakeAllActivity);
+      Mockito.verify(mockRequest).setAttribute("conversationTitles", fakeMessageToConversationTitle);
+      
 
       Mockito.verify(mockRequestDispatcher).forward(mockRequest, mockResponse);
     }
+    
+    
 
 
 
