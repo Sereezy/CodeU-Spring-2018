@@ -13,7 +13,7 @@
 // limitations under the License.
 package codeu.controller;
 
-import java.awt.Image;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.Instant;
@@ -39,6 +39,7 @@ import codeu.model.data.ImageMessage;
 import codeu.model.data.Message;
 import codeu.model.data.User;
 import codeu.model.store.basic.ConversationStore;
+import codeu.model.store.basic.ImageStore;
 import codeu.model.store.basic.MessageStore;
 import codeu.model.store.basic.UserStore;
 
@@ -54,6 +55,8 @@ public class ChatServlet extends HttpServlet {
 
 	/** Store class that gives access to Users. */
 	private UserStore userStore;
+	
+	private ImageStore imageStore;
 
 	/** Set up state for handling chat requests. */
 	@Override
@@ -62,6 +65,7 @@ public class ChatServlet extends HttpServlet {
 		setConversationStore(ConversationStore.getInstance());
 		setMessageStore(MessageStore.getInstance());
 		setUserStore(UserStore.getInstance());
+		setImageStore(ImageStore.getInstance());
 	}
 
 	/**
@@ -87,6 +91,10 @@ public class ChatServlet extends HttpServlet {
 	 */
 	void setUserStore(UserStore userStore) {
 		this.userStore = userStore;
+	}
+	
+	void setImageStore(ImageStore imageStore) {
+		this.imageStore = imageStore;
 	}
 
 	/**
@@ -175,9 +183,14 @@ public class ChatServlet extends HttpServlet {
 		// fileStream.available() returns the number of bytes that are ready to read,
 		// so if it is 0, then no file was uploaded.
 		if (fileStream.available() > 0) {
-			Image image = ImageIO.read(fileStream);
+			BufferedImage image = ImageIO.read(fileStream);
 
-			ImageMessage message = new ImageMessage(UUID.randomUUID(), conversation.getId(), user.getId(), Instant.now(), image);
+			ImageMessage imageMessage = new ImageMessage(UUID.randomUUID(), image);
+
+			String src = "http://www.clker.com/cliparts/3/m/v/Y/E/V/small-red-apple-hi.png";
+			String content = "<img src=" + src + " width=500>";
+			Message message = new Message(UUID.randomUUID(), conversation.getId(),
+			 		user.getId(), content, Instant.now());
 			messageStore.addMessage(message);
 		}
 

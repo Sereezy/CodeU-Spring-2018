@@ -14,12 +14,13 @@
 
 package codeu.model.store.persistence;
 
-import codeu.model.data.UserProfile;
+import java.util.List;
+
 import codeu.model.data.Conversation;
+import codeu.model.data.ImageMessage;
 import codeu.model.data.Message;
 import codeu.model.data.User;
-import codeu.model.store.persistence.PersistentDataStore;
-import java.util.List;
+import codeu.model.data.UserProfile;
 
 /**
  * This class is the interface between the application and PersistentDataStore, which handles
@@ -90,6 +91,10 @@ public class PersistentStorageAgent {
     return persistentDataStore.loadMessages();
   }
 
+  public List<ImageMessage> loadImages() throws PersistentDataStoreException {
+    return persistentDataStore.loadImages();
+  }
+
   /** Write a User object to the Datastore service. */
   public void writeThrough(User user) {
     persistentDataStore.writeThrough(user);
@@ -107,6 +112,10 @@ public class PersistentStorageAgent {
 
   public void writeThrough(UserProfile userprofile) {
     persistentDataStore.writeThrough(userprofile);
+  }
+
+  public void writeThrough(ImageMessage image) {
+    persistentDataStore.writeThrough(image);
   }
 
   /**
