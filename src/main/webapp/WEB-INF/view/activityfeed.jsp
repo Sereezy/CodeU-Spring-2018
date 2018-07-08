@@ -21,6 +21,13 @@ Hashtable<Message, String> conversationTitles = (Hashtable<Message, String>) req
 <head>
     <title>Activity Feed</title>
     <link rel="stylesheet" href="/css/main.css">
+    <style>
+	    #activities_container {
+	      background-color: white;
+	      height: 500px;
+	      overflow-y: scroll
+	    }
+  	</style>
 </head>
 
 <body>
@@ -42,18 +49,22 @@ Hashtable<Message, String> conversationTitles = (Hashtable<Message, String>) req
     </nav>
 
     <div id="container">
-        <p>This is the Activity Feed! It shows the 25 most recent events. </p>
+        <p>This is the Activity Feed! </p>
         <div id="activities_container">
 	        <ul>
+			    <%!
+			      public String setTime(Instant creationInstant){
+			    	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd-yyyy HH:mm:ss").withZone(ZoneId.systemDefault());
+		    		return formatter.format(creationInstant) + " " + formatter.getZone();
+			      }
+			    %>
 			    <%
 			      for (Object activity : allActivity) {
 			    	  if (activity.getClass() == User.class){
 			    		  User user = (User) activity;
 			    		  String name = user.getName();
 					      Instant creationInstant = user.getCreationTime();	
-					      DateTimeFormatter formatter =
-					    		  DateTimeFormatter.ofPattern("MM-dd-yyyy HH:mm:ss").withZone(ZoneId.systemDefault());
-					      String creationTime = formatter.format(creationInstant) + " " + formatter.getZone();
+					      String creationTime = setTime(creationInstant);
 					      %>
 					      	<li><strong><%= creationTime %>:</strong> <%= name %> joined!</li>
 					      <%
@@ -64,9 +75,7 @@ Hashtable<Message, String> conversationTitles = (Hashtable<Message, String>) req
 					      UUID ownerID = conversation.getOwnerId();
 					      String ownerName =  UserStore.getInstance().getUser(ownerID).getName();
 					      Instant creationInstant = conversation.getCreationTime();	
-					      DateTimeFormatter formatter =
-					    		  DateTimeFormatter.ofPattern("MM-dd-yyyy HH:mm:ss").withZone(ZoneId.systemDefault());
-					      String creationTime = formatter.format(creationInstant) + " " + formatter.getZone();
+					      String creationTime = setTime(creationInstant);
 					      %>
 						    <li><strong><%= creationTime %>:</strong> <%= ownerName %> created <i><%= title %></i></li>
 						  <%
@@ -81,9 +90,7 @@ Hashtable<Message, String> conversationTitles = (Hashtable<Message, String>) req
 					      String authorName =  UserStore.getInstance().getUser(authorId).getName();
 					      String conversationTitle = conversationTitles.get(message);
 					      Instant creationInstant = message.getCreationTime();	
-					      DateTimeFormatter formatter =
-					    		  DateTimeFormatter.ofPattern("MM-dd-yyyy HH:mm:ss").withZone(ZoneId.systemDefault());
-					      String creationTime = formatter.format(creationInstant) + " " + formatter.getZone();
+					      String creationTime = setTime(creationInstant);
 					      %>
 							<li><strong><%= creationTime %>:</strong> <%= authorName %> wrote "<%= content %>" in  <i><%= conversationTitle %></i> </li>
 						  <%

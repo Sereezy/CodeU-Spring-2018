@@ -55,7 +55,7 @@ public class ChatServlet extends HttpServlet {
 
 	/** Store class that gives access to Users. */
 	private UserStore userStore;
-	
+
 	private ImageStore imageStore;
 
 	/** Set up state for handling chat requests. */
@@ -92,7 +92,7 @@ public class ChatServlet extends HttpServlet {
 	void setUserStore(UserStore userStore) {
 		this.userStore = userStore;
 	}
-	
+
 	void setImageStore(ImageStore imageStore) {
 		this.imageStore = imageStore;
 	}
@@ -153,6 +153,7 @@ public class ChatServlet extends HttpServlet {
 		String conversationTitle = requestUrl.substring("/chat/".length());
 
 		Conversation conversation = conversationStore.getConversationWithTitle(conversationTitle);
+
 		if (conversation == null) {
 			// couldn't find conversation, redirect to conversation list
 			response.sendRedirect("/conversations");

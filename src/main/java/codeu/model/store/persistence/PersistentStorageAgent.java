@@ -14,7 +14,15 @@
 
 package codeu.model.store.persistence;
 
+
+import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
+
+import com.google.appengine.api.datastore.Key;
+import com.google.appengine.api.datastore.KeyFactory;
+
+import codeu.model.data.UserProfile;
 
 import codeu.model.data.Conversation;
 import codeu.model.data.ImageMessage;

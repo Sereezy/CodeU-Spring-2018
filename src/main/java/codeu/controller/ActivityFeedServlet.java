@@ -101,9 +101,9 @@ public class ActivityFeedServlet extends HttpServlet {
 		Comparator<Object> byCreationDate = Comparator.comparing(o -> getCreationTime(o)).reversed();
 		allActivity = allActivity.stream().sorted(byCreationDate).collect(Collectors.toList());
 		
-		if (allActivity.size() > 25){ //truncate list if too long
-			allActivity = new ArrayList<Object>(allActivity.subList(0, 25));
-		}
+		//if (allActivity.size() > 25){ //truncate list if too long
+		//	allActivity = new ArrayList<Object>(allActivity.subList(0, 25));
+		//}
 		
     	request.setAttribute("activity", allActivity);
     	request.setAttribute("conversationTitles", messageToConversationTitle);
@@ -115,13 +115,13 @@ public class ActivityFeedServlet extends HttpServlet {
 
     
     private Instant getCreationTime(Object object) {
-        if (object.getClass() == Conversation.class) {
+        if (object instanceof Conversation) {
           return ((Conversation) object).getCreationTime();
         } 
-        else if (object.getClass() == Message.class) {
+        else if (object instanceof Message) {
           return ((Message) object).getCreationTime();
         }
-        else if (object.getClass() == User.class) {
+        else if (object instanceof User) {
           return ((User) object).getCreationTime();
         }
         return null;
