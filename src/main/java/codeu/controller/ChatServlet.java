@@ -137,9 +137,16 @@ public class ChatServlet extends HttpServlet {
 		String conversationTitle = requestUrl.substring("/chat/".length());
 
 		Conversation conversation = conversationStore.getConversationWithTitle(conversationTitle);
+
 		if (conversation == null) {
 			// couldn't find conversation, redirect to conversation list
 			response.sendRedirect("/conversations");
+			return;
+		}
+
+		if (TestDataGenerator.getInstance().isTestConversation(conversation.getId())) {
+			// No user may contribute to a test conversation
+			response.sendRedirect("/chat/" + conversationTitle);
 			return;
 		}
 

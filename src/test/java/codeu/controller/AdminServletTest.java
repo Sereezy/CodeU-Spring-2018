@@ -40,7 +40,6 @@ public class AdminServletTest {
   @Before
   public void setup() {
     adminServlet = new AdminServlet();
-    adminServlet.setAdminUsernames();
 
     setUpStores();
 
@@ -70,7 +69,7 @@ public class AdminServletTest {
 
   @Test
   public void testDoGet_NonAdmin() throws IOException, ServletException {
-    Mockito.when(mockSession.getAttribute("user")).thenReturn("not an admin");
+    Mockito.when(mockSession.getAttribute("isAdmin")).thenReturn(false);
 
     adminServlet.doGet(mockRequest, mockResponse);
 
@@ -79,7 +78,7 @@ public class AdminServletTest {
 
   @Test
   public void testDoGet_Admin() throws IOException, ServletException {
-    Mockito.when(mockSession.getAttribute("user")).thenReturn("admin");
+    Mockito.when(mockSession.getAttribute("isAdmin")).thenReturn(true);
 
     adminServlet.doGet(mockRequest, mockResponse);
 
@@ -89,7 +88,7 @@ public class AdminServletTest {
   // Number of users tests
   @Test
   public void testNumberOfUsers_NoUsers() throws IOException, ServletException {
-    Mockito.when(mockSession.getAttribute("user")).thenReturn("admin");
+    Mockito.when(mockSession.getAttribute("isAdmin")).thenReturn(true);
 
     List<User> mockAllUsers = new ArrayList<User>();
 
@@ -103,7 +102,7 @@ public class AdminServletTest {
 
   @Test
   public void testNumberOfUsers_MultipleUsers() throws IOException, ServletException {
-    Mockito.when(mockSession.getAttribute("user")).thenReturn("admin");
+    Mockito.when(mockSession.getAttribute("isAdmin")).thenReturn(true);
 
     User u1 = new User(UUID.randomUUID(), "user1", "hashed_pw", Instant.now());
     User u2 = new User(UUID.randomUUID(), "user2", "hashed_pw", Instant.now());
@@ -124,7 +123,7 @@ public class AdminServletTest {
   // Newest user tests
   @Test
   public void testNewestUser_NoUsers() throws IOException, ServletException {
-    Mockito.when(mockSession.getAttribute("user")).thenReturn("admin");
+    Mockito.when(mockSession.getAttribute("isAdmin")).thenReturn(true);
 
     List<User> mockAllUsers = new ArrayList<User>();
     Mockito.when(mockUserStore.getAllUsers()).thenReturn(mockAllUsers);
@@ -136,7 +135,7 @@ public class AdminServletTest {
 
   @Test
   public void testNewestUser_MultipleUsers() throws IOException, ServletException {
-    Mockito.when(mockSession.getAttribute("user")).thenReturn("admin");
+    Mockito.when(mockSession.getAttribute("isAdmin")).thenReturn(true);
 
     User u1 = new User(UUID.randomUUID(), "user1", "hashed_pw", Instant.ofEpochSecond(200));
     User u2 = new User(UUID.randomUUID(), "user2", "hashed_pw", Instant.ofEpochSecond(300));
@@ -157,7 +156,7 @@ public class AdminServletTest {
   // Most active user tests
   @Test
   public void testMostActiveUser_NoUsers() throws IOException, ServletException {
-    Mockito.when(mockSession.getAttribute("user")).thenReturn("admin");
+    Mockito.when(mockSession.getAttribute("isAdmin")).thenReturn(true);
 
     List<User> mockAllUsers = new ArrayList<User>();
     Mockito.when(mockUserStore.getAllUsers()).thenReturn(mockAllUsers);
@@ -169,7 +168,7 @@ public class AdminServletTest {
 
   @Test
   public void testMostActiveUser_MultipleUsers() throws IOException, ServletException {
-    Mockito.when(mockSession.getAttribute("user")).thenReturn("admin");
+    Mockito.when(mockSession.getAttribute("isAdmin")).thenReturn(true);
 
     // Set up mock users
     User u1 = new User(UUID.randomUUID(), "user1", "hashed_pw", Instant.now());
@@ -222,7 +221,7 @@ public class AdminServletTest {
   // Number of conversations test
   @Test
   public void testNumberOfConversations_NoConversations() throws IOException, ServletException {
-    Mockito.when(mockSession.getAttribute("user")).thenReturn("admin");
+    Mockito.when(mockSession.getAttribute("isAdmin")).thenReturn(true);
 
     List<Conversation> mockAllConversations = new ArrayList<Conversation>();
 
@@ -235,7 +234,7 @@ public class AdminServletTest {
 
   @Test
   public void testNumberOfConversations_MultipleConversations() throws IOException, ServletException {
-    Mockito.when(mockSession.getAttribute("user")).thenReturn("admin");
+    Mockito.when(mockSession.getAttribute("isAdmin")).thenReturn(true);
 
     List<Conversation> mockAllConversations = new ArrayList<Conversation>();
     UUID mockUserID = UUID.randomUUID();
@@ -255,7 +254,7 @@ public class AdminServletTest {
   // Number of messages tests
   @Test
   public void testNumberOfMessages_NoConversations() throws IOException, ServletException {
-    Mockito.when(mockSession.getAttribute("user")).thenReturn("admin");
+    Mockito.when(mockSession.getAttribute("isAdmin")).thenReturn(true);
 
     List<Conversation> mockAllConversations = new ArrayList<Conversation>();
     Mockito.when(mockConversationStore.getAllConversations()).thenReturn(mockAllConversations);
@@ -267,7 +266,7 @@ public class AdminServletTest {
 
   @Test
   public void testNumberOfMessages_NoMessages() throws IOException, ServletException {
-    Mockito.when(mockSession.getAttribute("user")).thenReturn("admin");
+    Mockito.when(mockSession.getAttribute("isAdmin")).thenReturn(true);
 
     List<Conversation> mockAllConversations = new ArrayList<Conversation>();
     Conversation emptyConversation = new Conversation(UUID.randomUUID(), UUID.randomUUID(), "empty conversation", Instant.now());
@@ -285,7 +284,7 @@ public class AdminServletTest {
 
   @Test
   public void testNumberOfMessages_MultipleMessages() throws IOException, ServletException {
-    Mockito.when(mockSession.getAttribute("user")).thenReturn("admin");
+    Mockito.when(mockSession.getAttribute("isAdmin")).thenReturn(true);
 
     List<Conversation> mockAllConversations = new ArrayList<Conversation>();
     UUID mockUserID = UUID.randomUUID();
@@ -323,7 +322,7 @@ public class AdminServletTest {
   // Average messages per conversation tests
   @Test
   public void testAvgMessagesPerConvo_NoConvos() throws IOException, ServletException {
-    Mockito.when(mockSession.getAttribute("user")).thenReturn("admin");
+    Mockito.when(mockSession.getAttribute("isAdmin")).thenReturn(true);
 
     List<Conversation> mockAllConversations = new ArrayList<Conversation>();
     Mockito.when(mockConversationStore.getAllConversations()).thenReturn(mockAllConversations);
@@ -335,7 +334,7 @@ public class AdminServletTest {
 
   @Test
   public void testAvgMessagesPerConvo_NoMessages() throws IOException, ServletException {
-    Mockito.when(mockSession.getAttribute("user")).thenReturn("admin");
+    Mockito.when(mockSession.getAttribute("isAdmin")).thenReturn(true);
 
     List<Conversation> mockAllConversations = new ArrayList<Conversation>();
     Conversation emptyConversation = new Conversation(UUID.randomUUID(), UUID.randomUUID(), "empty conversation", Instant.now());
@@ -354,7 +353,7 @@ public class AdminServletTest {
 
   @Test
   public void testAvgMessagesPerConvo_MultipleMessages() throws IOException, ServletException {
-    Mockito.when(mockSession.getAttribute("user")).thenReturn("admin");
+    Mockito.when(mockSession.getAttribute("isAdmin")).thenReturn(true);
 
     List<Conversation> mockAllConversations = new ArrayList<Conversation>();
     UUID mockUserID = UUID.randomUUID();
@@ -397,7 +396,7 @@ public class AdminServletTest {
   // Average words per message tests
   @Test
   public void testAvgWordsPerMessage_NoConvos() throws IOException, ServletException {
-    Mockito.when(mockSession.getAttribute("user")).thenReturn("admin");
+    Mockito.when(mockSession.getAttribute("isAdmin")).thenReturn(true);
 
     List<Conversation> mockAllConversations = new ArrayList<Conversation>();
     Mockito.when(mockConversationStore.getAllConversations()).thenReturn(mockAllConversations);
@@ -411,7 +410,7 @@ public class AdminServletTest {
 
   @Test
   public void testAvgWordsPerMessage_NoMessages() throws IOException, ServletException {
-    Mockito.when(mockSession.getAttribute("user")).thenReturn("admin");
+    Mockito.when(mockSession.getAttribute("isAdmin")).thenReturn(true);
 
     List<Conversation> mockAllConversations = new ArrayList<Conversation>();
     Conversation emptyConversation = new Conversation(UUID.randomUUID(), UUID.randomUUID(), "empty conversation", Instant.now());
@@ -430,7 +429,7 @@ public class AdminServletTest {
 
   @Test
   public void testAvgWordsPerMessage_MultipleMessages() throws IOException, ServletException {
-    Mockito.when(mockSession.getAttribute("user")).thenReturn("admin");
+    Mockito.when(mockSession.getAttribute("isAdmin")).thenReturn(true);
 
     List<Conversation> mockAllConversations = new ArrayList<Conversation>();
     UUID mockUserID = UUID.randomUUID();

@@ -14,11 +14,13 @@
 
 package codeu.model.store.basic;
 
-import codeu.model.data.Message;
-import codeu.model.store.persistence.PersistentStorageAgent;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
+
+import codeu.model.data.Message;
+import codeu.model.store.persistence.PersistentStorageAgent;
 
 /**
  * Store class that uses in-memory data structures to hold values and automatically loads from and
@@ -71,6 +73,10 @@ public class MessageStore {
     persistentStorageAgent.writeThrough(message);
   }
 
+  public void addVolatileMessage(Message message) {
+    messages.add(message);
+  }
+
   /** Access the current set of Messages within the given Conversation. */
   public List<Message> getMessagesInConversation(UUID conversationId) {
 
@@ -85,8 +91,13 @@ public class MessageStore {
     return messagesInConversation;
   }
 
+  public List<Message> getAllMessages() {
+    return messages;
+  }
+
   /** Sets the List of Messages stored by this MessageStore. */
   public void setMessages(List<Message> messages) {
     this.messages = messages;
   }
+
 }
