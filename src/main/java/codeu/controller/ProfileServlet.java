@@ -42,16 +42,16 @@ public class ProfileServlet extends HttpServlet {
     public void doPost(HttpServletRequest request, HttpServletResponse response)
         throws IOException, ServletException {
 					String username = (String) request.getSession().getAttribute("user");
+					String userValue = request.getParameter("userprofile");
 					UserProfile firstprofile =
 							new UserProfile(
 									UUID.randomUUID(),
 									UUID.randomUUID(),
-									"first profile");
+									userValue);
 
 					profileuserStore.addUserProfile(firstprofile);
 					UserProfile testProfile = profileuserStore.getUserProfileContent().get(0);
 
-					String userValue = request.getParameter("userprofile");
 					System.out.println(userValue);
 					response.sendRedirect("/profile/" + request.getSession().getAttribute("user"));
     }
