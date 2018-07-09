@@ -1,7 +1,6 @@
 <%@ page import="codeu.model.store.basic.UserProfileStore" %>
 <%@ page import="codeu.model.data.UserProfile" %>
 
-<%= request.getAttribute("userprofile") %>
 
 <!DOCTYPE html>
 
