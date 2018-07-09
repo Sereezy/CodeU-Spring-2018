@@ -31,7 +31,11 @@
 
     <div id="container"><h1><%=request.getSession().getAttribute("user")%>'s Profile</h1>
          <hr/>
-         <p><%= request.getAttribute("userprofile") %><p>
+         <% if(request.getSession().getAttribute("user") != null){ %>
+          <p><%= request.getAttribute("userprofile") %><p>
+         <% } else{ %>
+            <p> </p>
+         <% } %>
          <form action="/profile/<%=request.getSession().getAttribute("user")%>" method="POST">
            <input type="text" name="userprofile">
              <br/><br/>
