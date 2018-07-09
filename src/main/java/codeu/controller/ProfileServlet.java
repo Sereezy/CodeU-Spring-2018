@@ -30,12 +30,12 @@ public class ProfileServlet extends HttpServlet {
     public void doGet(HttpServletRequest request, HttpServletResponse response)
         throws IOException, ServletException {
 					List<UserProfile> profiles = profileuserStore.getUserProfileContent();
-					if !profiles.isEmpty();
+					if (!profiles.isEmpty()){
 					UserProfile oneprofile = profiles.get(0);
 					String aboutme = oneprofile.getContent();
 					request.setAttribute("userprofile", aboutme);
+				}
         	request.getRequestDispatcher("/WEB-INF/view/profile.jsp").forward(request, response);
-
     }
 
     @Override
