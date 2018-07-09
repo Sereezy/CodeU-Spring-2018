@@ -25,7 +25,7 @@ import com.google.appengine.api.datastore.KeyFactory;
 import codeu.model.data.UserProfile;
 
 import codeu.model.data.Conversation;
-import codeu.model.data.ImageMessage;
+import codeu.model.data.ImageAttachment;
 import codeu.model.data.Message;
 import codeu.model.data.User;
 import codeu.model.data.UserProfile;
@@ -99,7 +99,7 @@ public class PersistentStorageAgent {
     return persistentDataStore.loadMessages();
   }
 
-  public List<ImageMessage> loadImages() throws PersistentDataStoreException {
+  public List<ImageAttachment> loadImages() throws PersistentDataStoreException {
     return persistentDataStore.loadImages();
   }
 
@@ -122,7 +122,7 @@ public class PersistentStorageAgent {
     persistentDataStore.writeThrough(userprofile);
   }
 
-  public void writeThrough(ImageMessage image) {
+  public void writeThrough(ImageAttachment image) {
     persistentDataStore.writeThrough(image);
   }
 

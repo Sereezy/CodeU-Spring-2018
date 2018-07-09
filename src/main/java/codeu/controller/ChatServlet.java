@@ -35,7 +35,7 @@ import org.jsoup.safety.Cleaner;
 import org.jsoup.safety.Whitelist;
 
 import codeu.model.data.Conversation;
-import codeu.model.data.ImageMessage;
+import codeu.model.data.ImageAttachment;
 import codeu.model.data.Message;
 import codeu.model.data.User;
 import codeu.model.store.basic.ConversationStore;
@@ -186,7 +186,7 @@ public class ChatServlet extends HttpServlet {
 		if (fileStream.available() > 0) {
 			BufferedImage image = ImageIO.read(fileStream);
 
-			ImageMessage imageMessage = new ImageMessage(UUID.randomUUID(), image);
+			ImageAttachment imageMessage = new ImageAttachment(UUID.randomUUID(), image);
 
 			String src = "/image/" + imageMessage.getId().toString();
 			String content = "<img src=" + src + " width=500>";

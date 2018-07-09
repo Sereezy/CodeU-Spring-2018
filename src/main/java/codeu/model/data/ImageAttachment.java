@@ -10,18 +10,18 @@ import java.util.UUID;
 import javax.imageio.ImageIO;
 
 
-public class ImageMessage {
+public class ImageAttachment {
 
   private BufferedImage image;
 
   private UUID id;
 
-  public ImageMessage(UUID id, BufferedImage image) {
+  public ImageAttachment(UUID id, BufferedImage image) {
     this.image = image;
     this.id = id;
   }
 
-  public ImageMessage(UUID id, String base64String) {
+  public ImageAttachment(UUID id, String base64String) {
     try {
       this.image = getImageFromString(base64String);
     } catch (IOException e) {}

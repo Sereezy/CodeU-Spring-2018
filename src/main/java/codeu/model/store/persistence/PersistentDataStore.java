@@ -28,7 +28,7 @@ import com.google.appengine.api.datastore.Query.SortDirection;
 import com.google.appengine.api.datastore.Text;
 
 import codeu.model.data.Conversation;
-import codeu.model.data.ImageMessage;
+import codeu.model.data.ImageAttachment;
 import codeu.model.data.Message;
 import codeu.model.data.User;
 import codeu.model.data.UserProfile;
@@ -180,8 +180,8 @@ public class PersistentDataStore {
     return messages;
   }
 
-  public List<ImageMessage> loadImages() throws PersistentDataStoreException {
-    List<ImageMessage> images = new ArrayList<ImageMessage>();
+  public List<ImageAttachment> loadImages() throws PersistentDataStoreException {
+    List<ImageAttachment> images = new ArrayList<ImageAttachment>();
 
     // Retrieve all messages from the datastore.
     Query query = new Query("chat-images");
@@ -192,7 +192,7 @@ public class PersistentDataStore {
         UUID uuid = UUID.fromString((String) entity.getProperty("uuid"));
         String imageBytes = ((Text) entity.getProperty("image_bytes")).getValue();
 
-        ImageMessage image = new ImageMessage(uuid, imageBytes);
+        ImageAttachment image = new ImageAttachment(uuid, imageBytes);
         images.add(image);
       } catch (Exception e) {
         e.printStackTrace();
@@ -246,7 +246,7 @@ public class PersistentDataStore {
     datastore.put(conversationEntity);
   }
 
-  public void writeThrough(ImageMessage image) {
+  public void writeThrough(ImageAttachment image) {
     Entity imageEntity = new Entity("chat-images", image.getId().toString());
     imageEntity.setProperty("uuid", image.getId().toString());
 

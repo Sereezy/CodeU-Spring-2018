@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.UUID;
 
-import codeu.model.data.ImageMessage;
+import codeu.model.data.ImageAttachment;
 import codeu.model.store.persistence.PersistentStorageAgent;
 
 public class ImageStore {
@@ -22,21 +22,21 @@ public class ImageStore {
 
   private PersistentStorageAgent persistentStorageAgent;
 
-  private List<ImageMessage> images;
+  private List<ImageAttachment> images;
 
   private ImageStore(PersistentStorageAgent persistentStorageAgent) {
     this.persistentStorageAgent = persistentStorageAgent;
 
-    images = new ArrayList<ImageMessage>();
+    images = new ArrayList<ImageAttachment>();
   }
 
-  public void addImage(ImageMessage im) {
+  public void addImage(ImageAttachment im) {
     images.add(im);
     persistentStorageAgent.writeThrough(im);
   }
 
-  public ImageMessage getImage(UUID id) {
-    for (ImageMessage im : images) {
+  public ImageAttachment getImage(UUID id) {
+    for (ImageAttachment im : images) {
       if (im.getId().equals(id)) {
         return im;
       }
@@ -44,7 +44,7 @@ public class ImageStore {
     return null;
   }
 
-  public void setImages(List<ImageMessage> images) {
+  public void setImages(List<ImageAttachment> images) {
     this.images = images;
   }
 }

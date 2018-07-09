@@ -10,7 +10,7 @@ import javax.servlet.ServletContextListener;
 import org.mindrot.jbcrypt.BCrypt;
 
 import codeu.model.data.Conversation;
-import codeu.model.data.ImageMessage;
+import codeu.model.data.ImageAttachment;
 import codeu.model.data.Message;
 import codeu.model.data.User;
 import codeu.model.data.UserProfile;
@@ -53,7 +53,7 @@ public class ServerStartupListener implements ServletContextListener {
       List<UserProfile> userprofiles = PersistentStorageAgent.getInstance().loadUserProfiles();
       UserProfileStore.getInstance().setUserProfiles(userprofiles);
 
-      List<ImageMessage> images = PersistentStorageAgent.getInstance().loadImages();
+      List<ImageAttachment> images = PersistentStorageAgent.getInstance().loadImages();
       ImageStore.getInstance().setImages(images);
 
     } catch (PersistentDataStoreException e) {

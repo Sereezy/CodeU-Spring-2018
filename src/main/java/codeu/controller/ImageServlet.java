@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import codeu.model.data.ImageMessage;
+import codeu.model.data.ImageAttachment;
 import codeu.model.store.basic.ImageStore;
 
 public class ImageServlet extends HttpServlet {
@@ -37,7 +37,7 @@ public class ImageServlet extends HttpServlet {
     String imageId = requestUrl.substring("/image/".length());
     UUID imageUUID = UUID.fromString(imageId);
 
-    ImageMessage imageMessage = imageStore.getImage(imageUUID);
+    ImageAttachment imageMessage = imageStore.getImage(imageUUID);
 
     if (imageMessage == null) {
       System.out.println("No image found with id: " + imageId);
