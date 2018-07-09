@@ -178,23 +178,30 @@ public class ChatServlet extends HttpServlet {
 		s.close();
 
 		// Add image message if there is one
+
 		Part filePart = request.getPart("upload");
 		InputStream fileStream = filePart.getInputStream();
 
 		// fileStream.available() returns the number of bytes that are ready to read,
-		// so if it is 0, then no file was uploaded.
-		if (fileStream.available() > 0) {
+		// so if it is 0, then no file was uploaded. We also cap this at 1MB because
+		// that is the max data size that can be saved as a property in the datastore.
+		int bytesAvailable = fileStream.available();
+		if (bytesAvailable > 0 && bytesAvailable < 1000000) {
+
+			// Convert bytestream into BufferedImage object
 			BufferedImage image = ImageIO.read(fileStream);
 
-			ImageAttachment imageMessage = new ImageAttachment(UUID.randomUUID(), image);
+			// Create image attachment object from BufferedImage object
+			ImageAttachment imageAttachment = new ImageAttachment(UUID.randomUUID(), image);
 
-			String src = "/image/" + imageMessage.getId().toString();
+			// Set the content of the message to an img tag that calls the ImageServlet
+			String src = "/image/" + imageAttachment.getId().toString();
 			String content = "<img src=" + src + " width=500>";
 			Message message = new Message(UUID.randomUUID(), conversation.getId(),
 					user.getId(), content, Instant.now());
 
 			messageStore.addMessage(message);
-			imageStore.addImage(imageMessage);
+			imageStore.addImage(imageAttachment);
 		}
 
 		// redirect to a GET request

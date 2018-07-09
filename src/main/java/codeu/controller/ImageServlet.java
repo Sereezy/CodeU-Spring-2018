@@ -33,19 +33,22 @@ public class ImageServlet extends HttpServlet {
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) {
 
+    // Get the UUID of the requested image
     String requestUrl = request.getRequestURI();
     String imageId = requestUrl.substring("/image/".length());
     UUID imageUUID = UUID.fromString(imageId);
 
-    ImageAttachment imageMessage = imageStore.getImage(imageUUID);
+    ImageAttachment imageAttachment = imageStore.getImage(imageUUID);
 
-    if (imageMessage == null) {
+    if (imageAttachment == null) {
       System.out.println("No image found with id: " + imageId);
       return;
     }
-    BufferedImage image = imageMessage.getImage();
+    
+    BufferedImage image = imageAttachment.getImage();
     response.setContentType("image/png");
 
+    // Write the bytes of the image to the response
     try {
       OutputStream out = response.getOutputStream();
       ImageIO.write(image, "png", out);

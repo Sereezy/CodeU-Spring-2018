@@ -30,15 +30,15 @@ public class ImageStore {
     images = new ArrayList<ImageAttachment>();
   }
 
-  public void addImage(ImageAttachment im) {
-    images.add(im);
-    persistentStorageAgent.writeThrough(im);
+  public void addImage(ImageAttachment imageAttachment) {
+    images.add(imageAttachment);
+    persistentStorageAgent.writeThrough(imageAttachment);
   }
 
   public ImageAttachment getImage(UUID id) {
-    for (ImageAttachment im : images) {
-      if (im.getId().equals(id)) {
-        return im;
+    for (ImageAttachment image : images) {
+      if (image.getId().equals(id)) {
+        return image;
       }
     }
     return null;
