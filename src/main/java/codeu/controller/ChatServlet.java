@@ -188,11 +188,13 @@ public class ChatServlet extends HttpServlet {
 
 			ImageMessage imageMessage = new ImageMessage(UUID.randomUUID(), image);
 
-			String src = "http://www.clker.com/cliparts/3/m/v/Y/E/V/small-red-apple-hi.png";
+			String src = "/image/" + imageMessage.getId().toString();
 			String content = "<img src=" + src + " width=500>";
 			Message message = new Message(UUID.randomUUID(), conversation.getId(),
-			 		user.getId(), content, Instant.now());
+					user.getId(), content, Instant.now());
+
 			messageStore.addMessage(message);
+			imageStore.addImage(imageMessage);
 		}
 
 		// redirect to a GET request
