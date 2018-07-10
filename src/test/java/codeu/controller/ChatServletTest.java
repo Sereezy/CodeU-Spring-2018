@@ -178,7 +178,10 @@ public class ChatServletTest {
     Mockito.when(mockConversationStore.getConversationWithTitle("test_conversation"))
         .thenReturn(fakeConversation);
 
-    Mockito.when(mockRequest.getPart("message")).thenReturn(getMockStringPart("Test message."));
+    String messageContent = "Test message.";
+    Part mockPart = Mockito.mock(Part.class);
+    Mockito.when(mockPart.getInputStream()).thenReturn(getInputStreamFromString(messageContent));
+    Mockito.when(mockRequest.getPart("message")).thenReturn(mockPart);
 
     chatServlet.doPost(mockRequest, mockResponse);
 
@@ -209,8 +212,10 @@ public class ChatServletTest {
 
     String messageContent = "Contains <b>html</b> and <script>JavaScript</script> content.";
 
+    Part mockPart = Mockito.mock(Part.class);
+    Mockito.when(mockPart.getInputStream()).thenReturn(getInputStreamFromString(messageContent));
     Mockito.when(mockRequest.getPart("message"))
-        .thenReturn(getMockStringPart(messageContent));
+        .thenReturn(mockPart);
 
     chatServlet.doPost(mockRequest, mockResponse);
 
@@ -222,42 +227,8 @@ public class ChatServletTest {
     Mockito.verify(mockResponse).sendRedirect("/chat/test_conversation");
   }
 
-  private Part getMockStringPart(String str) {
-    Part mockPart = new Part() {
-      @Override
-      public InputStream getInputStream() {
-        InputStream inputStream = new ByteArrayInputStream(str.getBytes(StandardCharsets.UTF_8));
-        return inputStream;
-      }
-      @Override
-      public String getContentType() { return null; }
-
-      @Override
-      public String getName() { return null; }
-
-      @Override
-      public String getSubmittedFileName() { return null; }
-
-      @Override
-      public long getSize() { return 0; }
-
-      @Override
-      public void write(String fileName) throws IOException { }
-
-      @Override
-      public void delete() throws IOException { }
-
-      @Override
-      public String getHeader(String name) { return null; }
-
-      @Override
-      public Collection<String> getHeaders(String name) { return null; }
-
-      @Override
-      public Collection<String> getHeaderNames() { return null; }
-    };
-
-    return mockPart;
+  private InputStream getInputStreamFromString(String str) {
+    return new ByteArrayInputStream(str.getBytes(StandardCharsets.UTF_8));
   }
 
 }
