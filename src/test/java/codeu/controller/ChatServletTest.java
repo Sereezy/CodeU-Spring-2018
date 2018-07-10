@@ -14,31 +14,35 @@
 
 package codeu.controller;
 
-import codeu.model.data.Conversation;
-import codeu.model.data.Message;
-import codeu.model.data.User;
-import codeu.model.store.basic.ConversationStore;
-import codeu.model.store.basic.MessageStore;
-import codeu.model.store.basic.UserStore;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
+
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.servlet.http.Part;
 
-import org.jsoup.Jsoup;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 
-import com.google.apphosting.runtime.security.WhiteList;
+import codeu.model.data.Conversation;
+import codeu.model.data.Message;
+import codeu.model.data.User;
+import codeu.model.store.basic.ConversationStore;
+import codeu.model.store.basic.MessageStore;
+import codeu.model.store.basic.UserStore;
 
 public class ChatServletTest {
 
@@ -73,7 +77,7 @@ public class ChatServletTest {
     mockUserStore = Mockito.mock(UserStore.class);
     chatServlet.setUserStore(mockUserStore);
   }
-  /*
+
   @Test
   public void testDoGet() throws IOException, ServletException {
     Mockito.when(mockRequest.getRequestURI()).thenReturn("/chat/test_conversation");
@@ -174,7 +178,7 @@ public class ChatServletTest {
     Mockito.when(mockConversationStore.getConversationWithTitle("test_conversation"))
         .thenReturn(fakeConversation);
 
-    Mockito.when(mockRequest.getParameter("message")).thenReturn("Test message.");
+    Mockito.when(mockRequest.getPart("message")).thenReturn(getMockStringPart("Test message."));
 
     chatServlet.doPost(mockRequest, mockResponse);
 
@@ -203,18 +207,57 @@ public class ChatServletTest {
     Mockito.when(mockConversationStore.getConversationWithTitle("test_conversation"))
         .thenReturn(fakeConversation);
 
-    Mockito.when(mockRequest.getParameter("message"))
-        .thenReturn("Contains <b>html</b> and <script>JavaScript</script> content.");
+    String messageContent = "Contains <b>html</b> and <script>JavaScript</script> content.";
+
+    Mockito.when(mockRequest.getPart("message"))
+        .thenReturn(getMockStringPart(messageContent));
 
     chatServlet.doPost(mockRequest, mockResponse);
 
     ArgumentCaptor<Message> messageArgumentCaptor = ArgumentCaptor.forClass(Message.class);
     Mockito.verify(mockMessageStore).addMessage(messageArgumentCaptor.capture());
     Assert.assertEquals(
-    		"Contains <b>html</b> and  content.", messageArgumentCaptor.getValue().getContent());
+        "Contains <b>html</b> and  content.", messageArgumentCaptor.getValue().getContent());
 
     Mockito.verify(mockResponse).sendRedirect("/chat/test_conversation");
   }
-  */
-}
 
+  private Part getMockStringPart(String str) {
+    Part mockPart = new Part() {
+      @Override
+      public InputStream getInputStream() {
+        InputStream inputStream = new ByteArrayInputStream(str.getBytes(StandardCharsets.UTF_8));
+        return inputStream;
+      }
+      @Override
+      public String getContentType() { return null; }
+
+      @Override
+      public String getName() { return null; }
+
+      @Override
+      public String getSubmittedFileName() { return null; }
+
+      @Override
+      public long getSize() { return 0; }
+
+      @Override
+      public void write(String fileName) throws IOException { }
+
+      @Override
+      public void delete() throws IOException { }
+
+      @Override
+      public String getHeader(String name) { return null; }
+
+      @Override
+      public Collection<String> getHeaders(String name) { return null; }
+
+      @Override
+      public Collection<String> getHeaderNames() { return null; }
+    };
+
+    return mockPart;
+  }
+
+}
