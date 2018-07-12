@@ -31,7 +31,7 @@ public class ProfileServlet extends HttpServlet {
         throws IOException, ServletException {
 					List<UserProfile> profiles = profileuserStore.getUserProfileContent();
 					if (!profiles.isEmpty()){
-					UserProfile oneprofile = profiles.get(.size-1);
+					UserProfile oneprofile = profiles.get(.size-1)
 					String aboutme = oneprofile.getContent();
 					request.setAttribute("userprofile", aboutme);
 				}
@@ -50,7 +50,7 @@ public class ProfileServlet extends HttpServlet {
 									userValue);
 
 					profileuserStore.addUserProfile(firstprofile);
-					UserProfile testProfile = profileuserStore.getUserProfileContent().get(.size-1);
+					UserProfile testProfile = profileuserStore.getUserProfileContent().get(.size-1)
 
 					System.out.println(userValue);
 					response.sendRedirect("/profile/" + request.getSession().getAttribute("user"));
