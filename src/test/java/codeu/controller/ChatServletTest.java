@@ -186,8 +186,8 @@ public class ChatServletTest {
     Mockito.verify(mockResponse).sendRedirect("/chat/test_conversation");
   }
 
- // @Test
- /*public void testDoPost_CleansHtmlContent() throws IOException, ServletException {
+ @Test
+ public void testDoPost_CleansHtmlContent() throws IOException, ServletException {
     Mockito.when(mockRequest.getRequestURI()).thenReturn("/chat/test_conversation");
     Mockito.when(mockSession.getAttribute("user")).thenReturn("test_username");
 
@@ -206,7 +206,8 @@ public class ChatServletTest {
 
     Mockito.when(mockRequest.getParameter("message"))
         .thenReturn("Contains <b>html</b> and <script>JavaScript</script> content.");
-
+    Mockito.when(mockRequest.getParameter("GIFSrc")).thenReturn("");
+    
     chatServlet.doPost(mockRequest, mockResponse);
 
     ArgumentCaptor<Message> messageArgumentCaptor = ArgumentCaptor.forClass(Message.class);
@@ -215,5 +216,5 @@ public class ChatServletTest {
     		"Contains <b>html</b> and  content.", messageArgumentCaptor.getValue().getContent());
 
     Mockito.verify(mockResponse).sendRedirect("/chat/test_conversation");
-  }*/
+  }
 }

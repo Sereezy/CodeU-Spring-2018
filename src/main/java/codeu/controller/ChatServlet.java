@@ -153,19 +153,19 @@ public class ChatServlet extends HttpServlet {
 		String messageContent = request.getParameter("message");
 		String GIFSrc = request.getParameter("GIFSrc");
 		
-		if (GIFSrc != "") { //if no text content but there is a GIF
+		if (!GIFSrc.equals("")) { //if no text content but there is a GIF
 			Message message = new Message(UUID.randomUUID(), conversation.getId(), user.getId(), GIFSrc,
 					Instant.now());
 			messageStore.addMessage(message);
 		}
 		
-		if((GIFSrc == ""  && messageContent != "") || (GIFSrc == ""  && messageContent == "")) {
+		if((GIFSrc.equals("")  && !messageContent.equals("")) || (GIFSrc.equals("")  && messageContent.equals(""))) {
 			// allows users to enter basic HTML tags that are not a threat to security
 			String HTMLMessageContent = clean(messageContent);
 	
 			Message message = new Message(UUID.randomUUID(), conversation.getId(), user.getId(), HTMLMessageContent,
 					Instant.now());
-	
+			System.out.println("here");
 			messageStore.addMessage(message);
 		}
 		// redirect to a GET request
