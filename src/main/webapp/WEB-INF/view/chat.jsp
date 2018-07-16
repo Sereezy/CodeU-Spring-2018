@@ -43,7 +43,12 @@ List<Message> messages = (List<Message>) request.getAttribute("messages");
     function scrollChat() {
       var chatDiv = document.getElementById('chat');
       chatDiv.scrollTop = chatDiv.scrollHeight;
-    };
+    }
+    
+    function sendGIF(el) {
+    	document.getElementById("hiddenField").value = el.src;
+    	document.forms["chat"].submit();
+    }
   </script>
 </head>
 <body onload="scrollChat()">
@@ -90,9 +95,9 @@ List<Message> messages = (List<Message>) request.getAttribute("messages");
     <hr/>
 
     <% if (request.getSession().getAttribute("user") != null) { %>
-    <form action="/chat/<%= conversation.getTitle() %>" method="POST">
+    <form name="chat" action="/chat/<%= conversation.getTitle() %>" method="POST">
         <input type="text" name="message">
-        
+        <input type="hidden" name="GIFSrc" id="hiddenField" value=""/>
         <!-- Button trigger modal -->
 		<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalLong">
 		  Send a GIF
@@ -113,24 +118,24 @@ List<Message> messages = (List<Message>) request.getAttribute("messages");
 				  <div class="row">
 				    <div class="col">
 				    	<div data-dismiss="modal">
-     						<img src="https://i.giphy.com/media/feqkVgjJpYtjy/200.gif" class="img-fluid" alt="Responsive image">
+     						<img onclick="sendGIF(this)" src="https://i.giphy.com/media/feqkVgjJpYtjy/200.gif" class="img-fluid">
      					</div>
 				    </div>
 				    <div class="col">
 				    	<div data-dismiss="modal">
-				      		<img src="https://media0.giphy.com/media/HkEAY1Yu8UWLS/giphy.gif" class="img-fluid" alt="Responsive image">
+				      		<img onclick="sendGIF(this)" src="https://media0.giphy.com/media/HkEAY1Yu8UWLS/giphy.gif" class="img-fluid">
 				    	</div>
 				    </div>
 				  </div>
 				  <div class="row">
 				    <div class="col">
 				    	<div data-dismiss="modal">
-				      		<img src="https://media1.giphy.com/media/tG6ZDOfW5Xeo/giphy.gif" class="img-fluid" alt="Responsive image">
+				      		<img onclick="sendGIF(this)" src="https://media1.giphy.com/media/tG6ZDOfW5Xeo/giphy.gif" class="img-fluid">
 				      	</div>
 				    </div>
 				    <div class="col">
 				    	<div data-dismiss="modal">
-				      		<img src="https://media3.giphy.com/media/1tS2pqIiNwJDa/giphy.gif" class="img-fluid" alt="Responsive image">
+				      		<img onclick="sendGIF(this)" src="https://media3.giphy.com/media/1tS2pqIiNwJDa/giphy.gif" class="img-fluid">
 				      	</div>
 				    </div>
 				  </div>
