@@ -13,29 +13,38 @@
 // limitations under the License.
 package codeu.controller;
 
-import codeu.model.data.Conversation;
-
-import codeu.model.data.Message;
-import codeu.model.data.User;
-import codeu.model.store.basic.ConversationStore;
-import codeu.model.store.basic.MessageStore;
-import codeu.model.store.basic.UserStore;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.io.InputStream;
 import java.time.Instant;
 import java.util.List;
+import java.util.Scanner;
 import java.util.UUID;
+
+import javax.imageio.ImageIO;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.jsoup.Jsoup;
-import org.jsoup.parser.Parser;
-import org.jsoup.safety.Whitelist;
+import javax.servlet.http.Part;
+
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
+import org.jsoup.parser.Parser;
 import org.jsoup.safety.Cleaner;
+import org.jsoup.safety.Whitelist;
+
+import codeu.model.data.Conversation;
+import codeu.model.data.ImageAttachment;
+import codeu.model.data.Message;
+import codeu.model.data.User;
+import codeu.model.store.basic.ConversationStore;
+import codeu.model.store.basic.ImageStore;
+import codeu.model.store.basic.MessageStore;
+import codeu.model.store.basic.UserStore;
 
 /** Servlet class responsible for the chat page. */
+@MultipartConfig
 public class ChatServlet extends HttpServlet {
 
 	/** Store class that gives access to Conversations. */
@@ -47,6 +56,8 @@ public class ChatServlet extends HttpServlet {
 	/** Store class that gives access to Users. */
 	private UserStore userStore;
 
+	private ImageStore imageStore;
+
 	/** Set up state for handling chat requests. */
 	@Override
 	public void init() throws ServletException {
@@ -54,6 +65,7 @@ public class ChatServlet extends HttpServlet {
 		setConversationStore(ConversationStore.getInstance());
 		setMessageStore(MessageStore.getInstance());
 		setUserStore(UserStore.getInstance());
+		setImageStore(ImageStore.getInstance());
 	}
 
 	/**
@@ -79,6 +91,10 @@ public class ChatServlet extends HttpServlet {
 	 */
 	void setUserStore(UserStore userStore) {
 		this.userStore = userStore;
+	}
+
+	void setImageStore(ImageStore imageStore) {
+		this.imageStore = imageStore;
 	}
 
 	/**
@@ -144,22 +160,52 @@ public class ChatServlet extends HttpServlet {
 			return;
 		}
 
-		if (TestDataGenerator.getInstance().isTestConversation(conversation.getId())) {
-			// No user may contribute to a test conversation
-			response.sendRedirect("/chat/" + conversationTitle);
-			return;
+		Part messagePart = request.getPart("message");
+		if (messagePart != null) {
+			Scanner s = new Scanner(messagePart.getInputStream());
+
+			if (s.hasNextLine()) {
+				String messageContent = s.nextLine();
+
+				// allows users to enter basic HTML tags that are not a threat to security
+				String HTMLMessageContent = clean(messageContent);
+
+				Message message = new Message(UUID.randomUUID(), conversation.getId(), user.getId(), HTMLMessageContent,
+						Instant.now());
+
+				messageStore.addMessage(message);
+
+			}
+			s.close();
 		}
+		// Add image message if there is one
 
-		String messageContent = request.getParameter("message");
+		Part filePart = request.getPart("upload");
+		if (filePart != null) {
+			InputStream fileStream = filePart.getInputStream();
 
-		// allows users to enter basic HTML tags that are not a threat to security
-		String HTMLMessageContent = clean(messageContent);
+			// fileStream.available() returns the number of bytes that are ready to read,
+			// so if it is 0, then no file was uploaded. We also cap this at 1MB because
+			// that is the max data size that can be saved as a property in the datastore.
+			int bytesAvailable = fileStream.available();
+			if (bytesAvailable > 0 && bytesAvailable < 1000000) {
 
-		Message message = new Message(UUID.randomUUID(), conversation.getId(), user.getId(), HTMLMessageContent,
-				Instant.now());
+				// Convert bytestream into BufferedImage object
+				BufferedImage image = ImageIO.read(fileStream);
 
-		messageStore.addMessage(message);
+				// Create image attachment object from BufferedImage object
+				ImageAttachment imageAttachment = new ImageAttachment(UUID.randomUUID(), image);
 
+				// Set the content of the message to an img tag that calls the ImageServlet
+				String src = "/image/" + imageAttachment.getId().toString();
+				String content = "<img src=" + src + " width=500>";
+				Message message = new Message(UUID.randomUUID(), conversation.getId(),
+						user.getId(), content, Instant.now());
+
+				messageStore.addMessage(message);
+				imageStore.addImage(imageAttachment);
+			}
+		}
 		// redirect to a GET request
 		response.sendRedirect("/chat/" + conversationTitle);
 	}
