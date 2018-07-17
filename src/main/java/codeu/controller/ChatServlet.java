@@ -14,7 +14,7 @@
 package codeu.controller;
 
 import codeu.model.data.Conversation;
-
+import codeu.model.data.GIF;
 import codeu.model.data.Message;
 import codeu.model.data.User;
 import codeu.model.store.basic.ConversationStore;
@@ -154,9 +154,9 @@ public class ChatServlet extends HttpServlet {
 		String GIFSrc = request.getParameter("GIFSrc");
 		
 		if (!GIFSrc.equals("")) { //if no text content but there is a GIF
-			Message message = new Message(UUID.randomUUID(), conversation.getId(), user.getId(), GIFSrc,
+			GIF gif = new GIF(UUID.randomUUID(), conversation.getId(), user.getId(), GIFSrc,
 					Instant.now());
-			messageStore.addMessage(message);
+			messageStore.addMessage(gif);
 		}
 		
 		if((GIFSrc.equals("")  && !messageContent.equals("")) || (GIFSrc.equals("")  && messageContent.equals(""))) {
