@@ -9,14 +9,15 @@ import javax.servlet.ServletContextListener;
 
 import org.mindrot.jbcrypt.BCrypt;
 
-import codeu.model.data.UserProfile;
-
 import codeu.model.data.Conversation;
+import codeu.model.data.ImageAttachment;
 import codeu.model.data.Message;
 import codeu.model.data.User;
-import codeu.model.store.basic.UserProfileStore;
+import codeu.model.data.UserProfile;
 import codeu.model.store.basic.ConversationStore;
+import codeu.model.store.basic.ImageStore;
 import codeu.model.store.basic.MessageStore;
+import codeu.model.store.basic.UserProfileStore;
 import codeu.model.store.basic.UserStore;
 import codeu.model.store.persistence.PersistentDataStoreException;
 import codeu.model.store.persistence.PersistentStorageAgent;
@@ -33,13 +34,15 @@ public class ServerStartupListener implements ServletContextListener {
     try {
       List<User> users = PersistentStorageAgent.getInstance().loadUsers();
 
-      String adminPassword = "admin";
-      String hashedPassword = BCrypt.hashpw(adminPassword, BCrypt.gensalt());
-      User rootAdmin = new User(UUID.randomUUID(), "admin", hashedPassword, Instant.ofEpochSecond(0));
-      rootAdmin.setAdminStatus(true);
-      users.add(rootAdmin);
-
       UserStore.getInstance().setUsers(users);
+      if (UserStore.getInstance().getUser("admin") == null) {
+        System.out.println("No admin exists, creating new admin account.");
+        String adminPassword = "admin";
+        String hashedPassword = BCrypt.hashpw(adminPassword, BCrypt.gensalt());
+        User rootAdmin = new User(UUID.randomUUID(), "admin", hashedPassword, Instant.ofEpochSecond(0));
+        rootAdmin.setAdminStatus(true);
+        UserStore.getInstance().addUser(rootAdmin);
+      }
 
       List<Conversation> conversations = PersistentStorageAgent.getInstance().loadConversations();
       ConversationStore.getInstance().setConversations(conversations);
@@ -49,6 +52,9 @@ public class ServerStartupListener implements ServletContextListener {
 
       List<UserProfile> userprofiles = PersistentStorageAgent.getInstance().loadUserProfiles();
       UserProfileStore.getInstance().setUserProfiles(userprofiles);
+
+      List<ImageAttachment> images = PersistentStorageAgent.getInstance().loadImages();
+      ImageStore.getInstance().setImages(images);
 
     } catch (PersistentDataStoreException e) {
       System.err.println("Server didn't start correctly. An error occurred during Datastore load!");

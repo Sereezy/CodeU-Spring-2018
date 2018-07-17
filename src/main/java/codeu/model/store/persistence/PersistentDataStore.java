@@ -19,23 +19,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import codeu.model.data.UserProfile;
-import codeu.model.data.Conversation;
-import codeu.model.data.Message;
-import codeu.model.data.User;
-import codeu.model.store.persistence.PersistentDataStoreException;
-
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
-import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
+import com.google.appengine.api.datastore.Text;
 
 import codeu.model.data.Conversation;
+import codeu.model.data.ImageAttachment;
 import codeu.model.data.Message;
 import codeu.model.data.User;
+import codeu.model.data.UserProfile;
 
 /**
  * This class handles all interactions with Google App Engine's Datastore service. On startup it
@@ -184,6 +180,33 @@ public class PersistentDataStore {
     return messages;
   }
 
+  public List<ImageAttachment> loadImages() throws PersistentDataStoreException {
+    List<ImageAttachment> images = new ArrayList<ImageAttachment>();
+
+    // Retrieve all messages from the datastore.
+    Query query = new Query("chat-images");
+    PreparedQuery results = datastore.prepare(query);
+
+    for (Entity entity : results.asIterable()) {
+      try {
+        UUID uuid = UUID.fromString((String) entity.getProperty("uuid"));
+        String imageBytes = ((Text) entity.getProperty("image_bytes")).getValue();
+
+        ImageAttachment image = new ImageAttachment(uuid, imageBytes);
+        images.add(image);
+      } catch (Exception e) {
+        e.printStackTrace();
+        // In a production environment, errors should be very rare. Errors which may
+        // occur include network errors, Datastore service errors, authorization errors,
+        // database entity definition mismatches, or service mismatches.
+        throw new PersistentDataStoreException(e);
+      }
+    }
+
+    return images;
+  }
+
+
   /** Write a User object to the Datastore service. */
   public void writeThrough(User user) {
     Entity userEntity = new Entity("chat-users", user.getId().toString());
@@ -223,4 +246,13 @@ public class PersistentDataStore {
     datastore.put(conversationEntity);
   }
 
+  public void writeThrough(ImageAttachment image) {
+    Entity imageEntity = new Entity("chat-images", image.getId().toString());
+    imageEntity.setProperty("uuid", image.getId().toString());
+
+    Text imageBytes = new Text(image.getBase64String("png"));
+    imageEntity.setProperty("image_bytes", imageBytes);
+
+    datastore.put(imageEntity);
+  }
 }
