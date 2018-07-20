@@ -194,7 +194,7 @@ public class ChatServlet extends HttpServlet {
 			if (s.hasNextLine()) {
 				String GIFSrc = s.nextLine();
 				
-				String content = "<img src=" + GIFSrc + " width=500>";
+				String content = "<img src=" + GIFSrc + " width=300>";
 				Message message = new Message(UUID.randomUUID(), conversation.getId(), user.getId(), content,
 						Instant.now());
 		
