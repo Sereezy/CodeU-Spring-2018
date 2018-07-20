@@ -41,7 +41,6 @@ public class ImageServlet extends HttpServlet {
     ImageAttachment imageAttachment = imageStore.getImage(imageUUID);
 
     if (imageAttachment == null) {
-      System.out.println("No image found with id: " + imageId);
       return;
     }
 
