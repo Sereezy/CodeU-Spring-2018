@@ -193,8 +193,11 @@ public class ChatServlet extends HttpServlet {
 				// Convert bytestream into BufferedImage object
 				BufferedImage image = ImageIO.read(fileStream);
 
+				String contentType = filePart.getContentType();
+				String imageType = contentType.substring(contentType.lastIndexOf("/")+1);
+
 				// Create image attachment object from BufferedImage object
-				ImageAttachment imageAttachment = new ImageAttachment(UUID.randomUUID(), image);
+				ImageAttachment imageAttachment = new ImageAttachment(UUID.randomUUID(), image, imageType);
 
 				// Set the content of the message to an img tag that calls the ImageServlet
 				String src = "/image/" + imageAttachment.getId().toString();

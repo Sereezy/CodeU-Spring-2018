@@ -26,6 +26,7 @@ import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
 import com.google.appengine.api.datastore.Text;
+import com.google.apphosting.api.ApiProxy.RequestTooLargeException;
 
 import codeu.model.data.Conversation;
 import codeu.model.data.ImageAttachment;
@@ -250,9 +251,13 @@ public class PersistentDataStore {
     Entity imageEntity = new Entity("chat-images", image.getId().toString());
     imageEntity.setProperty("uuid", image.getId().toString());
 
-    Text imageBytes = new Text(image.getBase64String("png"));
+    Text imageBytes = new Text(image.getBase64String());
     imageEntity.setProperty("image_bytes", imageBytes);
 
-    datastore.put(imageEntity);
+    try {
+      datastore.put(imageEntity);
+    } catch (RequestTooLargeException e) {
+      e.printStackTrace();
+    }
   }
 }

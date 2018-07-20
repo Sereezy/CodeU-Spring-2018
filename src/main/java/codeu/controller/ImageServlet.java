@@ -44,14 +44,14 @@ public class ImageServlet extends HttpServlet {
       System.out.println("No image found with id: " + imageId);
       return;
     }
-    
+
     BufferedImage image = imageAttachment.getImage();
-    response.setContentType("image/png");
+    response.setContentType("image/" + imageAttachment.getImageType());
 
     // Write the bytes of the image to the response
     try {
       OutputStream out = response.getOutputStream();
-      ImageIO.write(image, "png", out);
+      ImageIO.write(image, imageAttachment.getImageType(), out);
       out.close();
     } catch (IOException e) {
       e.printStackTrace();

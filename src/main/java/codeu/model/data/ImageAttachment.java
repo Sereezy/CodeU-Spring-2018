@@ -16,9 +16,12 @@ public class ImageAttachment {
 
   private UUID id;
 
-  public ImageAttachment(UUID id, BufferedImage image) {
+  private String imageType;
+
+  public ImageAttachment(UUID id, BufferedImage image, String imageType) {
     this.image = image;
     this.id = id;
+    this.imageType = imageType;
   }
 
   public ImageAttachment(UUID id, String base64String) {
@@ -37,6 +40,10 @@ public class ImageAttachment {
     return id;
   }
 
+  public String getImageType() {
+    return imageType;
+  }
+
   /**
    * Converts a String containing the bytes of an image into a BufferedImage object
    */
@@ -48,13 +55,13 @@ public class ImageAttachment {
   }
 
   /**
-   * Converts the BufferedImage object of this object into a String, given an image format
+   * Converts the BufferedImage object of this object into a String
    */
-  public String getBase64String(String format) {
+  public String getBase64String() {
 	  ByteArrayOutputStream os = new ByteArrayOutputStream();
 
 	  try {
-	    ImageIO.write(image, format, os);
+	    ImageIO.write(image, imageType, os);
 	    return Base64.getEncoder().encodeToString(os.toByteArray());
 	  }
 	  catch (IOException ioe) {
