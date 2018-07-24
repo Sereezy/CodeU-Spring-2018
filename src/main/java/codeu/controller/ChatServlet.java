@@ -201,7 +201,7 @@ public class ChatServlet extends HttpServlet {
 
 				// Set the content of the message to an img tag that calls the ImageServlet
 				String src = "/image/" + imageAttachment.getId().toString();
-				String content = "<img src=" + src + " width=500>";
+				String content = "<a href=" + src + "><img src=" + src + " width=200></a>";
 				Message message = new Message(UUID.randomUUID(), conversation.getId(),
 						user.getId(), content, Instant.now());
 
