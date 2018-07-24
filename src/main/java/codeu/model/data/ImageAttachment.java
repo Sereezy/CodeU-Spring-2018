@@ -24,12 +24,13 @@ public class ImageAttachment {
     this.imageType = imageType;
   }
 
-  public ImageAttachment(UUID id, String base64String) {
+  public ImageAttachment(UUID id, String base64String, String imageType) {
     try {
       this.image = getImageFromString(base64String);
     } catch (IOException e) {}
 
     this.id = id;
+    this.imageType = imageType;
   }
 
   public BufferedImage getImage() {

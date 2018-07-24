@@ -192,8 +192,9 @@ public class PersistentDataStore {
       try {
         UUID uuid = UUID.fromString((String) entity.getProperty("uuid"));
         String imageBytes = ((Text) entity.getProperty("image_bytes")).getValue();
+        String imageType = (String) entity.getProperty("image_type");
 
-        ImageAttachment image = new ImageAttachment(uuid, imageBytes);
+        ImageAttachment image = new ImageAttachment(uuid, imageBytes, imageType);
         images.add(image);
       } catch (Exception e) {
         e.printStackTrace();
@@ -253,6 +254,9 @@ public class PersistentDataStore {
 
     Text imageBytes = new Text(image.getBase64String());
     imageEntity.setProperty("image_bytes", imageBytes);
+
+    String imageType = image.getImageType();
+    imageEntity.setProperty("image_type", imageType);
 
     try {
       datastore.put(imageEntity);
