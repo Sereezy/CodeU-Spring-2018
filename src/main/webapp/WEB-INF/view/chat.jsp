@@ -37,7 +37,10 @@ List<String> allGIFs = (List<String>) request.getAttribute("allGIFs");
       overflow-y: scroll
     }
   </style>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script
+  src="https://code.jquery.com/jquery-3.3.1.min.js"
+  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+  crossorigin="anonymous"></script>
   <script>
     // scroll the chat div to the bottom
     function scrollChat() {
@@ -50,30 +53,25 @@ List<String> allGIFs = (List<String>) request.getAttribute("allGIFs");
     	document.forms["chat"].submit();
     }
     
-    $(document).on("submit", "#gifSearchForm", function(event) {  // When HTML DOM "click" event is invoked on element with ID "somebutton", execute the following function...
-    	//event.preventDefault();
-    	alert("here");
-	    var myForm = $(this);
-	    $.ajax({  
-	    	type: "GET",  
-	    	url: $(this).attr('action'),  // read the action attribute of the form
-	    	data: $(this).serialize(),  // what data should go there?
-	    	success: function(data) {  
-	    	 alert(data);
-	    	}  
-	    });  
-	        /*$.get(myForm.attr('action'), myForm.serialize(), function(data) {
-	        	alert(data);
-	        	$.each(data, function(index, item) { // Iterate over the JSON array.
-	                $("<li>").text(item).appendTo($ul);      // Create HTML <li> element, set its text content with currently iterated item and append it to the <ul>.
-	            });
-	        });*/
-	        
+    $(document).ready(function(){
+    	
+	    $(document).on("submit", "#gifSearchForm", function(event) {  
+	        var myForm = $(this);
+		    $.ajax({  
+		    	type: "GET",  
+		    	url: $(this).attr('action'),  // read the action attribute of the form
+		    	data: $(this).serialize(),  
+		    	success: function(data) {  
+		    	 $("#modal-container").html(data);
+		    	}  
+		    });  
+		    event.preventDefault();
+		        
+	    });
     });
   </script>
 </head>
 <body onload="scrollChat()">
-
   <nav>
     <a id="navTitle" href="/">CodeU Chat App</a>
     <a href="/conversations">Conversations</a>
@@ -139,7 +137,7 @@ List<String> allGIFs = (List<String>) request.getAttribute("allGIFs");
     		        </button>
     		      </div>
     		      <div class="modal-body">
-    		        <div class="container">
+    		        <div id="modal-container" class="container">
     				  <div class="row">
     				    <div class="col">
     				    	<div data-dismiss="modal">
@@ -197,7 +195,7 @@ List<String> allGIFs = (List<String>) request.getAttribute("allGIFs");
 			    %>
 
   <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+  
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 
