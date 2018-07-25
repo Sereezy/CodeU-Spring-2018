@@ -183,19 +183,58 @@ public class ChatServletTest {
     Mockito.when(mockPart.getInputStream()).thenReturn(getInputStreamFromString(messageContent));
     Mockito.when(mockRequest.getPart("message")).thenReturn(mockPart);
     
-    Part mockPartGIF = Mockito.mock(Part.class);
-    Mockito.when(mockPartGIF.getInputStream()).thenReturn(getInputStreamFromString(""));
-    Mockito.when(mockRequest.getPart("GIFSrc")).thenReturn(mockPartGIF);
-
     chatServlet.doPost(mockRequest, mockResponse);
 
     ArgumentCaptor<Message> messageArgumentCaptor = ArgumentCaptor.forClass(Message.class);
     Mockito.verify(mockMessageStore).addMessage(messageArgumentCaptor.capture());
     Assert.assertEquals("Test message.", messageArgumentCaptor.getValue().getContent());
 
+    
+    /*ArgumentCaptor<Message> messageArgumentCaptorGIF = ArgumentCaptor.forClass(Message.class);
+    Mockito.verify(mockMessageStore).addMessage(messageArgumentCaptorGIF.capture());
+    System.out.println(messageArgumentCaptorGIF.getValue().getContent());
+    Assert.assertEquals("https://i.giphy.com/test.gif", messageArgumentCaptorGIF.getValue().getContent());*/
+
+    
     Mockito.verify(mockResponse).sendRedirect("/chat/test_conversation");
   }
 
+  @Test
+  public void testDoPost_StoresGIF() throws IOException, ServletException {
+    Mockito.when(mockRequest.getRequestURI()).thenReturn("/chat/test_conversation");
+    Mockito.when(mockSession.getAttribute("user")).thenReturn("test_username");
+
+    User fakeUser =
+        new User(
+            UUID.randomUUID(),
+            "test_username",
+            "$2a$10$bBiLUAVmUFK6Iwg5rmpBUOIBW6rIMhU1eKfi3KR60V9UXaYTwPfHy",
+            Instant.now());
+    Mockito.when(mockUserStore.getUser("test_username")).thenReturn(fakeUser);
+
+    Conversation fakeConversation =
+        new Conversation(UUID.randomUUID(), UUID.randomUUID(), "test_conversation", Instant.now());
+    Mockito.when(mockConversationStore.getConversationWithTitle("test_conversation"))
+        .thenReturn(fakeConversation);
+
+    
+    Part mockPartGIF = Mockito.mock(Part.class);
+    Mockito.when(mockPartGIF.getInputStream()).thenReturn(getInputStreamFromString("https://i.giphy.com/test.gif"));
+    Mockito.when(mockRequest.getPart("GIFSrc")).thenReturn(mockPartGIF);
+
+    chatServlet.doPost(mockRequest, mockResponse);
+
+
+    
+    ArgumentCaptor<Message> messageArgumentCaptorGIF = ArgumentCaptor.forClass(Message.class);
+    Mockito.verify(mockMessageStore).addMessage(messageArgumentCaptorGIF.capture());
+    System.out.println(messageArgumentCaptorGIF.getValue().getContent());
+    Assert.assertEquals("<img src=https://i.giphy.com/test.gif width=300>", messageArgumentCaptorGIF.getValue().getContent());
+
+    
+    Mockito.verify(mockResponse).sendRedirect("/chat/test_conversation");
+  }
+  
  @Test
  public void testDoPost_CleansHtmlContent() throws IOException, ServletException {
     Mockito.when(mockRequest.getRequestURI()).thenReturn("/chat/test_conversation");
@@ -221,11 +260,6 @@ public class ChatServletTest {
     Mockito.when(mockRequest.getPart("message"))
         .thenReturn(mockPart);
     
-    Part mockPartGIF = Mockito.mock(Part.class);
-    Mockito.when(mockPartGIF.getInputStream()).thenReturn(getInputStreamFromString(""));
-    Mockito.when(mockRequest.getPart("GIFSrc")).thenReturn(mockPartGIF);
-
-
     chatServlet.doPost(mockRequest, mockResponse);
 
     ArgumentCaptor<Message> messageArgumentCaptor = ArgumentCaptor.forClass(Message.class);
