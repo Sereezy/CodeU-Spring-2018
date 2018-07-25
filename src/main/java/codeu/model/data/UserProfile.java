@@ -6,25 +6,39 @@ public class UserProfile {
 
   private final UUID id;
   private final UUID author;
-  private final String content;
+  private String content;
 
   /**
-   * @param content the text content of this Message
-   */
+	 * Constructs a new Profile
+	 *
+	 * @param id the ID of the profile
+	 * @param author the author of the profile
+	 * @param content the About Me section text
+	 */
+
   public UserProfile(UUID id, UUID author, String content) {
     this.id = id;
     this.author = author;
     this.content = content;
   }
   public UUID getId() {
-    return id;
-  }
-
-  public UUID getAuthorId() {
-    return author;
+    return this.id;
   }
 
   public String getContent() {
-    return content;
+    return this.content;
   }
+  /**
+	 * Updates the About Me text for a user's profile
+	 */
+	public void setContentText(String content) {
+		this.content = content;
+	}
+
+	/**
+	 * @return the author of the profile
+	 */
+	public UUID getAuthorId() {
+		return author;
+	}
 }
