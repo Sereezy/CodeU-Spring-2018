@@ -2,6 +2,8 @@ package codeu.controller;
 
 import codeu.model.data.UserProfile;
 import codeu.model.store.basic.UserProfileStore;
+import codeu.model.data.User;
+import codeu.model.data.basic.UserStore;
 import java.util.List;
 import java.util.UUID;
 import java.io.IOException;
@@ -15,6 +17,8 @@ import org.jsoup.safety.Whitelist;
 public class ProfileServlet extends HttpServlet {
 
 	private UserProfileStore profileuserStore;
+
+	private UserStore userStore;
 
 	  @Override
     public void init() throws ServletException {
@@ -42,7 +46,7 @@ public class ProfileServlet extends HttpServlet {
     public void doPost(HttpServletRequest request, HttpServletResponse response)
         throws IOException, ServletException {
 					String username = (String) request.getSession().getAttribute("user");
-					String userValue = request.getParameter("userprofile");
+					String userValue = request.getParameter("userprofile"); 
 					UserProfile firstprofile =
 							new UserProfile(
 									UUID.randomUUID(),
