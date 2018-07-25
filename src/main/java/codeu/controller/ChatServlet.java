@@ -14,7 +14,6 @@
 package codeu.controller;
 
 import codeu.model.data.Conversation;
-import codeu.model.data.GIF;
 import codeu.model.data.Message;
 import codeu.model.data.User;
 import codeu.model.store.basic.ConversationStore;
