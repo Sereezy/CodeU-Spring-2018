@@ -1,6 +1,10 @@
 <%@ page import="codeu.model.store.basic.UserProfileStore" %>
 <%@ page import="codeu.model.data.UserProfile" %>
 
+<%
+String user = (String) request.getSession().getAttribute("user");
+String profileAuthor = (String) request.getAttribute("profileAuthor");
+%>
 
 <!DOCTYPE html>
 
