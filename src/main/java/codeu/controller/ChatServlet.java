@@ -25,6 +25,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import java.util.UUID;
@@ -127,9 +128,11 @@ public class ChatServlet extends HttpServlet {
 		UUID conversationId = conversation.getId();
 
 		List<Message> messages = messageStore.getMessagesInConversation(conversationId);
-
+		List<String> allGIFs = new ArrayList<>();
+		
 		request.setAttribute("conversation", conversation);
 		request.setAttribute("messages", messages);
+		request.setAttribute("allGIFs", allGIFs);
 		request.getRequestDispatcher("/WEB-INF/view/chat.jsp").forward(request, response);
 	}
 

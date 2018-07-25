@@ -37,7 +37,7 @@ List<String> allGIFs = (List<String>) request.getAttribute("allGIFs");
       overflow-y: scroll
     }
   </style>
-
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <script>
     // scroll the chat div to the bottom
     function scrollChat() {
@@ -49,6 +49,27 @@ List<String> allGIFs = (List<String>) request.getAttribute("allGIFs");
     	document.getElementById("hiddenField").value = el.src;
     	document.forms["chat"].submit();
     }
+    
+    $(document).on("submit", "#gifSearchForm", function(event) {  // When HTML DOM "click" event is invoked on element with ID "somebutton", execute the following function...
+    	//event.preventDefault();
+    	alert("here");
+	    var myForm = $(this);
+	    $.ajax({  
+	    	type: "GET",  
+	    	url: $(this).attr('action'),  // read the action attribute of the form
+	    	data: $(this).serialize(),  // what data should go there?
+	    	success: function(data) {  
+	    	 alert(data);
+	    	}  
+	    });  
+	        /*$.get(myForm.attr('action'), myForm.serialize(), function(data) {
+	        	alert(data);
+	        	$.each(data, function(index, item) { // Iterate over the JSON array.
+	                $("<li>").text(item).appendTo($ul);      // Create HTML <li> element, set its text content with currently iterated item and append it to the <ul>.
+	            });
+	        });*/
+	        
+    });
   </script>
 </head>
 <body onload="scrollChat()">
@@ -99,17 +120,20 @@ List<String> allGIFs = (List<String>) request.getAttribute("allGIFs");
         <input type="text" name="message">
         <input type="hidden" name="GIFSrc" id="hiddenField" value=""/>
         <input type="file" name="upload">
+        <button type="submit">Send</button>
+    </form>
+
         <!-- Button trigger modal -->
-		    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalLong">
+		    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal">
 		    Send a GIF
 		    </button>
-
+    	<form id="gifSearchForm" name="gifSearch" action="/search/" method="GET"> 
     		<!-- Modal -->
-    		<div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+    		<div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="modalTitle" aria-hidden="true">
     		  <div class="modal-dialog" role="document">
     		    <div class="modal-content">
     		      <div class="modal-header">
-    		        <input type="search" class="form-control" id="GIFsearch" placeholder="Search GIFs on GIPHY...">
+    		        <input type="search" name="search" class="form-control" id="GIFsearch" placeholder="Search GIFs on GIPHY...">
     		        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
     		          <span aria-hidden="true">&times;</span>
     		        </button>
@@ -151,9 +175,9 @@ List<String> allGIFs = (List<String>) request.getAttribute("allGIFs");
     		  </div>
     		</div>
         <br/>
-        <button type="submit">Send</button>
+        
 
-    </form>
+    </form> 
     <% } else { %>
       <p><a href="/login">Login</a> to send a message.</p>
     <% } %>
@@ -161,6 +185,16 @@ List<String> allGIFs = (List<String>) request.getAttribute("allGIFs");
     <hr/>
 
   </div>
+  
+  <%
+			      for (String GIFUrl : allGIFs) {
+			    	  System.out.println(GIFUrl);
+			    	  %>
+				      	<li><strong><%= GIFUrl %></strong></li>
+				      <%
+		
+					}
+			    %>
 
   <!-- jQuery first, then Popper.js, then Bootstrap JS -->
   <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>

@@ -110,4 +110,15 @@
     <url-pattern>/image/*</url-pattern>
   </servlet-mapping>
 
+
+  <servlet>
+    <servlet-name>GIFSearchServlet</servlet-name>
+    <servlet-class>codeu.controller.GIFSearchServlet</servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>GIFSearchServlet</servlet-name>
+    <url-pattern>/search/*</url-pattern>
+  </servlet-mapping>
+
 </web-app>

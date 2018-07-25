@@ -24,28 +24,33 @@ import javax.servlet.http.HttpServletResponse;
 import org.json.JSONObject;
 import org.json.JSONArray;
 
-public class ActivityFeedServlet2 extends HttpServlet {
+public class GIFSearchServlet extends HttpServlet {
 
 	private final String USER_AGENT = "Mozilla/5.0";
 	
 	@Override
-	public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-		String requestUrl = request.getRequestURI();
-		String conversationTitle = requestUrl.substring("/chat/".length());
-		
+	public void doGet(HttpServletRequest request, HttpServletResponse response)
+	        throws IOException, ServletException {
+		System.out.println("here");
 		String GIFsearch = request.getParameter("search");
 		
 		List<String> allGIFs = new ArrayList<>();
+		
 		try {
 			allGIFs = sendGet(GIFsearch);
 		} catch (Throwable e) {
 			for(int i = 0; i < 20; i++) {
-				allGIFs.add("https://i.giphy.com/bi6RQ5x3tqoSI.gif");
+				allGIFs.add("https://i.giphy.com/bi6RQ5x3tqoSI.gif"); //default GIF
 			}
+
         }
-		request.setAttribute("allGIFs", allGIFs);
-		// redirect to a GET request
-		response.sendRedirect("/chat/" + conversationTitle);
+		String json = new JSONArray(allGIFs).toString();
+		response.setContentType("application/json");
+	    response.setCharacterEncoding("UTF-8");
+	    response.getWriter().write(json);
+		//request.setAttribute("allGIFs", allGIFs);
+		//request.getRequestDispatcher("/WEB-INF/view/chat.jsp").forward(request, response);
+
 	}
 	
 	// HTTP GET request
@@ -63,8 +68,8 @@ public class ActivityFeedServlet2 extends HttpServlet {
 		con.setRequestProperty("User-Agent", USER_AGENT);
 
 		int responseCode = con.getResponseCode();
-		System.out.println("\nSending 'GET' request to URL : " + url);
-		System.out.println("Response Code : " + responseCode);
+		//System.out.println("\nSending 'GET' request to URL : " + url);
+		//System.out.println("Response Code : " + responseCode);
 
 		BufferedReader in = new BufferedReader(
 		        new InputStreamReader(con.getInputStream()));
@@ -77,12 +82,12 @@ public class ActivityFeedServlet2 extends HttpServlet {
 		in.close();
 
 		//print result
-		System.out.println(response.toString());
+		//System.out.println(response.toString());
 		
 		List<String> allGIFs = new ArrayList<>();
         //Read JSON response and add URLs to ArrayList
         JSONObject giphyJSONResponse = new JSONObject(response.toString());
-        JSONArray JSONArray = new JSONArray(giphyJSONResponse.getString("data"));
+        JSONArray JSONArray = giphyJSONResponse.getJSONArray("data");
         for(int i=0; i < JSONArray.length(); i++) {
             JSONObject JSONObject = JSONArray.getJSONObject(i);
             String id = JSONObject.getString("id");
