@@ -26,6 +26,7 @@ import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
 import com.google.appengine.api.datastore.Text;
+import com.google.apphosting.api.ApiProxy.RequestTooLargeException;
 
 import codeu.model.data.Conversation;
 import codeu.model.data.ImageAttachment;
@@ -191,8 +192,9 @@ public class PersistentDataStore {
       try {
         UUID uuid = UUID.fromString((String) entity.getProperty("uuid"));
         String imageBytes = ((Text) entity.getProperty("image_bytes")).getValue();
+        String imageType = (String) entity.getProperty("image_type");
 
-        ImageAttachment image = new ImageAttachment(uuid, imageBytes);
+        ImageAttachment image = new ImageAttachment(uuid, imageBytes, imageType);
         images.add(image);
       } catch (Exception e) {
         e.printStackTrace();
@@ -250,9 +252,16 @@ public class PersistentDataStore {
     Entity imageEntity = new Entity("chat-images", image.getId().toString());
     imageEntity.setProperty("uuid", image.getId().toString());
 
-    Text imageBytes = new Text(image.getBase64String("png"));
+    Text imageBytes = new Text(image.getBase64String());
     imageEntity.setProperty("image_bytes", imageBytes);
 
-    datastore.put(imageEntity);
+    String imageType = image.getImageType();
+    imageEntity.setProperty("image_type", imageType);
+
+    try {
+      datastore.put(imageEntity);
+    } catch (RequestTooLargeException e) {
+      e.printStackTrace();
+    }
   }
 }
