@@ -7,7 +7,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.ThreadLocalRandom;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -20,10 +19,10 @@ import codeu.model.data.User;
 import codeu.model.store.basic.ConversationStore;
 import codeu.model.store.basic.MessageStore;
 import codeu.model.store.basic.UserStore;
+import codeu.model.store.persistence.PersistentDataStoreException;
+import codeu.model.store.persistence.PersistentStorageAgent;
 
 public class AdminServlet extends HttpServlet {
-
-  private HashSet<String> admins;
 
   private UserStore userStore;
   private ConversationStore conversationStore;
@@ -33,22 +32,10 @@ public class AdminServlet extends HttpServlet {
   public void init() throws ServletException {
     super.init();
 
-    setAdminUsernames();
-
     setUserStore(UserStore.getInstance());
     setConversationStore(ConversationStore.getInstance());
     setMessageStore(MessageStore.getInstance());
 
-  }
-
-  void setAdminUsernames() {
-    admins = new HashSet<String>();
-    admins.add("admin");
-    admins.add("daniel");
-    admins.add("leslie");
-    admins.add("serena");
-    admins.add("shana");
-    admins.add("kyra");
   }
 
   void setUserStore(UserStore userStore) {
@@ -149,11 +136,9 @@ public class AdminServlet extends HttpServlet {
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response)
-    throws IOException, ServletException {
+      throws IOException, ServletException {
 
-    String user = (String) request.getSession().getAttribute("user");
-
-    if (admins.contains(user)) {
+    if (request.getSession().getAttribute("isAdmin").equals(Boolean.TRUE)) {
       computeAdminStats(request);
       request.getRequestDispatcher("/WEB-INF/view/admin.jsp").forward(request, response);
     } else {
@@ -162,5 +147,49 @@ public class AdminServlet extends HttpServlet {
 
   }
 
+  @Override
+  public void doPost(HttpServletRequest request, HttpServletResponse response)
+      throws IOException, ServletException{
 
+
+    if (request.getSession().getAttribute("isAdmin").equals(Boolean.TRUE)) {
+      switch (request.getParameter("id")) {
+        case "dataGenOptions":
+
+          addTestData(parseInt(request.getParameter("numUsers")),
+              parseInt(request.getParameter("numConvos")),
+              parseInt(request.getParameter("numMessages")));
+          break;
+        case "clearTestData":
+          clearTestData();
+          break;
+        default:
+          break;
+      }
+      computeAdminStats(request);
+      request.getRequestDispatcher("/WEB-INF/view/admin.jsp").forward(request, response);
+    } else {
+      response.sendError(HttpServletResponse.SC_NOT_FOUND);
+    }
+  }
+
+  private int parseInt(String str) {
+    try {
+      return Integer.parseInt(str);
+    } catch (NumberFormatException e) {
+      return 0;
+    }
+  }
+
+  void addTestData(int numUsers, int numConvos, int numMessages) {
+    TestDataGenerator generator = TestDataGenerator.getInstance();
+
+    generator.addTestUsers(numUsers);
+    generator.addTestConversations(numConvos);
+    generator.addTestMessages(numMessages);
+  }
+
+  void clearTestData() {
+    TestDataGenerator.getInstance().clearTestData();
+  }
 }

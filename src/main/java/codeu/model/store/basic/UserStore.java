@@ -14,11 +14,13 @@
 
 package codeu.model.store.basic;
 
-import codeu.model.data.User;
-import codeu.model.store.persistence.PersistentStorageAgent;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
+
+import codeu.model.data.User;
+import codeu.model.store.persistence.PersistentStorageAgent;
 
 /**
  * Store class that uses in-memory data structures to hold values and automatically loads from and
@@ -106,6 +108,10 @@ public class UserStore {
     persistentStorageAgent.writeThrough(user);
   }
 
+  public void addVolatileUser(User user) {
+    users.add(user);
+  }
+
   /**
    * Update an existing User.
    */
@@ -130,4 +136,6 @@ public class UserStore {
   public void setUsers(List<User> users) {
     this.users = users;
   }
+
+  
 }

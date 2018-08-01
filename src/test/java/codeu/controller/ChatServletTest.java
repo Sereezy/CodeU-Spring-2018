@@ -14,31 +14,35 @@
 
 package codeu.controller;
 
-import codeu.model.data.Conversation;
-import codeu.model.data.Message;
-import codeu.model.data.User;
-import codeu.model.store.basic.ConversationStore;
-import codeu.model.store.basic.MessageStore;
-import codeu.model.store.basic.UserStore;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
+
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.servlet.http.Part;
 
-import org.jsoup.Jsoup;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 
-import com.google.apphosting.runtime.security.WhiteList;
+import codeu.model.data.Conversation;
+import codeu.model.data.Message;
+import codeu.model.data.User;
+import codeu.model.store.basic.ConversationStore;
+import codeu.model.store.basic.MessageStore;
+import codeu.model.store.basic.UserStore;
 
 //import org.docx4j 
 
@@ -176,7 +180,10 @@ public class ChatServletTest {
     Mockito.when(mockConversationStore.getConversationWithTitle("test_conversation"))
         .thenReturn(fakeConversation);
 
-    Mockito.when(mockRequest.getParameter("message")).thenReturn("Test message.");
+    String messageContent = "Test message.";
+    Part mockPart = Mockito.mock(Part.class);
+    Mockito.when(mockPart.getInputStream()).thenReturn(getInputStreamFromString(messageContent));
+    Mockito.when(mockRequest.getPart("message")).thenReturn(mockPart);
 
     chatServlet.doPost(mockRequest, mockResponse);
 
@@ -205,16 +212,25 @@ public class ChatServletTest {
     Mockito.when(mockConversationStore.getConversationWithTitle("test_conversation"))
         .thenReturn(fakeConversation);
 
-    Mockito.when(mockRequest.getParameter("message"))
-        .thenReturn("Contains <b>html</b> and <script>JavaScript</script> content.");
+    String messageContent = "Contains <b>html</b> and <script>JavaScript</script> content.";
+
+    Part mockPart = Mockito.mock(Part.class);
+    Mockito.when(mockPart.getInputStream()).thenReturn(getInputStreamFromString(messageContent));
+    Mockito.when(mockRequest.getPart("message"))
+        .thenReturn(mockPart);
 
     chatServlet.doPost(mockRequest, mockResponse);
 
     ArgumentCaptor<Message> messageArgumentCaptor = ArgumentCaptor.forClass(Message.class);
     Mockito.verify(mockMessageStore).addMessage(messageArgumentCaptor.capture());
     Assert.assertEquals(
-    		"Contains <b>html</b> and  content.", messageArgumentCaptor.getValue().getContent());
+        "Contains <b>html</b> and  content.", messageArgumentCaptor.getValue().getContent());
 
     Mockito.verify(mockResponse).sendRedirect("/chat/test_conversation");
   }
+
+  private InputStream getInputStreamFromString(String str) {
+    return new ByteArrayInputStream(str.getBytes(StandardCharsets.UTF_8));
+  }
+
 }

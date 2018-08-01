@@ -14,20 +14,25 @@
 
 package codeu.model.store.persistence;
 
-import codeu.model.data.Conversation;
-import codeu.model.data.Message;
-import codeu.model.data.User;
-import codeu.model.store.persistence.PersistentDataStoreException;
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
-import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import com.google.appengine.api.datastore.Text;
+import com.google.apphosting.api.ApiProxy.RequestTooLargeException;
+
+import codeu.model.data.Conversation;
+import codeu.model.data.ImageAttachment;
+import codeu.model.data.Message;
+import codeu.model.data.User;
+import codeu.model.data.UserProfile;
 
 /**
  * This class handles all interactions with Google App Engine's Datastore service. On startup it
@@ -68,6 +73,7 @@ public class PersistentDataStore {
         String passwordHash = (String) entity.getProperty("password_hash");
         Instant creationTime = Instant.parse((String) entity.getProperty("creation_time"));
         User user = new User(uuid, userName, passwordHash, creationTime);
+        user.setAdminStatus(Boolean.parseBoolean((String) entity.getProperty("isAdmin")));
         users.add(user);
       } catch (Exception e) {
         // In a production environment, errors should be very rare. Errors which may
@@ -78,6 +84,32 @@ public class PersistentDataStore {
     }
 
     return users;
+  }
+
+  /**
+   * @throws PersistentDataStoreException
+   */
+
+  public List<UserProfile> loadUserProfiles() throws PersistentDataStoreException {
+
+    List<UserProfile> profileUsers = new ArrayList<>();
+
+    Query query = new Query("chat-userprofile");
+    PreparedQuery results = datastore.prepare(query);
+
+    for (Entity entity : results.asIterable()) {
+      try {
+        UUID uuid = UUID.fromString((String) entity.getProperty("uuid"));
+        UUID authorUuid = UUID.fromString((String) entity.getProperty("author_uuid"));
+        String content = (String) entity.getProperty("content");
+        UserProfile userprofile = new UserProfile(uuid, authorUuid,content);
+        profileUsers.add(userprofile);
+      } catch (Exception e) {
+        throw new PersistentDataStoreException(e);
+      }
+    }
+
+    return profileUsers;
   }
 
   /**
@@ -149,6 +181,34 @@ public class PersistentDataStore {
     return messages;
   }
 
+  public List<ImageAttachment> loadImages() throws PersistentDataStoreException {
+    List<ImageAttachment> images = new ArrayList<ImageAttachment>();
+
+    // Retrieve all messages from the datastore.
+    Query query = new Query("chat-images");
+    PreparedQuery results = datastore.prepare(query);
+
+    for (Entity entity : results.asIterable()) {
+      try {
+        UUID uuid = UUID.fromString((String) entity.getProperty("uuid"));
+        String imageBytes = ((Text) entity.getProperty("image_bytes")).getValue();
+        String imageType = (String) entity.getProperty("image_type");
+
+        ImageAttachment image = new ImageAttachment(uuid, imageBytes, imageType);
+        images.add(image);
+      } catch (Exception e) {
+        e.printStackTrace();
+        // In a production environment, errors should be very rare. Errors which may
+        // occur include network errors, Datastore service errors, authorization errors,
+        // database entity definition mismatches, or service mismatches.
+        throw new PersistentDataStoreException(e);
+      }
+    }
+
+    return images;
+  }
+
+
   /** Write a User object to the Datastore service. */
   public void writeThrough(User user) {
     Entity userEntity = new Entity("chat-users", user.getId().toString());
@@ -156,6 +216,7 @@ public class PersistentDataStore {
     userEntity.setProperty("username", user.getName());
     userEntity.setProperty("password_hash", user.getPasswordHash());
     userEntity.setProperty("creation_time", user.getCreationTime().toString());
+    userEntity.setProperty("isAdmin", String.valueOf(user.isAdmin()));
     datastore.put(userEntity);
   }
 
@@ -169,6 +230,13 @@ public class PersistentDataStore {
     messageEntity.setProperty("creation_time", message.getCreationTime().toString());
     datastore.put(messageEntity);
   }
+  public void writeThrough(UserProfile userprofile) {
+    Entity profileuserEntity = new Entity("chat-userprofile", userprofile.getId().toString());
+    profileuserEntity.setProperty("uuid", userprofile.getId().toString());
+    profileuserEntity.setProperty("author_uuid", userprofile.getAuthorId().toString());
+    profileuserEntity.setProperty("content", userprofile.getContent());
+    datastore.put(profileuserEntity);
+  }
 
   /** Write a Conversation object to the Datastore service. */
   public void writeThrough(Conversation conversation) {
@@ -179,5 +247,21 @@ public class PersistentDataStore {
     conversationEntity.setProperty("creation_time", conversation.getCreationTime().toString());
     datastore.put(conversationEntity);
   }
-}
 
+  public void writeThrough(ImageAttachment image) {
+    Entity imageEntity = new Entity("chat-images", image.getId().toString());
+    imageEntity.setProperty("uuid", image.getId().toString());
+
+    Text imageBytes = new Text(image.getBase64String());
+    imageEntity.setProperty("image_bytes", imageBytes);
+
+    String imageType = image.getImageType();
+    imageEntity.setProperty("image_type", imageType);
+
+    try {
+      datastore.put(imageEntity);
+    } catch (RequestTooLargeException e) {
+      e.printStackTrace();
+    }
+  }
+}
