@@ -91,6 +91,11 @@ public class ChatServlet extends HttpServlet {
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		String requestUrl = request.getRequestURI();
 		String conversationTitle = requestUrl.substring("/chat/".length());
+		
+		/*String s1="javatpoint is a very good website";  
+        String replaceString=s1.replace('a','e');//replaces all occurrences of 'a' to 'e'  
+        System.out.println(replaceString); 
+        System.out.println("🚗");*/
 
 		Conversation conversation = conversationStore.getConversationWithTitle(conversationTitle);
 		if (conversation == null) {
@@ -144,6 +149,8 @@ public class ChatServlet extends HttpServlet {
 		}
 
 		String messageContent = request.getParameter("message");
+		String replacementString = messageContent.replaceAll(":turtle", "🐢").replaceAll(":car", "🏎️").replaceAll(":laughing", "😂").replaceAll(":smile", "😊" ).replaceAll(":crying", "😢").replaceAll(":kiss", "😘");
+		messageContent = replacementString;
 
 		// allows users to enter basic HTML tags that are not a threat to security
 		String HTMLMessageContent = clean(messageContent);
@@ -164,4 +171,11 @@ public class ChatServlet extends HttpServlet {
 		clean.outputSettings().prettyPrint(false);
 		return clean.body().html();
 	}
+
+	/*private static void main(String args[]){
+        String s1="javatpoint is a very good website";  
+        String replaceString=s1.replace('a','e');//replaces all occurrences of 'a' to 'e'  
+        System.out.println(replaceString); 
+        System.out.println('🚗');
+	}*/
 }
