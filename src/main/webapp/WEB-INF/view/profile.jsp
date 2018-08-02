@@ -53,7 +53,7 @@ String profileAuthor = (String) request.getAttribute("profileAuthor");
        <h1> <%=request.getSession().getAttribute("user")%>'s Profile</h1>
        <hr>
        <h2>About Me</h2>
-       <p id="aboutMe"><%= UserProfileStore.getInstance().getUserProfileContent() %></p>
+       <p id="aboutMe"><%= UserProfileStore.getAttribute("userprofile") %></p>
        <%--><% if (ProfileHelper.isSameUser(user, profileAuthor)) { %><--%>
         <h3>Edit</h3>
         <hr>
