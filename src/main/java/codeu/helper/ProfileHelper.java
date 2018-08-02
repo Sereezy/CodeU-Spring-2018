@@ -5,7 +5,7 @@ package codeu.helper;
  * class.
  *
  */
-//public class ProfileHelper {
+public class ProfileHelper {
 	/**
 	 *
 	 * @param user
