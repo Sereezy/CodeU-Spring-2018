@@ -33,8 +33,8 @@ public class ProfileServlet extends HttpServlet {
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response)
         throws IOException, ServletException {
-					int sizeOfTheList = list.size();
 					List<UserProfile> profiles = profileuserStore.getUserProfileContent();
+					int sizeOfTheList = profiles.size();
 					if (!profiles.isEmpty()){
 					UserProfile oneprofile = profiles.get(sizeOfTheList-1);
 					String aboutme = oneprofile.getContent();
@@ -46,7 +46,6 @@ public class ProfileServlet extends HttpServlet {
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response)
         throws IOException, ServletException {
-					int sizeOfTheList = list.size();
 					String username = (String) request.getSession().getAttribute("user");
 					String userValue = request.getParameter("userprofile");
 					UserProfile firstprofile =
@@ -55,6 +54,7 @@ public class ProfileServlet extends HttpServlet {
 									UUID.randomUUID(),
 									userValue);
 
+					int sizeOfTheList = profiles.size();
 					profileuserStore.addUserProfile(firstprofile);
 					UserProfile testProfile = profileuserStore.getUserProfileContent().get(sizeOfTheList-1);
 
