@@ -54,9 +54,7 @@ public class ProfileServlet extends HttpServlet {
 									UUID.randomUUID(),
 									userValue);
 
-					int sizeOfTheList = profiles.size();
 					profileuserStore.addUserProfile(firstprofile);
-					UserProfile testProfile = profileuserStore.getUserProfileContent().get(sizeOfTheList-1);
 
 					System.out.println(userValue);
 					response.sendRedirect("/profile/" + request.getSession().getAttribute("user"));
