@@ -35,7 +35,7 @@ public class ProfileServlet extends HttpServlet {
         throws IOException, ServletException {
 					List<UserProfile> profiles = profileuserStore.getUserProfileContent();
 					if (!profiles.isEmpty()){
-					UserProfile oneprofile = profiles.get(.size-1)
+					UserProfile oneprofile = profiles.get(.size-1);
 					String aboutme = oneprofile.getContent();
 					request.setAttribute("userprofile", aboutme);
 				}
@@ -46,7 +46,7 @@ public class ProfileServlet extends HttpServlet {
     public void doPost(HttpServletRequest request, HttpServletResponse response)
         throws IOException, ServletException {
 					String username = (String) request.getSession().getAttribute("user");
-					String userValue = request.getParameter("userprofile"); 
+					String userValue = request.getParameter("userprofile");
 					UserProfile firstprofile =
 							new UserProfile(
 									UUID.randomUUID(),
