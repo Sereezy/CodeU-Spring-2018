@@ -50,7 +50,7 @@ String profileAuthor = (String) request.getAttribute("profileAuthor");
     <div id="container">
     <div
       style="width:75%; margin-left:auto; margin-right:auto; margin-top: 50px;">
-       <h1><%= <%=request.getSession().getAttribute("user")%>'s Profile</h1>
+       <h1> <%=request.getSession().getAttribute("user")%>'s Profile</h1>
        <hr>
        <h2>About Me</h2>
        <p id="aboutMe"><%= UserProfileStore.getInstance().getUserProfileContent() %></p>
@@ -66,7 +66,7 @@ String profileAuthor = (String) request.getAttribute("profileAuthor");
       <% } %>
 
       <% if (!ProfileHelper.isSameUser(user, profileAuthor)) { %>
-        <form method="POST" action="${pageContext.request.contextPath}/profile/<%= profileOwner %>">
+        <form method="POST" action="${pageContext.request.contextPath}/profile/<%=request.getSession().getAttribute("user")%>">
            <input type="submit" name="messageUserButton" value="Message <%=request.getSession().getAttribute("user")%>" />
         </form>
       <% } %>
