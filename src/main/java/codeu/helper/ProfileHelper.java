@@ -1,14 +1,14 @@
 package codeu.helper;
 
 /**
- * Helper class that includes a method for the ProfilePageServlet 
+ * Helper class that includes a method for the ProfilePageServlet
  * class.
  *
  */
-public class ProfileHelper {
+//public class ProfileHelper {
 	/**
-	 * 
-	 * @param user 
+	 *
+	 * @param user
 	 * 			-- the name of the current user viewing the profile
 	 * @param profileAuthor
 	 * 			-- the author of the profile
@@ -18,8 +18,8 @@ public class ProfileHelper {
 		if (user != null && profileAuthor.equals(user)) {
 			return true;
 		}
-		
-		return false;
+
+		return true;
 	}
-	
+
 }
