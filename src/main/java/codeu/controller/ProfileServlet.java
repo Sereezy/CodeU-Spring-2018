@@ -3,7 +3,7 @@ package codeu.controller;
 import codeu.model.data.UserProfile;
 import codeu.model.store.basic.UserProfileStore;
 import codeu.model.data.User;
-import codeu.model.data.basic.UserStore;
+import codeu.model.store.basic.UserStore;
 import java.util.List;
 import java.util.UUID;
 import java.io.IOException;
