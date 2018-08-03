@@ -13,10 +13,18 @@
 // limitations under the License.
 package codeu.controller;
 
+import codeu.model.data.Conversation;
+import codeu.model.data.Message;
+import codeu.model.data.User;
+import codeu.model.store.basic.ConversationStore;
+import codeu.model.store.basic.MessageStore;
+import codeu.model.store.basic.UserStore;
+
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import java.util.UUID;
@@ -119,9 +127,11 @@ public class ChatServlet extends HttpServlet {
 		UUID conversationId = conversation.getId();
 
 		List<Message> messages = messageStore.getMessagesInConversation(conversationId);
-
+		List<String> allGIFs = new ArrayList<>();
+		
 		request.setAttribute("conversation", conversation);
 		request.setAttribute("messages", messages);
+		request.setAttribute("allGIFs", allGIFs);
 		request.getRequestDispatcher("/WEB-INF/view/chat.jsp").forward(request, response);
 	}
 
@@ -161,6 +171,8 @@ public class ChatServlet extends HttpServlet {
 		}
 
 		Part messagePart = request.getPart("message");
+		Part GIFSrcPart = request.getPart("GIFSrc");
+
 		if (messagePart != null) {
 			Scanner s = new Scanner(messagePart.getInputStream());
 
@@ -178,12 +190,27 @@ public class ChatServlet extends HttpServlet {
 			}
 			s.close();
 		}
+		if (GIFSrcPart != null) {
+			Scanner s = new Scanner(GIFSrcPart.getInputStream());
+		
+			if (s.hasNextLine()) {
+				String GIFSrc = s.nextLine();
+				
+				String content = "<img src=" + GIFSrc + " width=300>";
+				Message message = new Message(UUID.randomUUID(), conversation.getId(), user.getId(), content,
+						Instant.now());
+		
+				messageStore.addMessage(message);
+		
+			}
+			s.close();
+		}
+		
 		// Add image message if there is one
 
 		Part filePart = request.getPart("upload");
 		if (filePart != null) {
 			InputStream fileStream = filePart.getInputStream();
-
 			// fileStream.available() returns the number of bytes that are ready to read,
 			// so if it is 0, then no file was uploaded. We also cap this at 1MB because
 			// that is the max data size that can be saved as a property in the datastore.

@@ -20,6 +20,7 @@
 <%
 Conversation conversation = (Conversation) request.getAttribute("conversation");
 List<Message> messages = (List<Message>) request.getAttribute("messages");
+List<String> allGIFs = (List<String>) request.getAttribute("allGIFs");
 %>
 
 <!DOCTYPE html>
@@ -36,17 +37,41 @@ List<Message> messages = (List<Message>) request.getAttribute("messages");
       overflow-y: scroll
     }
   </style>
-
+  <script
+  src="https://code.jquery.com/jquery-3.3.1.min.js"
+  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+  crossorigin="anonymous"></script>
   <script>
     // scroll the chat div to the bottom
     function scrollChat() {
       var chatDiv = document.getElementById('chat');
       chatDiv.scrollTop = chatDiv.scrollHeight;
-    };
+    }
+    
+    function sendGIF(el) {
+    	document.getElementById("hiddenField").value = el.src;
+    	document.forms["chat"].submit();
+    }
+    
+    $(document).ready(function(){
+    	
+	    $(document).on("submit", "#gifSearchForm", function(event) {  
+	        var myForm = $(this);
+		    $.ajax({  
+		    	type: "GET",  
+		    	url: $(this).attr('action'),  // read the action attribute of the form
+		    	data: $(this).serialize(),  
+		    	success: function(data) {  
+		    	 $("#modal-container").html(data);
+		    	}  
+		    });  
+		    event.preventDefault();
+		        
+	    });
+    });
   </script>
 </head>
 <body onload="scrollChat()">
-
   <nav>
     <a id="navTitle" href="/">CodeU Chat App</a>
     <a href="/conversations">Conversations</a>
@@ -89,47 +114,51 @@ List<Message> messages = (List<Message>) request.getAttribute("messages");
     <hr/>
 
     <% if (request.getSession().getAttribute("user") != null) { %>
-    <form action="/chat/<%= conversation.getTitle() %>" method="POST" enctype="multipart/form-data">
+    <form name="chat" action="/chat/<%= conversation.getTitle() %>" method="POST" enctype="multipart/form-data">
         <input type="text" name="message">
+        <input type="hidden" name="GIFSrc" id="hiddenField" value=""/>
         <input type="file" name="upload">
+        <button type="submit">Send</button>
+    </form>
+
         <!-- Button trigger modal -->
-		    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalLong">
+		    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal">
 		    Send a GIF
 		    </button>
-
+    	<form id="gifSearchForm" name="gifSearch" action="/search/" method="GET"> 
     		<!-- Modal -->
-    		<div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+    		<div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="modalTitle" aria-hidden="true">
     		  <div class="modal-dialog" role="document">
     		    <div class="modal-content">
     		      <div class="modal-header">
-    		        <input type="search" class="form-control" id="GIFsearch" placeholder="Search GIFs on GIPHY...">
+    		        <input type="search" name="search" class="form-control" id="GIFsearch" placeholder="Search GIFs on GIPHY...">
     		        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
     		          <span aria-hidden="true">&times;</span>
     		        </button>
     		      </div>
     		      <div class="modal-body">
-    		        <div class="container">
+    		        <div id="modal-container" class="container">
     				  <div class="row">
     				    <div class="col">
     				    	<div data-dismiss="modal">
-         						<img src="https://i.giphy.com/media/feqkVgjJpYtjy/200.gif" class="img-fluid" alt="Responsive image">
+         						<img onclick="sendGIF(this)" src="https://i.giphy.com/media/feqkVgjJpYtjy/200.gif" class="img-fluid" alt="Responsive image">
          					</div>
     				    </div>
     				    <div class="col">
     				    	<div data-dismiss="modal">
-    				      		<img src="https://media0.giphy.com/media/HkEAY1Yu8UWLS/giphy.gif" class="img-fluid" alt="Responsive image">
+    				      		<img onclick="sendGIF(this)" src="https://media0.giphy.com/media/HkEAY1Yu8UWLS/giphy.gif" class="img-fluid" alt="Responsive image">
     				    	</div>
     				    </div>
     				  </div>
     				  <div class="row">
     				    <div class="col">
     				    	<div data-dismiss="modal">
-    				      		<img src="https://media1.giphy.com/media/tG6ZDOfW5Xeo/giphy.gif" class="img-fluid" alt="Responsive image">
+    				      		<img onclick="sendGIF(this)" src="https://media1.giphy.com/media/tG6ZDOfW5Xeo/giphy.gif" class="img-fluid" alt="Responsive image">
     				      	</div>
     				    </div>
     				    <div class="col">
     				    	<div data-dismiss="modal">
-    				      		<img src="https://media3.giphy.com/media/1tS2pqIiNwJDa/giphy.gif" class="img-fluid" alt="Responsive image">
+    				      		<img onclick="sendGIF(this)" src="https://media3.giphy.com/media/1tS2pqIiNwJDa/giphy.gif" class="img-fluid" alt="Responsive image">
     				      	</div>
     				    </div>
     				  </div>
@@ -144,9 +173,9 @@ List<Message> messages = (List<Message>) request.getAttribute("messages");
     		  </div>
     		</div>
         <br/>
-        <button type="submit">Send</button>
+        
 
-    </form>
+    </form> 
     <% } else { %>
       <p><a href="/login">Login</a> to send a message.</p>
     <% } %>
@@ -155,8 +184,8 @@ List<Message> messages = (List<Message>) request.getAttribute("messages");
 
   </div>
 
-  <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+  <!-- Popper.js, Bootstrap JS -->
+  
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 
