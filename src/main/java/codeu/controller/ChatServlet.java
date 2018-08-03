@@ -165,18 +165,18 @@ public class ChatServlet extends HttpServlet {
 			return;
 		}
 
-<<<<<<< HEAD
+		
 		String messageContent = request.getParameter("message");
 		String replacementString = messageContent.replaceAll(":turtle", "🐢").replaceAll(":car", "🏎️").replaceAll(":laughing", "😂").replaceAll(":smile", "😊" ).replaceAll(":crying", "😢").replaceAll(":kiss", "😘");
 		messageContent = replacementString;
-=======
+
 		Part messagePart = request.getPart("message");
 		if (messagePart != null) {
 			Scanner s = new Scanner(messagePart.getInputStream());
->>>>>>> master
+
 
 			if (s.hasNextLine()) {
-				String messageContent = s.nextLine();
+				messageContent = s.nextLine();
 
 				// allows users to enter basic HTML tags that are not a threat to security
 				String HTMLMessageContent = clean(messageContent);
