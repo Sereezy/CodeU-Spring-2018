@@ -47,13 +47,18 @@ String profileAuthor = (String) request.getAttribute("profileAuthor");
            <%--<p><%= UserProfileStore.getInstance().addUserProfile((String)request.getSession().getAttribute("user")).getUserProfileContent()%></p>
          </form>
     </div>--%>
-    <div id="container">
+    <div id="container"><h1><%=request.getSession().getAttribute("user")%>'s Profile</h1>
+    <% if(request.getSession().getAttribute("user") != null){ %>
+     <p><%= request.getAttribute("userprofile") %><p>
+    <% } else{ %>
+       <p> </p>
+    <% } %>
     <div
       style="width:75%; margin-left:auto; margin-right:auto; margin-top: 50px;">
        <h1> <%=request.getSession().getAttribute("user")%>'s Profile</h1>
        <hr>
        <h2>About Me</h2>
-       <p id="aboutMe"><%= request.getAttribute("userprofile") %></p>
+       <p id="aboutMe"><%= requ.getAttribute("userprofile") %></p>
        <%--><% if (ProfileHelper.isSameUser(user, profileAuthor)) { %><--%>
         <h3>Edit</h3>
         <hr>
