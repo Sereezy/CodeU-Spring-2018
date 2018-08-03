@@ -188,14 +188,7 @@ public class ChatServletTest {
     ArgumentCaptor<Message> messageArgumentCaptor = ArgumentCaptor.forClass(Message.class);
     Mockito.verify(mockMessageStore).addMessage(messageArgumentCaptor.capture());
     Assert.assertEquals("Test message.", messageArgumentCaptor.getValue().getContent());
-
-    
-    /*ArgumentCaptor<Message> messageArgumentCaptorGIF = ArgumentCaptor.forClass(Message.class);
-    Mockito.verify(mockMessageStore).addMessage(messageArgumentCaptorGIF.capture());
-    System.out.println(messageArgumentCaptorGIF.getValue().getContent());
-    Assert.assertEquals("https://i.giphy.com/test.gif", messageArgumentCaptorGIF.getValue().getContent());*/
-
-    
+ 
     Mockito.verify(mockResponse).sendRedirect("/chat/test_conversation");
   }
 
@@ -229,7 +222,8 @@ public class ChatServletTest {
     ArgumentCaptor<Message> messageArgumentCaptorGIF = ArgumentCaptor.forClass(Message.class);
     Mockito.verify(mockMessageStore).addMessage(messageArgumentCaptorGIF.capture());
     System.out.println(messageArgumentCaptorGIF.getValue().getContent());
-    Assert.assertEquals("<img src=https://i.giphy.com/test.gif width=300>", messageArgumentCaptorGIF.getValue().getContent());
+    Assert.assertEquals("<img src=https://i.giphy.com/test.gif width=300>",
+    		messageArgumentCaptorGIF.getValue().getContent());
 
     
     Mockito.verify(mockResponse).sendRedirect("/chat/test_conversation");
